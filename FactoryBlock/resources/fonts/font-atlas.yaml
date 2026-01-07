@@ -1,0 +1,5 @@
+type: class TwoD::SpriteAtlas
+name: font-atlas
+filter: linear
+textureFormat: r8g8b8a8-unorm
+gap: 5

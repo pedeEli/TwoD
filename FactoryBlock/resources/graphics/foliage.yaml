@@ -1,0 +1,7 @@
+type: class TwoD::Sprite
+name: foliage
+file: foliage.png
+slices:
+  width: 8
+  height: 8
+  count: 16

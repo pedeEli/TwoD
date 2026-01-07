@@ -1,0 +1,41 @@
+name: test
+entities:
+- name: ground
+  components:
+  - type: class Ground
+    width: 50
+    height: 30
+    foliage: 1000
+
+- name: player
+  components:
+  - type: class TwoD::SpriteRenderer
+    sprite: protagonist
+    layer: 10
+  - type: class Player
+    speed: 5.0
+  - type: class TwoD::Hitbox
+    layer: 10
+    x: -0.5
+    y: -0.5
+    w: 1.0
+    h: 1.0
+  children:
+  - name: camera
+    components:
+    - type: class TwoD::Camera
+      zoom: 25
+
+- name: iron ore vein
+  components:
+  - type: class Vein
+    size: 40
+
+- name: text
+  transform:
+    scale: { x: 0.04, y: 0.04 }
+  components:
+  - type: class TwoD::TextRenderer
+    layer: 5
+    font: Roboto
+    text: Hello World!

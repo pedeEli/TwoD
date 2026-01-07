@@ -1,0 +1,4 @@
+type: class TwoD::SpriteAtlas
+name: sprite-atlas
+filter: nearest
+textureFormat: r8g8b8a8-unorm

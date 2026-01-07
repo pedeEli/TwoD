@@ -1,0 +1,12 @@
+type: class resources::Prefab
+name: prefab/square
+renderer:
+  layer: layer/misc
+  mesh: square
+components:
+- type: class components::Hitbox
+  x: -0.5
+  y: -0.5
+  w: 1.0
+  h: 1.0
+- type: class Ore

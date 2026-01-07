@@ -1,0 +1,18 @@
+IncludeDir = {}
+IncludeDir["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/include"
+IncludeDir["SDL3_image"] = "%{wks.location}/TwoD/vendor/SDL3_image/include"
+IncludeDir["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/include"
+IncludeDir["msdfgen"] = "%{wks.location}/TwoD/vendor/msdfgen"
+IncludeDir["yaml_cpp"] = "%{wks.location}/TwoD/vendor/yaml-cpp/include"
+IncludeDir["glm"] = "%{wks.location}/TwoD/vendor/glm"
+IncludeDir["freetype"] = "%{wks.location}/TwoD/vendor/freetype/include"
+
+Library = {}
+Library["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/lib/SDL3.lib"
+Library["SDL3_image"] = "%{wks.location}/TwoD/vendor/SDL3_image/lib/SDL3_image.lib"
+Library["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/lib/SDL3_shadercross.lib"
+
+Dynamic = {}
+Dynamic["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/lib/SDL3.dll"
+Dynamic["SDL3_image"] = "%{wks.location}/TwoD/vendor/SDL3_image/lib/SDL3_image.dll"
+Dynamic["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/bin/*.dll"

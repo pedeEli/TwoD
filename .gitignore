@@ -1,0 +1,14 @@
+#binaries
+
+**/bin/
+**/bin-int/
+Intermediates/
+
+
+#visual studio files
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+**.csproj
