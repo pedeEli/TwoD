@@ -5,20 +5,24 @@
 
 namespace TwoD
 {
-	struct GlyphRect
-	{
-		int32_t x, y, w, h;
-	};
-
 	class TextRenderer : public Component
 	{
 		using Component::Component;
+	public:
+		struct Glyph
+		{
+			glm::fvec2 texMin;
+			glm::fvec2 texMax;
+			glm::fvec2 quadMin;
+			glm::fvec2 quadMax;
+		};
+
 	public:
 		void StartBefore() override;
 		void Destroy() override;
 
 		void SetText(const std::string& text);
-		const std::vector<std::pair<SpriteRect, GlyphRect>>& GetRects() const;
+		const std::vector<Glyph>& GetGlyphs() const;
 
 	public:
 		TD_COMPONENT_FIELDS(
@@ -28,9 +32,9 @@ namespace TwoD
 		)
 
 	private:
-		void SetRects();
+		void SetGlyphs();
 
 	private:
-		std::vector<std::pair<SpriteRect, GlyphRect>> m_rects;
+		std::vector<Glyph> m_glyphs;
 	};
 }

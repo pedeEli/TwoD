@@ -103,8 +103,8 @@ namespace TwoD
 		auto& renderers = ecs.GetComponents<TextRenderer>();
 
 		m_shader.Bind(&renderPass);
-		auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("font-atlas");
-		atlas.Bind(&renderPass);
+		//auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("font-atlas");
+		//atlas.Bind(&renderPass);
 
 		auto camera = Camera::Get();
 		Uniform uniform{
@@ -117,18 +117,21 @@ namespace TwoD
 		for (auto index : m_indices)
 		{
 			auto& renderer = renderers[index];
+			renderer.font->Bind(&renderPass);
 			uniform.model = renderer.GetComponent<Transform>()->GetWorldMatrix();
-			const auto& rects = renderer.GetRects();
+			const auto& glyphs = renderer.GetGlyphs();
 
-			for (size_t i = 0; i < rects.size(); i++)
+			for (size_t i = 0; i < glyphs.size(); i++)
 			{
-				auto& info = rects[i];
+				auto& glyph = glyphs[i];
 				data[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-				data[i].tex = info.first;
-				data[i].glyph = info.second;
+				data[i].texMin = glyph.texMin;
+				data[i].texMax = glyph.texMax;
+				data[i].quadMin = glyph.quadMin;
+				data[i].quadMax = glyph.quadMax;
 			}
 
-			auto size = static_cast<uint32_t>(sizeof(Instance) * rects.size());
+			auto size = static_cast<uint32_t>(sizeof(Instance) * glyphs.size());
 			auto copyPass = commandBuffer.BeginCopyPass();
 			copyPass.UploadToBuffer(
 				{ &m_transferBuffer, 0 },
@@ -138,7 +141,7 @@ namespace TwoD
 
 			renderPass.BindVertexStorageBuffers(0, { &m_buffer });
 			commandBuffer.PushVertexUniformData<Uniform>(0, uniform);
-			renderPass.DrawPrimitives(rects.size() * 6, 1, 0, 0);
+			renderPass.DrawPrimitives(glyphs.size() * 6, 1, 0, 0);
 		}
 	}
 
@@ -171,7 +174,7 @@ namespace TwoD
 		uint32_t bufferSize = 0;
 		for (auto& renderer : renderers)
 		{
-			bufferSize = std::max(bufferSize, static_cast<uint32_t>(renderer.GetRects().size()));
+			bufferSize = std::max(bufferSize, static_cast<uint32_t>(renderer.GetGlyphs().size()));
 		}
 
 		if (bufferSize != m_bufferSize)
@@ -190,20 +193,22 @@ namespace TwoD
 }
 
 static const char* vertex = R"(
-struct TextData
+struct Instance
 {
     float4 color;
-    float texU, texV, texW, texH;
-    int posX, posY, posW, posH;
+    float2 texMin;
+    float2 texMax;
+    float2 quadMin;
+    float2 quadMax;
 };
 
-StructuredBuffer<TextData> dataBuffer : register(t0, space0);
+StructuredBuffer<Instance> dataBuffer : register(t0, space0);
 
 struct Output
 {
     float4 position : SV_POSITION;
-    float2 texCoord : TEXCOORD0;
-    float4 color : TEXCOORD1;
+    float4 color : TEXCOORD0;
+    float2 texCoord : TEXCOORD1;
 };
 
 static const uint indices[6] = { 0, 1, 2, 3, 2, 1 };
@@ -220,22 +225,22 @@ Output main(uint id : SV_VertexID)
 {
     uint spriteIndex = id / 6;
     uint index = indices[id % 6];
-    TextData data = dataBuffer[spriteIndex];
+    Instance data = dataBuffer[spriteIndex];
     
     const float2 texCoords[4] =
     {
-        { data.texU,              data.texV },
-        { data.texU + data.texW,  data.texV },
-        { data.texU,              data.texV + data.texH },
-        { data.texU + data.texW,  data.texV + data.texH }
+        data.texMin,
+        { data.texMax.x, data.texMin.y },
+        { data.texMin.x, data.texMax.y },
+        data.texMax
     };
     
     const float2 positions[4] =
     {
-        { data.posX,             data.posY },
-        { data.posX + data.posW, data.posY },
-        { data.posX,             data.posY + data.posH },
-        { data.posX + data.posW, data.posY + data.posH }
+        data.quadMin,
+        { data.quadMax.x, data.quadMin.y },
+        { data.quadMin.x, data.quadMax.y },
+        data.quadMax
     };
     
     Output output;
@@ -251,15 +256,38 @@ SamplerState Sampler : register(s0, space2);
 
 struct Input
 {
-    float2 texCoord : TEXCOORD0;
-    float4 color : TEXCOORD1;
+    float4 color : TEXCOORD0;
+    float2 texCoord : TEXCOORD1;
 };
 
-float4 main(Input input) : SV_Target0
+const static float pxRange = 4.0;
+
+float2 sqr(float2 x)
 {
-	const float smoothing = 1.0 / 16.0;
-	float distance = Texture.Sample(Sampler, input.texCoord).a;
-	float alpha = smoothstep(0.5 - smoothing, 0.5 + smoothing, distance);
-	return float4(input.color.rgb, input.color.a * alpha);
+	return x*x;
+}
+
+float screenPxRange(float2 texCoord)
+{
+    const float2 unitRange = float2(pxRange, pxRange) / float2(270.0f, 270.0f);
+    // If inversesqrt is not available, use vec2(1.0)/sqrt
+    const float2 screenTexSize = rsqrt(sqr(ddx(texCoord)) + sqr(ddy(texCoord)));
+    // Can also be approximated as screenTexSize = vec2(1.0)/fwidth(texCoord);
+    return max(0.5 * dot(unitRange, screenTexSize), 1.0);
+}
+
+float median(float r, float g, float b)
+{
+    return max(min(r, g), min(max(r, g), b));
+}
+
+float4 main(Input input) : SV_TARGET0
+{
+	//return float4(Texture.Sample(Sampler, input.texCoord).agb, 1.0f);
+    const float3 msd = Texture.Sample(Sampler, input.texCoord).agb;
+    const float sd = median(msd.r, msd.g, msd.b);
+    const float screenPxDistance = screenPxRange(input.texCoord) * (sd - 0.5);
+    const float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
+    return float4(input.color.rgb, input.color.a * opacity);
 }
 )";

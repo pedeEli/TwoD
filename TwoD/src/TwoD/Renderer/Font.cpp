@@ -1,47 +1,130 @@
 #include "tdpch.hpp"
 #include "Font.hpp"
 
-#include "msdfgen.h"
-#include "msdfgen-ext.h"
+#undef INFINITE
+#include "msdf-atlas-gen/msdf-atlas-gen.h"
+#include "MSDFData.hpp"
 
 #include "SpriteAtlas.hpp"
 #include "TwoD/Core/App.hpp"
 
-static const std::string_view s_initialChars = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+static const std::string_view s_initialChars = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 namespace TwoD
 {
+	Font::Font() = default;
+	Font::~Font() = default;
+
 	void Font::Init(const std::filesystem::path& path)
 	{
 		auto filePath = path.parent_path() / file;
 
 		auto* ft = msdfgen::initializeFreetype();
 		auto* font = msdfgen::loadFont(ft, filePath.string().c_str());
+	
+		m_data = std::make_unique<MSDFData>();
+		m_data->fontGeometry = msdf_atlas::FontGeometry(&m_data->glyphs);
+		m_data->fontGeometry.loadCharset(font, 1.0, msdf_atlas::Charset::ASCII);
 		
-		auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("font-atlas");
-		for (char ch : s_initialChars)
+		const double maxCornerAngle = 3.0;
+		for (auto& glyph : m_data->glyphs)
 		{
-			msdfgen::Shape shape;
-			msdfgen::loadGlyph(shape, font, ch, msdfgen::FONT_SCALING_EM_NORMALIZED);
-			shape.normalize();
-			msdfgen::edgeColoringSimple(shape, 3.0);
-			msdfgen::Bitmap<float, 3> msdf(32, 32);
-			msdfgen::SDFTransformation t(msdfgen::Projection(32.0, msdfgen::Vector2(0.125, 0.125)), msdfgen::Range(0.125));
-			msdfgen::generateMSDF(msdf, shape, t);
-			
-
-			auto surface = m_font.GetGlyphImage(ch, SDL::ImageType::IMAGE_ALPHA);
-			m_metrics[ch] = m_font.GetGlyphMetrics(ch);
-			atlas.Add(surface, [ch, this](auto rect)
-				{
-					m_rects[ch] = { rect, m_metrics[ch] };
-				});
+			glyph.edgeColoring(&msdfgen::edgeColoringInkTrap, maxCornerAngle, 0);
 		}
+
+		msdf_atlas::TightAtlasPacker packer;
+		packer.setDimensionsConstraint(msdf_atlas::DimensionsConstraint::SQUARE);
+		packer.setMinimumScale(24.0);
+		packer.setPixelRange(2.0);
+		packer.setMiterLimit(1.0);
+		packer.setScale(40.0);
+		packer.setPixelRange(4.0);
+		packer.pack(m_data->glyphs.data(), m_data->glyphs.size());
+		packer.getDimensions(m_atlasSize.x, m_atlasSize.y);
+
+		msdf_atlas::ImmediateAtlasGenerator<
+			float,
+			3,
+			msdf_atlas::msdfGenerator,
+			msdf_atlas::BitmapAtlasStorage<msdf_atlas::byte, 3>
+		> generator(m_atlasSize.x, m_atlasSize.y);
+
+		msdf_atlas::GeneratorAttributes attributes;
+		generator.setAttributes(attributes);
+		generator.setThreadCount(4);
+		generator.generate(m_data->glyphs.data(), m_data->glyphs.size());
+
+		auto atlas = static_cast<msdfgen::BitmapConstRef<uint8_t, 3>>(generator.atlasStorage());
+
+		auto& window = App::Get<Window>();
+		SDL::SamplerInfo samplerInfo{
+			.minFilter = SDL::Filter::LINEAR,
+			.magFilter = SDL::Filter::LINEAR,
+			.mipmapMode = SDL::SamplerMipmapMode::NEAREST,
+			.addressModeU = SDL::SamplerAddressMode::CLAMP_TO_EDGE,
+			.addressModeV = SDL::SamplerAddressMode::CLAMP_TO_EDGE,
+			.addressModeW = SDL::SamplerAddressMode::CLAMP_TO_EDGE
+		};
+		m_sampler = window.CreateSampler(samplerInfo);
+
+		SDL::TextureInfo textureInfo{
+			.type = SDL::TextureType::TWO_D,
+			.format = SDL::TextureFormat::R8G8B8A8_UNORM,
+			.usage = SDL::TextureUsageFlags::SAMPLER,
+			.width = static_cast<uint32_t>(atlas.width),
+			.height = static_cast<uint32_t>(atlas.height),
+			.layerCountOrDepth = 1,
+			.numLevels = 1,
+			.sampleCount = SDL::SampleCount::ONE
+		};
+		m_texture = window.CreateTexture(textureInfo);
+
+		SDL::TransferBufferInfo transferInfo{
+			.usage = SDL::TransferBufferUsage::UPLOAD,
+			.size = static_cast<uint32_t>(atlas.width * atlas.height) * 4
+		};
+		auto transferBuffer = window.CreateTransferBuffer(transferInfo);
+		auto* transferData = transferBuffer.Map<uint8_t>(false);
+		size_t src = 0;
+		size_t dst = 0;
+		size_t max = atlas.width * atlas.height * 3;
+
+		SDL::Surface surface(atlas.width, atlas.height, SDL::PixelFormat::RGBA8888);
+		auto* pixels = static_cast<uint8_t*>(surface.GetPixels());
+		while (src < max)
+		{
+			pixels[dst] = 255;
+			transferData[dst++] = 255;
+			pixels[dst] = atlas.pixels[src];
+			transferData[dst++] = atlas.pixels[src++];
+			pixels[dst] = atlas.pixels[src];
+			transferData[dst++] = atlas.pixels[src++];
+			pixels[dst] = atlas.pixels[src];
+			transferData[dst++] = atlas.pixels[src++];
+		}
+		surface.SaveBMP("font-atlas.bmp");
+
+		auto commandBuffer = window.AcquireCommandBuffer();
+		auto copyPass = commandBuffer.BeginCopyPass();
+
+		SDL::TextureTransferInfo source{
+			.transferBuffer = &transferBuffer,
+			.offset = 0
+		};
+		SDL::TextureRegion destination{
+			.texture = &m_texture,
+			.w = static_cast<uint32_t>(atlas.width),
+			.h = static_cast<uint32_t>(atlas.height),
+			.d = 1
+		};
+		copyPass.UploadToTexture(source, destination, false);
+
+		msdfgen::destroyFont(font);
+		msdfgen::deinitializeFreetype(ft);
 	}
 
-	const std::pair<SpriteRect, SDL::GlyphMetrics>& Font::GetRect(char ch) const
+	void Font::Bind(SDL::RenderPass* renderPass)
 	{
-		TD_CORE_ASSERT(m_rects.contains(ch));
-		return m_rects.find(ch)->second;
+		renderPass->BindFragmentSamplers(0, { { &m_texture, &m_sampler } });
 	}
 }

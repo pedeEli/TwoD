@@ -32,10 +32,8 @@ entities:
     size: 40
 
 - name: text
-  transform:
-    scale: { x: 0.04, y: 0.04 }
   components:
   - type: class TwoD::TextRenderer
     layer: 5
     font: Roboto
-    text: Hello World!
+    text: Hello World!g

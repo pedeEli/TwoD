@@ -678,7 +678,7 @@ namespace TwoD::SDL
         NV21 = 0x3132564e,
         P010 = 0x30313050,
         EXTERNAL_OES = 0x2053454f,
-        MJPG = 0x47504a4d,
+        MJPG = 0x47504a4d
     };
 }
 
@@ -709,6 +709,470 @@ namespace YAML
             if (str == "linear")
             {
                 rhs = TwoD::SDL::Filter::LINEAR;
+                return true;
+            }
+            return false;
+        }
+    };
+
+    template<>
+    struct convert<TwoD::SDL::PixelFormat>
+    {
+        static Node encode(const TwoD::SDL::PixelFormat rhs)
+        {
+            switch (rhs)
+            {
+            case TwoD::SDL::PixelFormat::INDEX1LSB:
+                return Node("index1lsb");
+            case TwoD::SDL::PixelFormat::INDEX1MSB:
+                return Node("index1msb");
+            case TwoD::SDL::PixelFormat::INDEX2LSB:
+                return Node("index2lsb");
+            case TwoD::SDL::PixelFormat::INDEX2MSB:
+                return Node("index2msb");
+            case TwoD::SDL::PixelFormat::INDEX4LSB:
+                return Node("index4lsb");
+            case TwoD::SDL::PixelFormat::INDEX4MSB:
+                return Node("index4msb");
+            case TwoD::SDL::PixelFormat::INDEX8:
+                return Node("index8");
+            case TwoD::SDL::PixelFormat::RGB332:
+                return Node("rgb332");
+            case TwoD::SDL::PixelFormat::XRGB4444:
+                return Node("xrgb4444");
+            case TwoD::SDL::PixelFormat::XBGR4444:
+                return Node("xbgr4444");
+            case TwoD::SDL::PixelFormat::XRGB1555:
+                return Node("xrgb1555");
+            case TwoD::SDL::PixelFormat::XBGR1555:
+                return Node("xbgr1555");
+            case TwoD::SDL::PixelFormat::ARGB4444:
+                return Node("argb4444");
+            case TwoD::SDL::PixelFormat::RGBA4444:
+                return Node("rgba4444");
+            case TwoD::SDL::PixelFormat::ABGR4444:
+                return Node("abgr4444");
+            case TwoD::SDL::PixelFormat::BGRA4444:
+                return Node("bgra4444");
+            case TwoD::SDL::PixelFormat::ARGB1555:
+                return Node("argb1555");
+            case TwoD::SDL::PixelFormat::RGBA5551:
+                return Node("rgba5551");
+            case TwoD::SDL::PixelFormat::ABGR1555:
+                return Node("abgr1555");
+            case TwoD::SDL::PixelFormat::BGRA5551:
+                return Node("bgra5551");
+            case TwoD::SDL::PixelFormat::RGB565:
+                return Node("rgb565");
+            case TwoD::SDL::PixelFormat::BGR565:
+                return Node("bgr565");
+            case TwoD::SDL::PixelFormat::RGB24:
+                return Node("rgb24");
+            case TwoD::SDL::PixelFormat::BGR24:
+                return Node("bgr24");
+            case TwoD::SDL::PixelFormat::XRGB8888:
+                return Node("xrgb8888");
+            case TwoD::SDL::PixelFormat::RGBX8888:
+                return Node("rgbx8888");
+            case TwoD::SDL::PixelFormat::XBGR8888:
+                return Node("xbgr8888");
+            case TwoD::SDL::PixelFormat::BGRX8888:
+                return Node("bgrx8888");
+            case TwoD::SDL::PixelFormat::ARGB8888:
+                return Node("argb8888");
+            case TwoD::SDL::PixelFormat::RGBA8888:
+                return Node("rgba8888");
+            case TwoD::SDL::PixelFormat::ABGR8888:
+                return Node("abgr8888");
+            case TwoD::SDL::PixelFormat::BGRA8888:
+                return Node("bgra8888");
+            case TwoD::SDL::PixelFormat::XRGB2101010:
+                return Node("xrgb2101010");
+            case TwoD::SDL::PixelFormat::XBGR2101010:
+                return Node("xbgr2101010");
+            case TwoD::SDL::PixelFormat::ARGB2101010:
+                return Node("argb2101010");
+            case TwoD::SDL::PixelFormat::ABGR2101010:
+                return Node("abgr2101010");
+            case TwoD::SDL::PixelFormat::RGB48:
+                return Node("rgb48");
+            case TwoD::SDL::PixelFormat::BGR48:
+                return Node("bgr48");
+            case TwoD::SDL::PixelFormat::RGBA64:
+                return Node("rgba64");
+            case TwoD::SDL::PixelFormat::ARGB64:
+                return Node("argb64");
+            case TwoD::SDL::PixelFormat::BGRA64:
+                return Node("bgra64");
+            case TwoD::SDL::PixelFormat::ABGR64:
+                return Node("abgr64");
+            case TwoD::SDL::PixelFormat::RGB48_FLOAT:
+                return Node("rgb48-float");
+            case TwoD::SDL::PixelFormat::BGR48_FLOAT:
+                return Node("bgr48-float");
+            case TwoD::SDL::PixelFormat::RGBA64_FLOAT:
+                return Node("rgba64-float");
+            case TwoD::SDL::PixelFormat::ARGB64_FLOAT:
+                return Node("argb64-float");
+            case TwoD::SDL::PixelFormat::BGRA64_FLOAT:
+                return Node("bgra64-float");
+            case TwoD::SDL::PixelFormat::ABGR64_FLOAT:
+                return Node("abgr64-float");
+            case TwoD::SDL::PixelFormat::RGB96_FLOAT:
+                return Node("rgb96-float");
+            case TwoD::SDL::PixelFormat::BGR96_FLOAT:
+                return Node("bgr96-float");
+            case TwoD::SDL::PixelFormat::RGBA128_FLOAT:
+                return Node("rgba128-float");
+            case TwoD::SDL::PixelFormat::ARGB128_FLOAT:
+                return Node("argb128-float");
+            case TwoD::SDL::PixelFormat::BGRA128_FLOAT:
+                return Node("bgra128-float");
+            case TwoD::SDL::PixelFormat::ABGR128_FLOAT:
+                return Node("abgr128-float");
+            case TwoD::SDL::PixelFormat::YV12:
+                return Node("yv12");
+            case TwoD::SDL::PixelFormat::IYUV:
+                return Node("iyuv");
+            case TwoD::SDL::PixelFormat::YUY2:
+                return Node("yuy2");
+            case TwoD::SDL::PixelFormat::UYVY:
+                return Node("uyvy");
+            case TwoD::SDL::PixelFormat::YVYU:
+                return Node("yvyu");
+            case TwoD::SDL::PixelFormat::NV12:
+                return Node("nv12");
+            case TwoD::SDL::PixelFormat::NV21:
+                return Node("nv21");
+            case TwoD::SDL::PixelFormat::P010:
+                return Node("p010");
+            case TwoD::SDL::PixelFormat::EXTERNAL_OES:
+                return Node("external-oes");
+            case TwoD::SDL::PixelFormat::MJPG:
+                return Node("mjpg");
+            }
+        }
+        static bool decode(const Node& node, TwoD::SDL::PixelFormat& rhs)
+        {
+            auto str = node.as<std::string>();
+            if (str == "index1lsb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX1LSB;
+                return true;
+            }
+            if (str == "index1msb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX1MSB;
+                return true;
+            }
+            if (str == "index2lsb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX2LSB;
+                return true;
+            }
+            if (str == "index2msb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX2MSB;
+                return true;
+            }
+            if (str == "index4lsb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX4LSB;
+                return true;
+            }
+            if (str == "index4msb")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX4MSB;
+                return true;
+            }
+            if (str == "index8")
+            {
+                rhs = TwoD::SDL::PixelFormat::INDEX8;
+                return true;
+            }
+            if (str == "rgb332")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB332;
+                return true;
+            }
+            if (str == "xrgb4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::XRGB4444;
+                return true;
+            }
+            if (str == "xbgr4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::XBGR4444;
+                return true;
+            }
+            if (str == "xrgb1555")
+            {
+                rhs = TwoD::SDL::PixelFormat::XRGB1555;
+                return true;
+            }
+            if (str == "xbgr1555")
+            {
+                rhs = TwoD::SDL::PixelFormat::XBGR1555;
+                return true;
+            }
+            if (str == "argb4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB4444;
+                return true;
+            }
+            if (str == "rgba4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA4444;
+                return true;
+            }
+            if (str == "abgr4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR4444;
+                return true;
+            }
+            if (str == "bgra4444")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA4444;
+                return true;
+            }
+            if (str == "argb1555")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB1555;
+                return true;
+            }
+            if (str == "rgba5551")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA5551;
+                return true;
+            }
+            if (str == "abgr1555")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR1555;
+                return true;
+            }
+            if (str == "bgra5551")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA5551;
+                return true;
+            }
+            if (str == "rgb565")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB565;
+                return true;
+            }
+            if (str == "bgr565")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGR565;
+                return true;
+            }
+            if (str == "rgb24")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB24;
+                return true;
+            }
+            if (str == "bgr24")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGR24;
+                return true;
+            }
+            if (str == "xrgb8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::XRGB8888;
+                return true;
+            }
+            if (str == "rgbx8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBX8888;
+                return true;
+            }
+            if (str == "xbgr8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::XBGR8888;
+                return true;
+            }
+            if (str == "bgrx8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRX8888;
+                return true;
+            }
+            if (str == "argb8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB8888;
+                return true;
+            }
+            if (str == "rgba8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA8888;
+                return true;
+            }
+            if (str == "abgr8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR8888;
+                return true;
+            }
+            if (str == "bgra8888")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA8888;
+                return true;
+            }
+            if (str == "xrgb2101010")
+            {
+                rhs = TwoD::SDL::PixelFormat::XRGB2101010;
+                return true;
+            }
+            if (str == "xbgr2101010")
+            {
+                rhs = TwoD::SDL::PixelFormat::XBGR2101010;
+                return true;
+            }
+            if (str == "argb2101010")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB2101010;
+                return true;
+            }
+            if (str == "abgr2101010")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR2101010;
+                return true;
+            }
+            if (str == "rgb48")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB48;
+                return true;
+            }
+            if (str == "bgr48")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGR48;
+                return true;
+            }
+            if (str == "rgba64")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA64;
+                return true;
+            }
+            if (str == "argb64")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB64;
+                return true;
+            }
+            if (str == "bgra64")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA64;
+                return true;
+            }
+            if (str == "abgr64")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR64;
+                return true;
+            }
+            if (str == "rgb48-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB48_FLOAT;
+                return true;
+            }
+            if (str == "bgr48-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGR48_FLOAT;
+                return true;
+            }
+            if (str == "rgba64-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA64_FLOAT;
+                return true;
+            }
+            if (str == "argb64-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB64_FLOAT;
+                return true;
+            }
+            if (str == "bgra64-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA64_FLOAT;
+                return true;
+            }
+            if (str == "abgr64-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR64_FLOAT;
+                return true;
+            }
+            if (str == "rgb96-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGB96_FLOAT;
+                return true;
+            }
+            if (str == "bgr96-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGR96_FLOAT;
+                return true;
+            }
+            if (str == "rgba128-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::RGBA128_FLOAT;
+                return true;
+            }
+            if (str == "argb128-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::ARGB128_FLOAT;
+                return true;
+            }
+            if (str == "bgra128-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::BGRA128_FLOAT;
+                return true;
+            }
+            if (str == "abgr128-float")
+            {
+                rhs = TwoD::SDL::PixelFormat::ABGR128_FLOAT;
+                return true;
+            }
+            if (str == "yv12")
+            {
+                rhs = TwoD::SDL::PixelFormat::YV12;
+                return true;
+            }
+            if (str == "iyuv")
+            {
+                rhs = TwoD::SDL::PixelFormat::IYUV;
+                return true;
+            }
+            if (str == "yuy2")
+            {
+                rhs = TwoD::SDL::PixelFormat::YUY2;
+                return true;
+            }
+            if (str == "uyvy")
+            {
+                rhs = TwoD::SDL::PixelFormat::UYVY;
+                return true;
+            }
+            if (str == "yvyu")
+            {
+                rhs = TwoD::SDL::PixelFormat::YVYU;
+                return true;
+            }
+            if (str == "nv12")
+            {
+                rhs = TwoD::SDL::PixelFormat::NV12;
+                return true;
+            }
+            if (str == "nv21")
+            {
+                rhs = TwoD::SDL::PixelFormat::NV21;
+                return true;
+            }
+            if (str == "p010")
+            {
+                rhs = TwoD::SDL::PixelFormat::P010;
+                return true;
+            }
+            if (str == "external-oes")
+            {
+                rhs = TwoD::SDL::PixelFormat::EXTERNAL_OES;
+                return true;
+            }
+            if (str == "mjpg")
+            {
+                rhs = TwoD::SDL::PixelFormat::MJPG;
                 return true;
             }
             return false;

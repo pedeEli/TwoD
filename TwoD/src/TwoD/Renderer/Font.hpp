@@ -5,21 +5,34 @@
 
 namespace TwoD
 {
+	struct MSDFData;
+
 	class Font : public Asset
 	{
 	public:
-		struct GlyphMetrics
+		struct Glyph
 		{
-			int minx, maxx, miny, maxy, advance;
+			SpriteRect rect{};
+			float width = 0.0f;;
+			float height = 0.0f;
+			float advance = 0.0f;
 		};
 
 	public:
-		Font() = default;
-		~Font() = default;
+		Font();
+		~Font();
 
 		void Init(const std::filesystem::path& path) override;
 
-		const std::pair<SpriteRect, GlyphMetrics>& GetRect(char ch) const;
+		const MSDFData* GetMSDFData() const
+		{
+			return m_data.get();
+		}
+		void Bind(SDL::RenderPass* renderPass);
+		glm::ivec2 GetAtlasSize() const
+		{
+			return m_atlasSize;
+		}
 
 	public:
 		TD_ASSET_FIELDS(
@@ -27,7 +40,9 @@ namespace TwoD
 		)
 
 	private:
-		std::unordered_map<char, GlyphMetrics> m_metrics;
-		std::unordered_map<char, std::pair<SpriteRect, GlyphMetrics>> m_rects;
+		glm::ivec2 m_atlasSize;
+		SDL::Texture m_texture;
+		SDL::Sampler m_sampler;
+		std::unique_ptr<MSDFData> m_data = nullptr;
 	};
 }

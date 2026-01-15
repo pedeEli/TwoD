@@ -2,7 +2,6 @@
 #include "App.hpp"
 
 #include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
 
 #include "TwoD/Renderer/RenderPipeline.hpp"
 #include "TwoD/Renderer/SpriteRenderLayer.hpp"
@@ -35,12 +34,6 @@ namespace TwoD
 		if (!SDL_Init(SDL_INIT_VIDEO))
 		{
 			TD_CORE_CRITICAL("Failed to initialize sdl: {}", SDL_GetError());
-			return;
-		}
-
-		if (!TTF_Init())
-		{
-			TD_CORE_CRITICAL("Failed to initialize sdl_ttf: {}", SDL_GetError());
 			return;
 		}
 
@@ -132,7 +125,6 @@ namespace TwoD
 
 	App::SDLQuiter::~SDLQuiter()
 	{
-		TTF_Quit();
 		SDL_Quit();
 	}
 }

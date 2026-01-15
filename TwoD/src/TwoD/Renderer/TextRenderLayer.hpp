@@ -36,8 +36,10 @@ namespace TwoD
 		struct Instance
 		{
 			glm::fvec4 color;
-			SpriteRect tex;
-			GlyphRect glyph;
+			glm::fvec2 texMin;
+			glm::fvec2 texMax;
+			glm::fvec2 quadMin;
+			glm::fvec2 quadMax;
 		};
 		struct Uniform
 		{

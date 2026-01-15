@@ -22,8 +22,8 @@ namespace TwoD
 
 		for (auto& sprite : m_sprites)
 		{
-			auto width = sprite.first.GetWidth();
-			auto height = sprite.first.GetHeight();
+			auto width = sprite.src.w;
+			auto height = sprite.src.h;
 			if (currentX + width > atlasWidth)
 			{
 				currentX = 0;
@@ -37,16 +37,17 @@ namespace TwoD
 		}
 
 
-		SDL::Surface surface(atlasWidth, atlasHeight);
+		SDL::Surface surface(atlasWidth, atlasHeight, pixelFormat);
 		for (size_t i = 0; i < spritePositions.size(); i++)
 		{
 			auto& pos = spritePositions[i];
-			m_sprites[i].second({ pos.x / atlasWidthF, pos.y / atlasHeightF, pos.w / atlasWidthF, pos.h / atlasHeightF });
-			m_sprites[i].first.BlitTo(surface, pos);
+			auto& sprite = m_sprites[i];
+			sprite.callback({ pos.x / atlasWidthF, pos.y / atlasHeightF, pos.w / atlasWidthF, pos.h / atlasHeightF });
+			sprite.surface.BlitTo(sprite.src, surface, pos);
 		}
 		m_sprites.clear();
 
-		surface.SaveBMP(name + ".bmp");
+		//surface.SaveBMP(name + ".bmp");
 
 		auto& window = App::Get<Window>();
 

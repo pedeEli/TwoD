@@ -2,12 +2,13 @@
 #include "TextRenderer.hpp"
 
 #include "TwoD/Core/App.hpp"
+#include "MSDFData.hpp"
 
 namespace TwoD
 {
 	void TextRenderer::StartBefore()
 	{
-		SetRects();
+		SetGlyphs();
 	}
 
 	void TextRenderer::Destroy()
@@ -18,29 +19,48 @@ namespace TwoD
 	void TextRenderer::SetText(const std::string& text)
 	{
 		this->text = text;
-		SetRects();
+		SetGlyphs();
 	}
-	const std::vector<std::pair<SpriteRect, GlyphRect>> &TextRenderer::GetRects() const
+	const std::vector<TextRenderer::Glyph> &TextRenderer::GetGlyphs() const
 	{
-		return m_rects;
+		return m_glyphs;
 	}
 
-	void TextRenderer::SetRects()
+	void TextRenderer::SetGlyphs()
 	{
-		m_rects.clear();
-		m_rects.reserve(text.size());
-		int32_t advance = 0;
-		for (auto ch : text)
+		m_glyphs.clear();
+		m_glyphs.reserve(text.size());
+		
+		auto* data = font->GetMSDFData();
+		auto& metrics = data->fontGeometry.getMetrics();
+		auto atlasSize = font->GetAtlasSize();
+		auto width = static_cast<double>(atlasSize.x);
+		auto height = static_cast<double>(atlasSize.y);
+
+		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
+		double x = 0;
+		for (size_t i = 0; i < text.size(); i++)
 		{
-			auto& info = font->GetRect(ch);
-			GlyphRect size = {
-				.x = info.second.minx + advance,
-				.y = info.second.miny,
-				.w = info.second.maxx - info.second.minx,
-				.h = info.second.maxy - info.second.miny
-			};
-			advance += info.second.advance;
-			m_rects.push_back({ info.first, size });
+			auto* glyph = data->fontGeometry.getGlyph(text[i]);
+
+			double al, ab, ar, at;
+			glyph->getQuadAtlasBounds(al, ab, ar, at);
+			double pl, pb, pr, pt;
+			glyph->getQuadPlaneBounds(pl, pb, pr, pt);
+
+			m_glyphs.emplace_back<glm::fvec2, glm::fvec2, glm::fvec2, glm::fvec2>(
+				{ al / width, ab / height },
+				{ ar / width, at / height },
+				{ x + pl * fsScale, metrics.lineHeight },
+				{ x + pr * fsScale, metrics.lineHeight - (pt - pb) * fsScale }
+			);
+
+			if (i + 1 < text.size())
+			{
+				double advance = glyph->getAdvance();
+				data->fontGeometry.getAdvance(advance, text[i], text[i + 1]);
+				x += advance * fsScale;
+			}
 		}
 
 		App::Get<RenderSystem>().SetDirty<TextRenderer>();

@@ -26,6 +26,7 @@ project "TwoD"
 		"%{IncludeDir.SDL3}",
 		"%{IncludeDir.SDL3_image}",
 		"%{IncludeDir.SDL3_shadercross}",
+		"%{IncludeDir.msdf_atlas_gen}",
 		"%{IncludeDir.msdfgen}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}"
@@ -33,7 +34,7 @@ project "TwoD"
 
 	links {
 		"yaml-cpp",
-		"msdfgen",
+		"msdf-atlas-gen",
 		"%{Library.SDL3}",
 		"%{Library.SDL3_image}",
 		"%{Library.SDL3_shadercross}"
