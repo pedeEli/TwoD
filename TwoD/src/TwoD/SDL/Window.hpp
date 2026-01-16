@@ -44,12 +44,16 @@ namespace TwoD
 	{
 		return static_cast<WindowFlags>(static_cast<uint64_t>(a) | static_cast<uint64_t>(b));
 	}
+	constexpr WindowFlags operator^(WindowFlags a, WindowFlags b) noexcept
+	{
+		return static_cast<WindowFlags>(static_cast<uint64_t>(a) ^ static_cast<uint64_t>(b));
+	}
 
 	struct WindowInfo
 	{
 		int width;
 		int height;
-		std::string title;
+		std::string_view title;
 		WindowFlags windowFlags;
 	};
 

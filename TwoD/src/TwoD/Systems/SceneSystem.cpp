@@ -7,13 +7,16 @@ namespace TwoD
 {
 	void SceneSystem::Load()
 	{
-		auto& path = App::GetBasePath();
+		auto& paths = App::GetBasePaths();
 
-		for (const auto& entry : std::filesystem::recursive_directory_iterator(path / "scenes"))
+		for (const auto& path : paths)
 		{
-			if (entry.is_regular_file() && entry.path().extension().string() == ".yaml")
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(path / "scenes"))
 			{
-				LoadFile(entry.path().string());
+				if (entry.is_regular_file() && entry.path().extension().string() == ".yaml")
+				{
+					LoadFile(entry.path().string());
+				}
 			}
 		}
 	}

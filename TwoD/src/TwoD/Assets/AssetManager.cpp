@@ -7,16 +7,19 @@ namespace TwoD
 {
 	void AssetManager::Load()
 	{
-		auto& path = App::GetBasePath();
+		auto& paths = App::GetBasePaths();
 
 		std::vector<Callbacks> callbacks;
 
-		for (const auto& entry : std::filesystem::recursive_directory_iterator(path / "resources"))
+		for (const auto& path : paths)
 		{
-			if (entry.is_regular_file() && entry.path().extension().string() == ".yaml")
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(path / "resources"))
 			{
-				auto callback = LoadFile(entry.path());
-				callbacks.push_back(callback);
+				if (entry.is_regular_file() && entry.path().extension().string() == ".yaml")
+				{
+					auto callback = LoadFile(entry.path());
+					callbacks.push_back(callback);
+				}
 			}
 		}
 

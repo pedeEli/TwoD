@@ -36,4 +36,4 @@ entities:
   - type: class TwoD::TextRenderer
     layer: 5
     font: Roboto
-    text: Hello World!g
+    text: Hello World!

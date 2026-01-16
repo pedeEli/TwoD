@@ -17,9 +17,9 @@ namespace TwoD
 		return *s_application;
 	}
 
-	const std::filesystem::path& App::GetBasePath()
+	const std::vector<std::filesystem::path>& App::GetBasePaths()
 	{
-		return Get().m_basePath;
+		return Get().m_basePaths;
 	}
 
 	
@@ -28,7 +28,7 @@ namespace TwoD
 		s_application = this;
 	}
 
-	void App::Init(const AppInfo& info)
+	void App::Init(const InitInfo& info)
 	{
 		Log::Init();
 		if (!SDL_Init(SDL_INIT_VIDEO))
@@ -47,6 +47,8 @@ namespace TwoD
 		{
 			return;
 		}
+
+		m_basePaths = info.basePaths;
 
 		m_assetManager.Load();
 
@@ -107,18 +109,6 @@ namespace TwoD
 				m_window.SetSize(event.window.data1, event.window.data2);
 				break;
 			}
-		}
-	}
-
-	void App::InitBasePath(const AppInfo& info)
-	{
-		if (info.basePath.empty())
-		{
-			m_basePath = SDL_GetBasePath();
-		}
-		else
-		{
-			m_basePath = info.basePath;
 		}
 	}
 

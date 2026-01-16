@@ -16,18 +16,19 @@
 
 namespace TwoD
 {
-	struct AppInfo
-	{
-		int width;
-		int height;
-		std::string title;
-		WindowFlags windowFlags;
-		std::string startScene;
-		std::filesystem::path basePath;
-	};
-
 	class App
 	{
+	public:
+		struct InitInfo
+		{
+			int width = 0;
+			int height = 0;
+			std::string_view title;
+			WindowFlags windowFlags = static_cast<WindowFlags>(0);
+			std::string startScene;
+			std::vector<std::filesystem::path> basePaths;
+		};
+
 	public:
 		static App& Get();
 		template<typename T>
@@ -62,12 +63,12 @@ namespace TwoD
 				static_assert(false, "Unsuported type for App::Get<T>()");
 			}
 		}
-		static const std::filesystem::path& GetBasePath();
+		static const std::vector<std::filesystem::path>& GetBasePaths();
 
 	public:
 		App();
 		~App();
-		void Init(const AppInfo& info);
+		void Init(const InitInfo& info);
 		void Run();
 
 		template<typename T>
@@ -79,7 +80,6 @@ namespace TwoD
 		void RegisterResource() { m_assetManager.Register<T>(); }
 
 	private:
-		void InitBasePath(const AppInfo& info);
 		void HandleEvents();
 
 	private:
@@ -100,7 +100,7 @@ namespace TwoD
 		bool m_running = false;
 		bool m_initialized = false;
 
-		std::filesystem::path m_basePath;
+		std::vector<std::filesystem::path> m_basePaths;
 	};
 }
 

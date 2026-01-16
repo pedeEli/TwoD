@@ -28,8 +28,7 @@ project "FactoryBlock"
 	postbuildcommands {
 		("{COPYFILE} %[%{Dynamic.SDL3}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]"),
 		("{COPYFILE} %[%{Dynamic.SDL3_image}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]"),
-		("{COPYFILE} %[%{Dynamic.SDL3_shadercross}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]"),
-		("{COPYFILE} %[%{Dynamic.SDL3_ttf}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]")
+		("{COPYFILE} %[%{Dynamic.SDL3_shadercross}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]")
 	}
 
 	buildoptions { "/utf-8" }
@@ -38,10 +37,7 @@ project "FactoryBlock"
 		systemversion "latest"
 
 	filter "configurations:Debug"
-		defines {
-			"TD_DEBUG",
-			'BASE_PATH="%{prj.location}"'
-		}
+		defines "TD_DEBUG"
 		runtime "Debug"
 		symbols "on"
 
