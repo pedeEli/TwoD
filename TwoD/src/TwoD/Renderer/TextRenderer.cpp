@@ -49,10 +49,10 @@ namespace TwoD
 			glyph->getQuadPlaneBounds(pl, pb, pr, pt);
 
 			m_glyphs.emplace_back<glm::fvec2, glm::fvec2, glm::fvec2, glm::fvec2>(
-				{ al / width, ab / height },
-				{ ar / width, at / height },
-				{ x + pl * fsScale, metrics.lineHeight },
-				{ x + pr * fsScale, metrics.lineHeight - (pt - pb) * fsScale }
+				{ al / width, at / height },
+				{ ar / width, ab / height },
+				{ x + pl * fsScale, metrics.lineHeight - pt * fsScale },
+				{ x + pr * fsScale, metrics.lineHeight - pb * fsScale }
 			);
 
 			if (i + 1 < text.size())
