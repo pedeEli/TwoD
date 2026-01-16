@@ -52,11 +52,6 @@ namespace TwoD
 
 		m_assetManager.Load();
 
-		RenderPipeline pipeline;
-		pipeline.AddLayer<SpriteRenderLayer>();
-		pipeline.AddLayer<TextRenderLayer>();
-		m_renderSystem.SetPipeline(pipeline);
-
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
 

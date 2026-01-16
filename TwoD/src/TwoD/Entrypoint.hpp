@@ -105,5 +105,11 @@ int main(void)
 	info.basePaths.push_back(".");
 
 	app.Init(info);
+	
+	TwoD::RenderPipeline pipeline;
+	pipeline.AddLayer<TwoD::SpriteRenderLayer>();
+	pipeline.AddLayer<TwoD::TextRenderLayer>();
+	TwoD::App::Get<TwoD::RenderSystem>().SetPipeline(pipeline);
+	
 	app.Run();
 }
