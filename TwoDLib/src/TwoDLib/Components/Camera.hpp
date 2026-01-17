@@ -1,5 +1,4 @@
 #pragma once
-#include <glm/glm.hpp>
 #include "TwoD/Core/App.hpp"
 #include "TwoD/ECS/Transform.hpp"
 

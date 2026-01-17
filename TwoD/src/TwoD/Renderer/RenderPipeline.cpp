@@ -2,7 +2,6 @@
 #include "RenderPipeline.hpp"
 
 #include "TwoD/Core/App.hpp"
-#include "TwoD/Renderer/SpriteRenderer.hpp"
 #include "TwoD/SDL/Window.hpp"
 
 namespace TwoD

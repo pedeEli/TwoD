@@ -1,5 +1,5 @@
 #pragma once
-#include "TwoD.hpp"
+#include "TwoDLib.hpp"
 
 using namespace TwoD;
 

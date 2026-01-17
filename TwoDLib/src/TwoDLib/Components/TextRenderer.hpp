@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TwoD/ECS/ECS.hpp"
-#include "Font.hpp"
+#include "TwoDLib/Assets/Font.hpp"
 
 namespace TwoD
 {

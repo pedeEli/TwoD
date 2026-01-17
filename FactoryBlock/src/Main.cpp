@@ -1,4 +1,5 @@
 #include "TwoD/Entrypoint.hpp"
+#include "TwoDLib.hpp"
 
 #include "Components/Player.hpp"
 #include "Components/Ground.hpp"
@@ -28,4 +29,10 @@ constexpr static void RegisterComponents(Components components)
 	components.Register<Vein>();
 	components.Register<Ore>();
 	components.Register<Ground>();
+}
+
+constexpr static void CreateRenderPipeline(TwoD::RenderPipeline& pipeline)
+{
+	pipeline.AddLayer<TwoD::SpriteRenderLayer>();
+	pipeline.AddLayer<TwoD::TextRenderLayer>();
 }

@@ -1,5 +1,5 @@
-project "FactoryBlock"
-	kind "ConsoleApp"
+project "TwoDLib"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++23"
 	staticruntime "off"
@@ -7,36 +7,44 @@ project "FactoryBlock"
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "tdpch.hpp"
+	pchsource "%{wks.location}/TwoD/src/tdpch.cpp"
+
 	files {
-		"src/**.hpp",
+		"%{wks.location}/TwoD/src/tdpch.cpp",
 		"src/**.cpp",
-		"src/**.h"
+		"src/**.hpp",
+		"src/**.inl",
+		"src/**.h",
 	}
 
 	includedirs {
-		"%{wks.location}/TwoD/vendor/spdlog/include",
+		"src",
 		"%{wks.location}/TwoD/src",
-		"%{wks.location}/TwoDLib/src",
+		"%{wks.location}/TwoD/vendor/spdlog/include",
 		"%{IncludeDir.SDL3}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.msdf_atlas_gen}",
+		"%{IncludeDir.msdfgen}",
+		"%{IncludeDir.glm}"
 	}
 
 	links {
-		"TwoD",
-		"TwoDLib"
+		"yaml-cpp",
+		"msdf-atlas-gen"
 	}
 
-	postbuildcommands {
-		("{COPYFILE} %[%{Dynamic.SDL3}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]"),
-		("{COPYFILE} %[%{Dynamic.SDL3_image}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]"),
-		("{COPYFILE} %[%{Dynamic.SDL3_shadercross}] %[%{wks.location}/bin/" .. outputdir .. "/%{prj.name}]")
+	defines {
+		"YAML_CPP_STATIC_DEFINE",
+		"MSDFGEN_PUBLIC="
 	}
 
 	buildoptions { "/utf-8" }
 
 	filter "system:windows"
 		systemversion "latest"
+
+		defines {}
 
 	filter "configurations:Debug"
 		defines "TD_DEBUG"

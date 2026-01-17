@@ -22,6 +22,7 @@ group ""
 
 group "Core"
 	include "TwoD"
+	include "TwoDLib"
 group ""
 
 group "Misc"

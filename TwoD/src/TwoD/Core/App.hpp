@@ -66,7 +66,7 @@ namespace TwoD
 		static const std::vector<std::filesystem::path>& GetBasePaths();
 
 	public:
-		App();
+		App() = default;
 		~App();
 		void Init(const InitInfo& info);
 		void Run();

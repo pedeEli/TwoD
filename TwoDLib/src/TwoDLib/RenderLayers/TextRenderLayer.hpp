@@ -2,10 +2,10 @@
 #include <vector>
 #include <typeindex>
 
-#include "RenderLayer.hpp"
-#include "Shader.hpp"
-#include "TextRenderer.hpp"
-#include "SpriteAtlas.hpp"
+#include "TwoD/Renderer/RenderLayer.hpp"
+#include "TwoD/Renderer/Shader.hpp"
+#include "TwoDLib/Components/TextRenderer.hpp"
+#include "TwoDLib/Assets/SpriteAtlas.hpp"
 
 #include "TwoD/SDL/TransferBuffer.hpp"
 #include "TwoD/SDL/Buffer.hpp"

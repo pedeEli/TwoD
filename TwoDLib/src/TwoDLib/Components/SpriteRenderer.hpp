@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TwoD/ECS/ECS.hpp"
-#include "Sprite.hpp"
+#include "TwoDLib/Assets/Sprite.hpp"
 
 namespace TwoD
 {

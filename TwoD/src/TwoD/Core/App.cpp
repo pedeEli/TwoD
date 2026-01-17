@@ -2,10 +2,7 @@
 #include "App.hpp"
 
 #include <SDL3/SDL.h>
-
-#include "TwoD/Renderer/RenderPipeline.hpp"
-#include "TwoD/Renderer/SpriteRenderLayer.hpp"
-#include "TwoD/Renderer/TextRenderLayer.hpp"
+#include "TwoD/ECS/Transform.hpp"
 
 namespace TwoD
 {
@@ -20,12 +17,6 @@ namespace TwoD
 	const std::vector<std::filesystem::path>& App::GetBasePaths()
 	{
 		return Get().m_basePaths;
-	}
-
-	
-	App::App()
-	{
-		s_application = this;
 	}
 
 	void App::Init(const InitInfo& info)
@@ -48,14 +39,14 @@ namespace TwoD
 			return;
 		}
 
+		s_application = this;
+
 		m_basePaths = info.basePaths;
-
+		m_ecs.Register<Transform>();
 		m_assetManager.Load();
-
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
 
-		s_application = this;
 		m_initialized = true;
 	}
 	App::~App()

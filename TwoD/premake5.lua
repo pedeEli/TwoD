@@ -26,23 +26,19 @@ project "TwoD"
 		"%{IncludeDir.SDL3}",
 		"%{IncludeDir.SDL3_image}",
 		"%{IncludeDir.SDL3_shadercross}",
-		"%{IncludeDir.msdf_atlas_gen}",
-		"%{IncludeDir.msdfgen}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.glm}"
 	}
 
 	links {
 		"yaml-cpp",
-		"msdf-atlas-gen",
 		"%{Library.SDL3}",
 		"%{Library.SDL3_image}",
 		"%{Library.SDL3_shadercross}"
 	}
 
 	defines {
-		"YAML_CPP_STATIC_DEFINE",
-		"MSDFGEN_PUBLIC="
+		"YAML_CPP_STATIC_DEFINE"
 	}
 
 	buildoptions { "/utf-8" }

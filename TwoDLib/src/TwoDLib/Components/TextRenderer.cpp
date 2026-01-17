@@ -2,7 +2,7 @@
 #include "TextRenderer.hpp"
 
 #include "TwoD/Core/App.hpp"
-#include "MSDFData.hpp"
+#include "TwoDLib/Assets/MSDFData.hpp"
 
 namespace TwoD
 {

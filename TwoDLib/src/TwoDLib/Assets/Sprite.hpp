@@ -18,7 +18,6 @@ namespace TwoD
 	public:
 		~Sprite() = default;
 
-		//void Load(const std::filesystem::path& path, const YAML::Node& file) override;
 		void Init(const std::filesystem::path& path) override;
 		
 		const SpriteRect& GetRect() const

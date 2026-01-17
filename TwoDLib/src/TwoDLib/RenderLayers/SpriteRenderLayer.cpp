@@ -3,7 +3,7 @@
 
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Core/App.hpp"
-#include "TwoD/Components/Camera.hpp"
+#include "TwoDLib/Components/Camera.hpp"
 
 extern const char* vertex;
 extern const char* fragment;
