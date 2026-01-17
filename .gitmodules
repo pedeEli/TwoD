@@ -10,9 +10,9 @@
 [submodule "TwoD/vendor/yaml-cpp"]
 	path = TwoD/vendor/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
-[submodule "TwoD/vendor/msdf-atlas-gen"]
-	path = TwoD/vendor/msdf-atlas-gen
-	url = https://github.com/Chlumsky/msdf-atlas-gen.git
 [submodule "TwoD/vendor/freetype"]
-	path = TwoD/vendor/freetype
+	path = TwoDLib/vendor/freetype
 	url = https://github.com/freetype/freetype.git
+[submodule "TwoDLib/vendor/msdf-atlas-gen"]
+	path = TwoDLib/vendor/msdf-atlas-gen
+	url = https://github.com/Chlumsky/msdf-atlas-gen.git

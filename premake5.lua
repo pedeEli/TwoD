@@ -18,6 +18,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 	include "TwoD/vendor"
+	include "TwoDLib/vendor"
 group ""
 
 group "Core"

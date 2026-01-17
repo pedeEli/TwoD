@@ -2,8 +2,8 @@ IncludeDir = {}
 IncludeDir["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/include"
 IncludeDir["SDL3_image"] = "%{wks.location}/TwoD/vendor/SDL3_image/include"
 IncludeDir["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/include"
-IncludeDir["msdf_atlas_gen"] = "%{wks.location}/TwoD/vendor/msdf-atlas-gen"
-IncludeDir["msdfgen"] = "%{wks.location}/TwoD/vendor/msdf-atlas-gen/msdfgen"
+IncludeDir["msdf_atlas_gen"] = "%{wks.location}/TwoDLib/vendor/msdf-atlas-gen"
+IncludeDir["msdfgen"] = "%{wks.location}/TwoDLib/vendor/msdf-atlas-gen/msdfgen"
 IncludeDir["yaml_cpp"] = "%{wks.location}/TwoD/vendor/yaml-cpp/include"
 IncludeDir["glm"] = "%{wks.location}/TwoD/vendor/glm"
 
