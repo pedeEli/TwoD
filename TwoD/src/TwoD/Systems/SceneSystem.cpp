@@ -78,8 +78,11 @@ namespace TwoD
 			renderLayers.push_back(layer.as<std::string>());
 		}
 
-		auto scene = std::make_shared<Scene>(entityInfos, renderLayers);
-		m_scenes.emplace(name, scene);
+		m_scenes.emplace(
+			std::piecewise_construct,
+			std::forward_as_tuple(name),
+			std::forward_as_tuple(entityInfos, renderLayers)
+		);
 	}
 
 	void SceneSystem::SetActive(const std::string& name)
@@ -95,8 +98,8 @@ namespace TwoD
 			TD_CORE_ERROR("Failed to set active scene: {} does not exist!", name);
 			return;
 		}
-		it->second->Load();
-		m_activeScene = it->second;
+		it->second.Load();
+		m_activeScene = &it->second;
 	}
 	void SceneSystem::Clear()
 	{

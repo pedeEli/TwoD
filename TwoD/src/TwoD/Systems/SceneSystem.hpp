@@ -69,7 +69,7 @@ namespace TwoD
 		void LoadFile(const std::string& path);
 
 	private:
-		std::unordered_map<std::string, std::shared_ptr<Scene>> m_scenes;
-		std::shared_ptr<Scene> m_activeScene;
+		std::unordered_map<std::string, Scene> m_scenes;
+		Scene* m_activeScene;
 	};
 }
