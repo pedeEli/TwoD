@@ -21,6 +21,7 @@ namespace TwoD
 	{
 	public:
 		Component(ECS* ecs, EntityHandle handle) : m_ecs(ecs), m_handle(handle) {}
+		virtual ~Component() = default;
 
 		virtual void Load(const YAML::Node& node) {}
 		virtual void StartBefore() {}

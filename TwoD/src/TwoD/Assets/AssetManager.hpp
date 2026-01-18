@@ -5,21 +5,13 @@
 
 namespace TwoD
 {
-	using AssetHandle = const std::string&;
-
-	class Asset : public HasHandle<AssetHandle>
+	class Asset
 	{
 	public:
+		virtual ~Asset() = default;
+
 		virtual void Load(const YAML::Node& node) = 0;
 		virtual void Init(const std::filesystem::path& path) {}
-
-		AssetHandle GetHandle() const override
-		{
-			return m_handle;
-		}
-
-	private:
-		std::string m_handle;
 	};
 
 	class AssetManager
@@ -44,7 +36,7 @@ namespace TwoD
 		requires(std::is_base_of_v<Asset, T>)
 		void Register(const std::string& name)
 		{
-			m_storages.emplace(name, std::make_shared<AssetStorageImpl<T>>());
+			m_storages.emplace(name, std::make_unique<AssetStorageImpl<T>>());
 		}
 
 		template<typename T>
@@ -66,14 +58,14 @@ namespace TwoD
 		
 		template<typename T>
 		requires(std::is_base_of_v<Asset, T>)
-		std::shared_ptr<AssetStorageImpl<T>> GetStorage() const
+		AssetStorageImpl<T>* GetStorage() const
 		{
-			return std::static_pointer_cast<AssetStorageImpl<T>>(GetStorage(typeid(T).name()));
+			return static_cast<AssetStorageImpl<T>*>(GetStorage(typeid(T).name()));
 		}
-		std::shared_ptr<AssetStorage> GetStorage(const std::string& name) const;
+		AssetStorage* GetStorage(const std::string& name) const;
 
 	private:
-		std::unordered_map<std::string, std::shared_ptr<AssetStorage>> m_storages;
+		std::unordered_map<std::string, std::unique_ptr<AssetStorage>> m_storages;
 	};
 }
 

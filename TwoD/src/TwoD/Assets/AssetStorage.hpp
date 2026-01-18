@@ -21,33 +21,23 @@ namespace TwoD
 	public:
 		T& Add(std::string& name) override
 		{
-			auto it = m_assets.find(name);
-			if (it != m_assets.end())
-			{
-				TD_CORE_ERROR("Failed to add asset: {} with name {} already exists!", typeid(T).name(), name);
-				throw;
-			}
+			TD_CORE_ASSERT(!m_assets.contains(name), "Asset already exists!");
 			return m_assets.try_emplace(name).first->second;
 		}
 		T& Get(const std::string& name) override
 		{
-			auto it = m_assets.find(name);
-			if (it == m_assets.end())
-			{
-				TD_CORE_ERROR("Failed to get asset: {} with name {} does not exist!", typeid(T).name(), name);
-				throw;
-			}
-			return it->second;
+			TD_CORE_ASSERT(m_assets.contains(name));
+			return m_assets.find(name)->second;
 		}
 		void Remove(const std::string& name) override
 		{
 			auto it = m_assets.find(name);
-			if (it == m_assets.end())
+			if (it != m_assets.end())
 			{
-				return;
+				m_assets.erase(it);
 			}
-			m_assets.erase(it);
 		}
+
 	private:
 		std::unordered_map<std::string, T> m_assets;
 	};

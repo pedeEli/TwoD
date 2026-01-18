@@ -39,12 +39,10 @@ namespace TwoD
 		YAML::Node node = YAML::LoadFile(path.string());
 
 		TD_CORE_ASSERT(node["type"]);
-
 		auto type = node["type"].as<std::string>();
 		auto storage = GetStorage(type);
 
 		TD_CORE_ASSERT(node["name"]);
-
 		auto name = node["name"].as<std::string>();
 		auto& asset = storage->Add(name);
 
@@ -54,14 +52,10 @@ namespace TwoD
 		};
 	}
 
-	std::shared_ptr<AssetStorage> AssetManager::GetStorage(const std::string& name) const
+	AssetStorage* AssetManager::GetStorage(const std::string& name) const
 	{
-		auto storage = m_storages.find(name);
-		if (storage == m_storages.end())
-		{
-			TD_CORE_ERROR("Failed to get asset storage: {} is not registered!", name);
-			return {};
-		}
-		return storage->second;
+		TD_CORE_ASSERT(m_storages.contains(name));
+		auto it = m_storages.find(name);
+		return it->second.get();
 	}
 }

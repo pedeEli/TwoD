@@ -128,7 +128,6 @@ namespace TwoD
 
 	private:
 		Storage<Entity, EntityHandle> m_entities;
-		//std::unordered_map<EntityHandle, std::unique_ptr<Entity>> m_entities;
 		std::unordered_map<std::string, std::unique_ptr<ComponentStorage>> m_storages;
 		uint32_t m_nextEntity = 1;
 		bool m_unstartedComponents = false;

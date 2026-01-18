@@ -20,6 +20,8 @@ namespace TwoD
 	class Storage
 	{
 	public:
+		virtual ~Storage() = default;
+
 		template<typename... Args>
 		Ref<T> Add(Handle handle, Args&&... args)
 		{
