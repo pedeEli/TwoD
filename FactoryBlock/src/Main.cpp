@@ -31,8 +31,7 @@ constexpr static void RegisterComponents(Components components)
 	components.Register<Ground>();
 }
 
-constexpr static void CreateRenderPipeline(TwoD::RenderPipeline& pipeline)
+constexpr static void RegisterRenderLayers(RenderLayers renderLayers)
 {
-	pipeline.AddLayer<TwoD::SpriteRenderLayer>();
-	pipeline.AddLayer<TwoD::TextRenderLayer>();
+	TwoDLib::RegisterRenderLayers(renderLayers);
 }

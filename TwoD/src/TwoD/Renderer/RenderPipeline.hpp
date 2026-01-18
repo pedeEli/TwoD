@@ -12,7 +12,7 @@ namespace TwoD
 	class RenderPipeline
 	{
 	public:
-		constexpr RenderPipeline() = default;
+		RenderPipeline() = default;
 		~RenderPipeline() = default;
 		RenderPipeline(RenderPipeline& other) noexcept = delete;
 		RenderPipeline(RenderPipeline&& other) noexcept = default;
@@ -21,7 +21,7 @@ namespace TwoD
 
 		template<class Layer>
 		requires(std::is_base_of_v<RenderLayer, Layer>)
-		constexpr void AddLayer()
+		void AddLayer()
 		{
 			auto layer = std::make_unique<Layer>();
 			const auto& types = layer->GetRendererTypes();
@@ -42,7 +42,7 @@ namespace TwoD
 		
 		template<class Layer>
 		requires(std::is_base_of_v<RenderLayer, Layer>)
-		constexpr Layer& GetLayer()
+		Layer& GetLayer() const
 		{
 			for (auto& layer : m_layers)
 			{
@@ -75,8 +75,8 @@ namespace TwoD
 		}
 
 	private:
-		std::vector<std::unique_ptr<RenderLayer>> m_layers{};
-		std::unordered_map<std::type_index, std::vector<size_t>> m_typesToLayers{};
+		std::vector<std::unique_ptr<RenderLayer>> m_layers;
+		std::unordered_map<std::type_index, std::vector<size_t>> m_typesToLayers;
 
 		friend class RenderSystem;
 	};

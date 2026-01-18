@@ -71,13 +71,17 @@ namespace TwoD
 		void Init(const InitInfo& info);
 		void Run();
 
-		template<typename T>
+		template<class T>
 		requires(std::is_base_of_v<Component, T>)
 		void RegisterComponent() { m_ecs.Register<T>(); }
 
-		template<typename T>
+		template<class T>
 		requires(std::is_base_of_v<Asset, T>)
 		void RegisterResource() { m_assetManager.Register<T>(); }
+
+		template<class T>
+		requires(std::is_base_of_v<RenderLayer, T>)
+		void RegisterRenderLayer() { m_renderSystem.RegisterLayer<T>(); }
 
 	private:
 		void HandleEvents();

@@ -34,4 +34,10 @@ namespace TwoDLib
 		components.Register<TwoD::SpriteRenderer>();
 		components.Register<TwoD::TextRenderer>();
 	}
+
+	constexpr static void RegisterRenderLayers(RenderLayers& renderLayers)
+	{
+		renderLayers.Register<TwoD::SpriteRenderLayer>();
+		renderLayers.Register<TwoD::TextRenderLayer>();
+	}
 }

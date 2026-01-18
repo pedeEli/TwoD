@@ -1,13 +1,29 @@
 #pragma once
 #include "TwoD.hpp"
 
+class RenderLayers
+{
+public:
+	constexpr RenderLayers(TwoD::App& app) : m_app(app) {}
+
+	template<class Layer>
+	requires(std::is_base_of_v<TwoD::RenderLayer, Layer>)
+	constexpr void Register()
+	{
+		m_app.RegisterRenderLayer<Layer>();
+	}
+
+private:
+	TwoD::App& m_app;
+};
+
 class Components
 {
 public:
 	constexpr Components(TwoD::App& app) : m_app(app) {}
 
 	template<class T>
-		requires(std::is_base_of_v<TwoD::Component, T>)
+	requires(std::is_base_of_v<TwoD::Component, T>)
 	constexpr void Register()
 	{
 		m_app.RegisterComponent<T>();
