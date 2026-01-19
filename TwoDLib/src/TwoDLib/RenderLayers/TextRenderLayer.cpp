@@ -103,17 +103,18 @@ namespace TwoD
 		auto& renderers = ecs.GetComponents<TextRenderer>();
 
 		m_shader.Bind(&renderPass);
-		//auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("font-atlas");
-		//atlas.Bind(&renderPass);
+
+		int width, height;
+		App::Get<Window>().GetSize(width, height);
 
 		auto camera = Camera::Get();
-		Uniform uniformWithView{
+		Uniform uniformInWorld{
 			camera->GetProjectionMatrix(),
 			camera->GetWorldToCameraMatrix(),
 			{ 1.0f }
 		};
-		Uniform uniformWithoutView{
-			camera->GetProjectionMatrix(),
+		Uniform uniformOnScreen{
+			camera->GetProjectionMatrixFixedZoom(),
 			{ 1.0f },
 			{ 1.0f }
 		};
@@ -144,7 +145,7 @@ namespace TwoD
 				true
 			);
 
-			Uniform& uniform = renderer.useViewMatrix ? uniformWithView : uniformWithoutView;
+			Uniform& uniform = renderer.renderLocation == RenderLocation::InWorld ? uniformInWorld : uniformOnScreen;
 
 			auto& model = renderer.GetComponent<Transform>()->GetWorldMatrix();
 			uniform.model[0][0] = model[0][0];

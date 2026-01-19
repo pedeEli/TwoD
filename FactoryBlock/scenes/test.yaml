@@ -43,4 +43,5 @@ entities:
     - type: class TwoD::TextRenderer
       layer: 5
       font: Roboto
+      renderLocation: onScreen
       text: Hello World!

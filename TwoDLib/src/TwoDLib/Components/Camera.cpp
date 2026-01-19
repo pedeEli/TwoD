@@ -27,13 +27,17 @@ namespace TwoD
 		int width, height;
 		m_window->GetSize(width, height);
 
+		float ratio = static_cast<float>(height) / static_cast<float>(width);
+
 		float right = zoom * 0.5f;
 		float left = -right;
-		float bottom = zoom * 0.5f * (float)height / (float)width;
+		float bottom = zoom * 0.5f * ratio;
 		float top = -bottom;
 
 		m_projectionMatrix = glm::ortho(left, right, bottom, top);
 		m_inverseProjectionMatrix = glm::inverse(m_projectionMatrix);
+
+		m_projectionMatrixFixedZoom = glm::ortho(0.0f, 100.0f, 100.0f * ratio, 0.0f);
 
 		auto& transform = GetComponent<Transform>()->GetWorldMatrix();
 		m_viewMatrix[0][0] = transform[0][0];

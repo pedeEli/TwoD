@@ -2,6 +2,7 @@
 
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoDLib/Assets/Font.hpp"
+#include "TwoDLib/Defines.hpp"
 
 namespace TwoD
 {
@@ -29,7 +30,7 @@ namespace TwoD
 			TD_FIELD(int32_t, layer, 0),
 			TD_FIELD(Font*, font),
 			TD_FIELD(std::string, text),
-			TD_FIELD(bool, useViewMatrix, false)
+			TD_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
 		)
 
 	private:
