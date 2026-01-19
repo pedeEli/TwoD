@@ -107,9 +107,15 @@ namespace TwoD
 		//atlas.Bind(&renderPass);
 
 		auto camera = Camera::Get();
-		Uniform uniform{
+		Uniform uniformWithView{
 			camera->GetProjectionMatrix(),
-			camera->GetWorldToCameraMatrix()
+			camera->GetWorldToCameraMatrix(),
+			{ 1.0f }
+		};
+		Uniform uniformWithoutView{
+			camera->GetProjectionMatrix(),
+			{ 1.0f },
+			{ 1.0f }
 		};
 
 		size_t i = 0;
@@ -118,7 +124,6 @@ namespace TwoD
 		{
 			auto& renderer = renderers[index];
 			renderer.font->Bind(&renderPass);
-			uniform.model = renderer.GetComponent<Transform>()->GetWorldMatrix();
 			const auto& glyphs = renderer.GetGlyphs();
 
 			for (size_t i = 0; i < glyphs.size(); i++)
@@ -138,6 +143,16 @@ namespace TwoD
 				{ &m_buffer, 0, size },
 				true
 			);
+
+			Uniform& uniform = renderer.useViewMatrix ? uniformWithView : uniformWithoutView;
+
+			auto& model = renderer.GetComponent<Transform>()->GetWorldMatrix();
+			uniform.model[0][0] = model[0][0];
+			uniform.model[0][1] = model[0][1];
+			uniform.model[1][0] = model[1][0];
+			uniform.model[1][1] = model[1][1];
+			uniform.model[3][0] = model[2][0];
+			uniform.model[3][1] = model[2][1];
 
 			renderPass.BindVertexStorageBuffers(0, { &m_buffer });
 			commandBuffer.PushVertexUniformData<Uniform>(0, uniform);

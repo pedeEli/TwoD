@@ -30,6 +30,13 @@ namespace TwoD
 		void SetRotation(float r);
 		void Rotate(float dr);
 		float GetRotation() const { return m_rotation; }
+
+		/**
+		* Note that this function only sets the local matrix and updates its own
+		* world matrix and its children. It does not extract the position, scale and rotation
+		* data out of the given matrix applying it to it self.
+		*/
+		void SetLocalMatrix(const glm::fmat3x3& local);
 		
 		const glm::fmat3x3& GetWorldMatrix() const { return m_worldMatrix; }
 		const glm::fmat3x3& GetLocalMatrix() const { return m_localMatrix; }
@@ -37,6 +44,7 @@ namespace TwoD
 
 	private:
 		void CalculateMatrices();
+		void UpdateParentAndChildren();
 
 	private:
 		glm::fvec2 m_position = { 0.0f, 0.0f };

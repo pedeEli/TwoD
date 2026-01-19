@@ -28,7 +28,8 @@ namespace TwoD
 		TD_COMPONENT_FIELDS(
 			TD_FIELD(int32_t, layer, 0),
 			TD_FIELD(Font*, font),
-			TD_FIELD(std::string, text)
+			TD_FIELD(std::string, text),
+			TD_FIELD(bool, useViewMatrix, false)
 		)
 
 	private:

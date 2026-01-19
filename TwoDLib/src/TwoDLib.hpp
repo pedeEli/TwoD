@@ -7,6 +7,7 @@
 
 #include "TwoDLib/Components/Camera.hpp"
 #include "TwoDLib/Components/Hitbox.hpp"
+#include "TwoDLib/Components/Canvas.hpp"
 #include "TwoDLib/Components/SpriteRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
 
@@ -31,6 +32,7 @@ namespace TwoDLib
 	{
 		components.Register<TwoD::Camera>();
 		components.Register<TwoD::Hitbox>();
+		components.Register<TwoD::Canvas>();
 		components.Register<TwoD::SpriteRenderer>();
 		components.Register<TwoD::TextRenderer>();
 	}

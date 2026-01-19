@@ -69,6 +69,12 @@ namespace TwoD
 		CalculateMatrices();
 	}
 
+	void Transform::SetLocalMatrix(const glm::fmat3x3& local)
+	{
+		m_localMatrix = local;
+		UpdateParentAndChildren();
+	}
+
 	void Transform::CalculateMatrices()
 	{
 		float c = glm::cos(m_rotation);
@@ -81,6 +87,10 @@ namespace TwoD
 		m_localMatrix[2][0] =  m_position.x;
 		m_localMatrix[2][1] =  m_position.y;
 
+		UpdateParentAndChildren();
+	}
+	void Transform::UpdateParentAndChildren()
+	{
 		if (m_parent)
 		{
 			const auto& parentMatrix = m_parent->GetComponent<Transform>()->GetWorldMatrix();
@@ -94,7 +104,7 @@ namespace TwoD
 
 		for (const auto& child : m_children)
 		{
-			child->GetComponent<Transform>()->CalculateMatrices();
+			child->GetComponent<Transform>()->UpdateParentAndChildren();
 		}
 	}
 
@@ -111,7 +121,7 @@ namespace TwoD
 		{
 			parent->GetComponent<Transform>()->m_children.push_back(entity);
 		}
-		CalculateMatrices();
+		UpdateParentAndChildren();
 	}
 	Ref<Entity> Transform::GetParent() const
 	{

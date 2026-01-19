@@ -34,6 +34,10 @@ project "FactoryBlock"
 	}
 
 	buildoptions { "/utf-8" }
+	
+	defines {
+		"YAML_CPP_STATIC_DEFINE"
+	}
 
 	filter "system:windows"
 		systemversion "latest"

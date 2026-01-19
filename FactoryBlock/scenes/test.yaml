@@ -34,9 +34,13 @@ entities:
   - type: class Vein
     size: 40
 
-- name: text
+- name: canvas
   components:
-  - type: class TwoD::TextRenderer
-    layer: 5
-    font: Roboto
-    text: Hello World!
+  - type: class TwoD::Canvas
+  children:
+  - name: text
+    components:
+    - type: class TwoD::TextRenderer
+      layer: 5
+      font: Roboto
+      text: Hello World!
