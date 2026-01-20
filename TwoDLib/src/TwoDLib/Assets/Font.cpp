@@ -8,8 +8,6 @@
 #include "SpriteAtlas.hpp"
 #include "TwoD/Core/App.hpp"
 
-static const std::string_view s_initialChars = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-
 namespace TwoD
 {
 	Font::Font() = default;
