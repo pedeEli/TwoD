@@ -15,6 +15,7 @@ namespace TwoD
 	class RenderLayer
 	{
 	public:
+		virtual ~RenderLayer() = default;
 		virtual void Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const = 0;
 		virtual void Update(ECS& ecs, Window& window) = 0;
 

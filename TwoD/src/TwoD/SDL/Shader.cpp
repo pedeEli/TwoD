@@ -44,8 +44,6 @@ namespace TwoD::SDL
 			return {};
 		}
 
-		size_t hlslSize = std::strlen(hlsl);
-
 		SDL_ShaderCross_ShaderStage shaderCrossStage = SDL_SHADERCROSS_SHADERSTAGE_VERTEX;
 		if (stage == SDL::ShaderStage::FRAGMENT)
 		{

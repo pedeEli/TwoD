@@ -1,5 +1,5 @@
 #pragma once
-#include "yaml-cpp/yaml.h"
+#include "TwoD/Core/YAML.hpp"
 
 namespace TwoD
 {
@@ -8,1919 +8,590 @@ namespace TwoD
 
 namespace TwoD::SDL
 {
-	// *****************************************************
-	// Declerations ****************************************
-	// *****************************************************
+    // *****************************************************
+    // Declerations ****************************************
+    // *****************************************************
 
     class Surface;
-	class Texture;
-	class Sampler;
-	class Buffer;
-	class CommandBuffer;
-	class CopyPass;
-	class GraphicsPipeline;
-	class RenderPass;
-	class Shader;
-	class TransferBuffer;
-
-    class Font;
+    class Texture;
+    class Sampler;
+    class Buffer;
+    class CommandBuffer;
+    class CopyPass;
+    class GraphicsPipeline;
+    class RenderPass;
+    class Shader;
+    class TransferBuffer;
+}
 	
-    // *****************************************************
-    // Misc ************************************************
-    // *****************************************************
-   
-    enum class Filter
-    {
-        NEAREST,
-        LINEAR
-    };
-    enum class CompareOp
-    {
-        INVALID,
-        NEVER,
-        LESS,
-        EQUAL,
-        LESS_OR_EQUAL,
-        GREATER,
-        NOT_EQUAL,
-        GREATER_OR_EQUAL,
-        ALWAYS
-    };
-    enum class BlendFactor
-    {
-        INVALID,
-        ZERO,
-        ONE,
-        SRC_COLOR,
-        ONE_MINUS_SRC_COLOR,
-        DST_COLOR,
-        ONE_MINUS_DST_COLOR,
-        SRC_ALPHA,
-        ONE_MINUS_SRC_ALPHA,
-        DST_ALPHA,
-        ONE_MINUS_DST_ALPHA,
-        CONSTANT_COLOR,
-        ONE_MINUS_CONSTANT_COLOR,
-        SRC_ALPHA_SATURATE
-    };
-    enum class BlendOp
-    {
-        INVALID,
-        ADD,
-        SUBTRACT,
-        REVERSE_SUBTRACT,
-        MIN,
-        MAX
-    };
-    enum class SampleCount
-    {
-        ONE,
-        TWO,
-        FOUR,
-        EIGHT,
-    };
-    struct Rect
-    {
-        uint32_t x, y;
-        uint32_t w, h;
-    };
+// *****************************************************
+// Misc ************************************************
+// *****************************************************
 
-	// *****************************************************
-	// Buffer **********************************************
-	// *****************************************************
+TD_YAML_ENUM(TwoD::SDL, Filter,
+    TD_YAML_ENUM_FIELD(NEAREST),
+    TD_YAML_ENUM_FIELD(LINEAR)
+)
+TD_YAML_ENUM(TwoD::SDL, CompareOp,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(NEVER),
+    TD_YAML_ENUM_FIELD(LESS),
+    TD_YAML_ENUM_FIELD(EQUAL),
+    TD_YAML_ENUM_FIELD(LESS_OR_EQUAL),
+    TD_YAML_ENUM_FIELD(GREATER),
+    TD_YAML_ENUM_FIELD(NOT_EQUAL),
+    TD_YAML_ENUM_FIELD(GREATER_OR_EQUAL),
+    TD_YAML_ENUM_FIELD(ALWAYS)
+)
+TD_YAML_ENUM(TwoD::SDL, BlendFactor,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(ZERO),
+    TD_YAML_ENUM_FIELD(ONE),
+    TD_YAML_ENUM_FIELD(SRC_COLOR),
+    TD_YAML_ENUM_FIELD(ONE_MINUS_SRC_COLOR),
+    TD_YAML_ENUM_FIELD(DST_COLOR),
+    TD_YAML_ENUM_FIELD(ONE_MINUS_DST_COLOR),
+    TD_YAML_ENUM_FIELD(SRC_ALPHA),
+    TD_YAML_ENUM_FIELD(ONE_MINUS_SRC_ALPHA),
+    TD_YAML_ENUM_FIELD(DST_ALPHA),
+    TD_YAML_ENUM_FIELD(ONE_MINUS_DST_ALPHA),
+    TD_YAML_ENUM_FIELD(CONSTANT_COLOR),
+    TD_YAML_ENUM_FIELD(ONE_MINUS_CONSTANT_COLOR),
+    TD_YAML_ENUM_FIELD(SRC_ALPHA_SATURATE)
+)
+TD_YAML_ENUM(TwoD::SDL, BlendOp,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(ADD),
+    TD_YAML_ENUM_FIELD(SUBTRACT),
+    TD_YAML_ENUM_FIELD(REVERSE_SUBTRACT),
+    TD_YAML_ENUM_FIELD(MIN),
+    TD_YAML_ENUM_FIELD(MAX)
+)
+TD_YAML_ENUM(TwoD::SDL, SampleCount,
+    TD_YAML_ENUM_FIELD(ONE),
+    TD_YAML_ENUM_FIELD(TWO),
+    TD_YAML_ENUM_FIELD(FOUR),
+    TD_YAML_ENUM_FIELD(EIGHT)
+)
+TD_YAML_STRUCT(TwoD::SDL, Rect,
+    TD_YAML_STRUCT_FIELD(uint32_t, x, 0),
+    TD_YAML_STRUCT_FIELD(uint32_t, y, 0),
+    TD_YAML_STRUCT_FIELD(uint32_t, w, 0),
+    TD_YAML_STRUCT_FIELD(uint32_t, h, 0)
+)
 
-	enum class BufferUsage : uint32_t
-	{
-		VERTEX = (1u << 0),
-		INDEX = (1u << 1),
-		INDIRECT = (1u << 2),
-		GRAPHICS_STORAGE_READ = (1u << 3),
-		COMPUTE_STORAGE_READ = (1u << 4),
-		COMPUTE_STORAGE_WRITE = (1u << 5)
-	};
-	struct BufferInfo
-	{
-		BufferUsage usage;
-		uint32_t size;
-	};
+// *****************************************************
+// Buffer **********************************************
+// *****************************************************
 
-	// *****************************************************
-	// TransferBuffer **************************************
-	// *****************************************************
+TD_YAML_ENUM_WITH_BASE(TwoD::SDL, BufferUsage, uint32_t,
+	TD_YAML_ENUM_FIELD(VERTEX, (1u << 0)),
+	TD_YAML_ENUM_FIELD(INDEX, (1u << 1)),
+	TD_YAML_ENUM_FIELD(INDIRECT, (1u << 2)),
+	TD_YAML_ENUM_FIELD(GRAPHICS_STORAGE_READ, (1u << 3)),
+	TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_READ, (1u << 4)),
+	TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_WRITE, (1u << 5))
+)
+TD_YAML_STRUCT(TwoD::SDL, BufferInfo,
+	TD_YAML_STRUCT_FIELD(TwoD::SDL::BufferUsage, usage),
+	TD_YAML_STRUCT_FIELD(uint32_t, size)
+)
 
-	enum class TransferBufferUsage
-	{
-		UPLOAD,
-		DOWNLOAD
-	};
-	struct TransferBufferInfo
-	{
-		TransferBufferUsage usage;
-		uint32_t size;
-	};
+// *****************************************************
+// TransferBuffer **************************************
+// *****************************************************
 
-    // *****************************************************
-    // Texture *********************************************
-    // *****************************************************
+TD_YAML_ENUM(TwoD::SDL, TransferBufferUsage,
+	TD_YAML_ENUM_FIELD(UPLOAD),
+	TD_YAML_ENUM_FIELD(DOWNLOAD)
+)
+TD_YAML_STRUCT(TwoD::SDL, TransferBufferInfo,
+	TD_YAML_STRUCT_FIELD(TwoD::SDL::TransferBufferUsage, usage),
+	TD_YAML_STRUCT_FIELD(uint32_t, size)
+)
 
-    enum class TextureFormat
-    {
-        INVALID,
-        /* Unsigned Normalized Float Color Formats */
-        A8_UNORM,
-        R8_UNORM,
-        R8G8_UNORM,
-        R8G8B8A8_UNORM,
-        R16_UNORM,
-        R16G16_UNORM,
-        R16G16B16A16_UNORM,
-        R10G10B10A2_UNORM,
-        B5G6R5_UNORM,
-        B5G5R5A1_UNORM,
-        B4G4R4A4_UNORM,
-        B8G8R8A8_UNORM,
-        /* Compressed Unsigned Normalized Float Color Formats */
-        BC1_RGBA_UNORM,
-        BC2_RGBA_UNORM,
-        BC3_RGBA_UNORM,
-        BC4_R_UNORM,
-        BC5_RG_UNORM,
-        BC7_RGBA_UNORM,
-        /* Compressed Signed Float Color Formats */
-        BC6H_RGB_FLOAT,
-        /* Compressed Unsigned Float Color Formats */
-        BC6H_RGB_UFLOAT,
-        /* Signed Normalized Float Color Formats  */
-        R8_SNORM,
-        R8G8_SNORM,
-        R8G8B8A8_SNORM,
-        R16_SNORM,
-        R16G16_SNORM,
-        R16G16B16A16_SNORM,
-        /* Signed Float Color Formats */
-        R16_FLOAT,
-        R16G16_FLOAT,
-        R16G16B16A16_FLOAT,
-        R32_FLOAT,
-        R32G32_FLOAT,
-        R32G32B32A32_FLOAT,
-        /* Unsigned Float Color Formats */
-        R11G11B10_UFLOAT,
-        /* Unsigned Integer Color Formats */
-        R8_UINT,
-        R8G8_UINT,
-        R8G8B8A8_UINT,
-        R16_UINT,
-        R16G16_UINT,
-        R16G16B16A16_UINT,
-        R32_UINT,
-        R32G32_UINT,
-        R32G32B32A32_UINT,
-        /* Signed Integer Color Formats */
-        R8_INT,
-        R8G8_INT,
-        R8G8B8A8_INT,
-        R16_INT,
-        R16G16_INT,
-        R16G16B16A16_INT,
-        R32_INT,
-        R32G32_INT,
-        R32G32B32A32_INT,
-        /* SRGB Unsigned Normalized Color Formats */
-        R8G8B8A8_UNORM_SRGB,
-        B8G8R8A8_UNORM_SRGB,
-        /* Compressed SRGB Unsigned Normalized Color Formats */
-        BC1_RGBA_UNORM_SRGB,
-        BC2_RGBA_UNORM_SRGB,
-        BC3_RGBA_UNORM_SRGB,
-        BC7_RGBA_UNORM_SRGB,
-        /* Depth Formats */
-        D16_UNORM,
-        D24_UNORM,
-        D32_FLOAT,
-        D24_UNORM_S8_UINT,
-        D32_FLOAT_S8_UINT,
-        /* Compressed ASTC Normalized Float Color Formats*/
-        ASTC_4x4_UNORM,
-        ASTC_5x4_UNORM,
-        ASTC_5x5_UNORM,
-        ASTC_6x5_UNORM,
-        ASTC_6x6_UNORM,
-        ASTC_8x5_UNORM,
-        ASTC_8x6_UNORM,
-        ASTC_8x8_UNORM,
-        ASTC_10x5_UNORM,
-        ASTC_10x6_UNORM,
-        ASTC_10x8_UNORM,
-        ASTC_10x10_UNORM,
-        ASTC_12x10_UNORM,
-        ASTC_12x12_UNORM,
-        /* Compressed SRGB ASTC Normalized Float Color Formats*/
-        ASTC_4x4_UNORM_SRGB,
-        ASTC_5x4_UNORM_SRGB,
-        ASTC_5x5_UNORM_SRGB,
-        ASTC_6x5_UNORM_SRGB,
-        ASTC_6x6_UNORM_SRGB,
-        ASTC_8x5_UNORM_SRGB,
-        ASTC_8x6_UNORM_SRGB,
-        ASTC_8x8_UNORM_SRGB,
-        ASTC_10x5_UNORM_SRGB,
-        ASTC_10x6_UNORM_SRGB,
-        ASTC_10x8_UNORM_SRGB,
-        ASTC_10x10_UNORM_SRGB,
-        ASTC_12x10_UNORM_SRGB,
-        ASTC_12x12_UNORM_SRGB,
-        /* Compressed ASTC Signed Float Color Formats*/
-        ASTC_4x4_FLOAT,
-        ASTC_5x4_FLOAT,
-        ASTC_5x5_FLOAT,
-        ASTC_6x5_FLOAT,
-        ASTC_6x6_FLOAT,
-        ASTC_8x5_FLOAT,
-        ASTC_8x6_FLOAT,
-        ASTC_8x8_FLOAT,
-        ASTC_10x5_FLOAT,
-        ASTC_10x6_FLOAT,
-        ASTC_10x8_FLOAT,
-        ASTC_10x10_FLOAT,
-        ASTC_12x10_FLOAT,
-        ASTC_12x12_FLOAT
-    };
-    enum class TextureType
-    {
-        TWO_D,
-        TWO_D_ARRAY,
-        THREE_D,
-        CUBE,
-        CUBE_ARRAY
-    };
-    enum class TextureUsageFlags : uint32_t
-    {
-        SAMPLER = (1u << 0),
-        COLOR_TARGET = (1u << 1),
-        DEPTH_STENCIL_TARGET = (1u << 2),
-        GRAPHICS_STORAGE_READ = (1u << 3),
-        COMPUTE_STORAGE_READ = (1u << 4),
-        COMPUTE_STORAGE_WRITE = (1u << 5),
-        COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE = (1u << 6)
-    };
-    struct TextureInfo
-    {
-        TextureType type;
-        TextureFormat format;
-        TextureUsageFlags usage;
-        uint32_t width;
-        uint32_t height;
-        uint32_t layerCountOrDepth;
-        uint32_t numLevels;
-        SampleCount sampleCount;
-    };
+// *****************************************************
+// Texture *********************************************
+// *****************************************************
 
-    constexpr TextureUsageFlags operator|(TextureUsageFlags a, TextureUsageFlags b) noexcept
-    {
-        return static_cast<TextureUsageFlags>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-    }
+TD_YAML_ENUM(TwoD::SDL, TextureFormat,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(A8_UNORM),
+    TD_YAML_ENUM_FIELD(R8_UNORM),
+    TD_YAML_ENUM_FIELD(R8G8_UNORM),
+    TD_YAML_ENUM_FIELD(R8G8B8A8_UNORM),
+    TD_YAML_ENUM_FIELD(R16_UNORM),
+    TD_YAML_ENUM_FIELD(R16G16_UNORM),
+    TD_YAML_ENUM_FIELD(R16G16B16A16_UNORM),
+    TD_YAML_ENUM_FIELD(R10G10B10A2_UNORM),
+    TD_YAML_ENUM_FIELD(B5G6R5_UNORM),
+    TD_YAML_ENUM_FIELD(B5G5R5A1_UNORM),
+    TD_YAML_ENUM_FIELD(B4G4R4A4_UNORM),
+    TD_YAML_ENUM_FIELD(B8G8R8A8_UNORM),
+    TD_YAML_ENUM_FIELD(BC1_RGBA_UNORM),
+    TD_YAML_ENUM_FIELD(BC2_RGBA_UNORM),
+    TD_YAML_ENUM_FIELD(BC3_RGBA_UNORM),
+    TD_YAML_ENUM_FIELD(BC4_R_UNORM),
+    TD_YAML_ENUM_FIELD(BC5_RG_UNORM),
+    TD_YAML_ENUM_FIELD(BC7_RGBA_UNORM),
+    TD_YAML_ENUM_FIELD(BC6H_RGB_FLOAT),
+    TD_YAML_ENUM_FIELD(BC6H_RGB_UFLOAT),
+    TD_YAML_ENUM_FIELD(R8_SNORM),
+    TD_YAML_ENUM_FIELD(R8G8_SNORM),
+    TD_YAML_ENUM_FIELD(R8G8B8A8_SNORM),
+    TD_YAML_ENUM_FIELD(R16_SNORM),
+    TD_YAML_ENUM_FIELD(R16G16_SNORM),
+    TD_YAML_ENUM_FIELD(R16G16B16A16_SNORM),
+    TD_YAML_ENUM_FIELD(R16_FLOAT),
+    TD_YAML_ENUM_FIELD(R16G16_FLOAT),
+    TD_YAML_ENUM_FIELD(R16G16B16A16_FLOAT),
+    TD_YAML_ENUM_FIELD(R32_FLOAT),
+    TD_YAML_ENUM_FIELD(R32G32_FLOAT),
+    TD_YAML_ENUM_FIELD(R32G32B32A32_FLOAT),
+    TD_YAML_ENUM_FIELD(R11G11B10_UFLOAT),
+    TD_YAML_ENUM_FIELD(R8_UINT),
+    TD_YAML_ENUM_FIELD(R8G8_UINT),
+    TD_YAML_ENUM_FIELD(R8G8B8A8_UINT),
+    TD_YAML_ENUM_FIELD(R16_UINT),
+    TD_YAML_ENUM_FIELD(R16G16_UINT),
+    TD_YAML_ENUM_FIELD(R16G16B16A16_UINT),
+    TD_YAML_ENUM_FIELD(R32_UINT),
+    TD_YAML_ENUM_FIELD(R32G32_UINT),
+    TD_YAML_ENUM_FIELD(R32G32B32A32_UINT),
+    TD_YAML_ENUM_FIELD(R8_INT),
+    TD_YAML_ENUM_FIELD(R8G8_INT),
+    TD_YAML_ENUM_FIELD(R8G8B8A8_INT),
+    TD_YAML_ENUM_FIELD(R16_INT),
+    TD_YAML_ENUM_FIELD(R16G16_INT),
+    TD_YAML_ENUM_FIELD(R16G16B16A16_INT),
+    TD_YAML_ENUM_FIELD(R32_INT),
+    TD_YAML_ENUM_FIELD(R32G32_INT),
+    TD_YAML_ENUM_FIELD(R32G32B32A32_INT),
+    TD_YAML_ENUM_FIELD(R8G8B8A8_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(B8G8R8A8_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(BC1_RGBA_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(BC2_RGBA_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(BC3_RGBA_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(BC7_RGBA_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(D16_UNORM),
+    TD_YAML_ENUM_FIELD(D24_UNORM),
+    TD_YAML_ENUM_FIELD(D32_FLOAT),
+    TD_YAML_ENUM_FIELD(D24_UNORM_S8_UINT),
+    TD_YAML_ENUM_FIELD(D32_FLOAT_S8_UINT),
+    TD_YAML_ENUM_FIELD(ASTC_4x4_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_5x4_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_5x5_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_6x5_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_6x6_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_8x5_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_8x6_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_8x8_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_10x5_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_10x6_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_10x8_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_10x10_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_12x10_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_12x12_UNORM),
+    TD_YAML_ENUM_FIELD(ASTC_4x4_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_5x4_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_5x5_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_6x5_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_6x6_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_8x5_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_8x6_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_8x8_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_10x5_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_10x6_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_10x8_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_10x10_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_12x10_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_12x12_UNORM_SRGB),
+    TD_YAML_ENUM_FIELD(ASTC_4x4_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_5x4_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_5x5_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_6x5_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_6x6_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_8x5_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_8x6_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_8x8_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_10x5_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_10x6_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_10x8_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_10x10_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_12x10_FLOAT),
+    TD_YAML_ENUM_FIELD(ASTC_12x12_FLOAT)
+)
+TD_YAML_ENUM(TwoD::SDL, TextureType,
+    TD_YAML_ENUM_FIELD(TWO_D),
+    TD_YAML_ENUM_FIELD(TWO_D_ARRAY),
+    TD_YAML_ENUM_FIELD(THREE_D),
+    TD_YAML_ENUM_FIELD(CUBE),
+    TD_YAML_ENUM_FIELD(CUBE_ARRAY)
+)
+TD_YAML_ENUM_WITH_BASE(TwoD::SDL, TextureUsageFlags, uint32_t,
+    TD_YAML_ENUM_FIELD(SAMPLER, (1u << 0)),
+    TD_YAML_ENUM_FIELD(COLOR_TARGET, (1u << 1)),
+    TD_YAML_ENUM_FIELD(DEPTH_STENCIL_TARGET, (1u << 2)),
+    TD_YAML_ENUM_FIELD(GRAPHICS_STORAGE_READ, (1u << 3)),
+    TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_READ, (1u << 4)),
+    TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_WRITE, (1u << 5)),
+    TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE, (1u << 6))
+)
+TD_YAML_STRUCT(TwoD::SDL, TextureInfo,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureType, type),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, format),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureUsageFlags, usage),
+    TD_YAML_STRUCT_FIELD(uint32_t, width),
+    TD_YAML_STRUCT_FIELD(uint32_t, height),
+    TD_YAML_STRUCT_FIELD(uint32_t, layerCountOrDepth, 1),
+    TD_YAML_STRUCT_FIELD(uint32_t, numLevels, 1),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SampleCount, sampleCount, TwoD::SDL::SampleCount::ONE)
+)
 
-    // *****************************************************
-    // Sampler *********************************************
-    // *****************************************************
-
-    enum class SamplerMipmapMode
-    {
-        NEAREST,
-        LINEAR
-    };
-    enum class SamplerAddressMode
-    {
-        REPEAT,
-        MIRRORED_REPEAT,
-        CLAMP_TO_EDGE
-    };
-    struct SamplerInfo
-    {
-        Filter minFilter;
-        Filter magFilter;
-        SamplerMipmapMode mipmapMode;
-        SamplerAddressMode addressModeU;
-        SamplerAddressMode addressModeV;
-        SamplerAddressMode addressModeW;
-        float mipLodBias;
-        float maxAnisotropy;
-        CompareOp compareOp;
-        float minLod;
-        float maxLod;
-        bool enableAnisotropy;
-        bool enableCompare;
-    };
-
-    // *****************************************************
-    // Shader **********************************************
-    // *****************************************************
-
-    enum class ShaderFormat : uint32_t
-    {
-        INVALID  = 0,
-        PRIVATE  = (1u << 0),
-        SPIRV    = (1u << 1),
-        DXBC     = (1u << 2),
-        DXIL     = (1u << 3),
-        MSL      = (1u << 4),
-        METALLIB = (1u << 5)
-    };
-    enum class ShaderStage
-    {
-        VERTEX,
-        FRAGMENT
-    };
-    struct ShaderInfo
-    {
-        uint32_t codeSize;
-        uint8_t* code;
-        std::string entrypoint;
-        ShaderFormat format;
-        ShaderStage stage;
-        uint32_t numSamplers;
-        uint32_t numStorageTextures;
-        uint32_t numStorageBuffers;
-        uint32_t numUniformBuffers;
-    };
-
-    constexpr ShaderFormat operator|(ShaderFormat a, ShaderFormat b) noexcept
-    {
-        return static_cast<ShaderFormat>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-    }
-    constexpr ShaderFormat operator&(ShaderFormat a, ShaderFormat b) noexcept
-    {
-        return static_cast<ShaderFormat>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
-    }
-    constexpr bool operator==(ShaderFormat a, ShaderFormat b) noexcept
-    {
-        return static_cast<uint32_t>(a) == static_cast<uint32_t>(b);
-    }
-    constexpr bool operator!=(ShaderFormat a, ShaderFormat b) noexcept
-    {
-        return static_cast<uint32_t>(a) != static_cast<uint32_t>(b);
-    }
-
-    // *****************************************************
-    // RenderPass ******************************************
-    // *****************************************************
-
-    enum class IndexElementSize
-    {
-        SIXTEEN_BIT,
-        THIRTY_TWO_BIT
-    };
-    struct TextureSamplerBinding
-    {
-        Texture* texture;
-        Sampler* sampler;
-    };
-    struct BufferBinding
-    {
-        Buffer* buffer;
-        uint32_t offset;
-    };
-
-    // *****************************************************
-    // CopyPass ********************************************
-    // *****************************************************
-
-    struct TextureTransferInfo
-    {
-        TransferBuffer* transferBuffer;
-        uint32_t offset;
-        uint32_t pixelsPerRow;
-        uint32_t rowsPerLayer;
-    };
-    struct TextureRegion
-    {
-        Texture* texture;
-        uint32_t mipLevel;
-        uint32_t layer;
-        uint32_t x;
-        uint32_t y;
-        uint32_t z;
-        uint32_t w;
-        uint32_t h;
-        uint32_t d;
-    };
-    struct TransferBufferLocation
-    {
-        const TransferBuffer* transferBuffer;
-        uint32_t offset;
-    };
-    struct BufferRegion
-    {
-        const Buffer* buffer;
-        uint32_t offset;
-        uint32_t size;
-    };
-
-    // *****************************************************
-    // GraphicsPipeline ************************************
-    // *****************************************************
-
-    enum class VertexElementFormat
-    {
-        INVALID,
-        /* 32-bit Signed Integers */
-        INT,
-        INT2,
-        INT3,
-        INT4,
-        /* 32-bit Unsigned Integers */
-        UINT,
-        UINT2,
-        UINT3,
-        UINT4,
-        /* 32-bit Floats */
-        FLOAT,
-        FLOAT2,
-        FLOAT3,
-        FLOAT4,
-        /* 8-bit Signed Integers */
-        BYTE2,
-        BYTE4,
-        /* 8-bit Unsigned Integers */
-        UBYTE2,
-        UBYTE4,
-        /* 8-bit Signed Normalized */
-        BYTE2_NORM,
-        BYTE4_NORM,
-        /* 8-bit Unsigned Normalized */
-        UBYTE2_NORM,
-        UBYTE4_NORM,
-        /* 16-bit Signed Integers */
-        SHORT2,
-        SHORT4,
-        /* 16-bit Unsigned Integers */
-        USHORT2,
-        USHORT4,
-        /* 16-bit Signed Normalized */
-        SHORT2_NORM,
-        SHORT4_NORM,
-        /* 16-bit Unsigned Normalized */
-        USHORT2_NORM,
-        USHORT4_NORM,
-        /* 16-bit Floats */
-        HALF2,
-        HALF4
-    };
-    enum class VertexInputRate
-    {
-        VERTEX,
-        INSTANCE
-    };
-    enum class PrimitiveType
-    {
-        TRIANGLELIST,
-        TRIANGLESTRIP,
-        LINELIST,
-        LINESTRIP,
-        POINTLIST
-    };
-    enum class FrontFace
-    {
-        COUNTER_CLOCKWISE,
-        CLOCKWISE
-    };
-    enum class CullMode
-    {
-        NONE,
-        FRONT,
-        BACK
-    };
-    enum class FillMode
-    {
-        FILL,
-        LINE
-    };
-    enum class StencilOp
-    {
-        INVALID,
-        KEEP,
-        ZERO,
-        REPLACE,
-        INCREMENT_AND_CLAMP,
-        DECREMENT_AND_CLAMP,
-        INVERT,
-        INCREMENT_AND_WRAP,
-        DECREMENT_AND_WRAP
-    };
-    enum class ColorComponentFlags : uint8_t
-    {
-        R = (1u << 0),
-        G = (1u << 1),
-        B = (1u << 2),
-        A = (1u << 3)
-    };
-    struct ColorTargetBlendState
-    {
-        BlendFactor srcColorBlendfactor;
-        BlendFactor dstColorBlendfactor;
-        BlendOp colorBlendOp;
-        BlendFactor srcAlphaBlendfactor;
-        BlendFactor dstAlphaBlendfactor;
-        BlendOp alphaBlendOp;
-        ColorComponentFlags colorWriteMask;
-        bool enableBlend;
-        bool enableColorWriteMask;
-    };
-    struct VertexBufferDescription
-    {
-        uint32_t slot;
-        uint32_t pitch;
-        VertexInputRate inputRate;
-    };
-    struct VertexAttribute
-    {
-        uint32_t location;
-        uint32_t bufferSlot;
-        VertexElementFormat format;
-        uint32_t offset;
-    };
-    struct StencilOpState
-    {
-        StencilOp failOp;
-        StencilOp passOp;
-        StencilOp depthFailOp;
-        CompareOp compareOp;
-    };
-    struct ColorTargetDescription
-    {
-        TextureFormat format;
-        ColorTargetBlendState blendState;
-    };
-    struct VertexInputState
-    {
-        std::vector<VertexBufferDescription> vertexBufferDescriptions;
-        std::vector<VertexAttribute> vertexAttributes;
-    };
-    struct RasterizerState
-    {
-        FillMode fillMode;
-        CullMode cullMode;
-        FrontFace frontFace;
-        float depthBiasConstantFactor;
-        float depthBiasClamp;
-        float depthBiasSlopeFactor;
-        bool enableDepthBias;
-        bool enableDepthClip;
-    };
-    struct MultisampleState
-    {
-        SampleCount sampleCount;
-        uint32_t sampleMask;
-        bool enableMask;
-    };
-    struct DepthStencilState
-    {
-        CompareOp compareOp;
-        StencilOpState backStencilState;
-        StencilOpState frontStencilState;
-        uint8_t compareMask;
-        uint8_t writeMask;
-        bool enableDepthTest;
-        bool enableDepthWrite;
-        bool enableStencilTest;
-    };
-    struct GraphicsPipelineTargetInfo
-    {
-        std::vector<ColorTargetDescription> colorTargetDescriptions;
-        TextureFormat depthStencilFormat;
-        bool hasDepthStencilTarget;
-    };
-    struct GraphicsPipelineInfo
-    {
-        Shader* vertexShader;
-        Shader* fragmentShader;
-        VertexInputState vertexInputState;
-        PrimitiveType primitiveType;
-        RasterizerState rasterizerState;
-        MultisampleState multisampleState;
-        DepthStencilState depthStencilState;
-        GraphicsPipelineTargetInfo targetInfo;
-    };
-
-    constexpr ColorComponentFlags operator|(ColorComponentFlags a, ColorComponentFlags b) noexcept
-    {
-        return static_cast<ColorComponentFlags>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-    }
-
-    // *****************************************************
-    // Surface *********************************************
-    // *****************************************************
-
-    enum class PixelFormat
-    {
-        UNKNOWN = 0,
-        INDEX1LSB = 0x11100100u,
-        INDEX1MSB = 0x11200100u,
-        INDEX2LSB = 0x1c100200u,
-        INDEX2MSB = 0x1c200200u,
-        INDEX4LSB = 0x12100400u,
-        INDEX4MSB = 0x12200400u,
-        INDEX8 = 0x13000801u,
-        RGB332 = 0x14110801u,
-        XRGB4444 = 0x15120c02u,
-        XBGR4444 = 0x15520c02u,
-        XRGB1555 = 0x15130f02u,
-        XBGR1555 = 0x15530f02u,
-        ARGB4444 = 0x15321002u,
-        RGBA4444 = 0x15421002u,
-        ABGR4444 = 0x15721002u,
-        BGRA4444 = 0x15821002u,
-        ARGB1555 = 0x15331002u,
-        RGBA5551 = 0x15441002u,
-        ABGR1555 = 0x15731002u,
-        BGRA5551 = 0x15841002u,
-        RGB565 = 0x15151002u,
-        BGR565 = 0x15551002u,
-        RGB24 = 0x17101803u,
-        BGR24 = 0x17401803u,
-        XRGB8888 = 0x16161804u,
-        RGBX8888 = 0x16261804u,
-        XBGR8888 = 0x16561804u,
-        BGRX8888 = 0x16661804u,
-        ARGB8888 = 0x16362004u,
-        RGBA8888 = 0x16462004u,
-        ABGR8888 = 0x16762004u,
-        BGRA8888 = 0x16862004u,
-        XRGB2101010 = 0x16172004u,
-        XBGR2101010 = 0x16572004u,
-        ARGB2101010 = 0x16372004u,
-        ABGR2101010 = 0x16772004u,
-        RGB48 = 0x18103006u,
-        BGR48 = 0x18403006u,
-        RGBA64 = 0x18204008u,
-        ARGB64 = 0x18304008u,
-        BGRA64 = 0x18504008u,
-        ABGR64 = 0x18604008u,
-        RGB48_FLOAT = 0x1a103006u,
-        BGR48_FLOAT = 0x1a403006u,
-        RGBA64_FLOAT = 0x1a204008u,
-        ARGB64_FLOAT = 0x1a304008u,
-        BGRA64_FLOAT = 0x1a504008u,
-        ABGR64_FLOAT = 0x1a604008u,
-        RGB96_FLOAT = 0x1b10600cu,
-        BGR96_FLOAT = 0x1b40600cu,
-        RGBA128_FLOAT = 0x1b208010u,
-        ARGB128_FLOAT = 0x1b308010u,
-        BGRA128_FLOAT = 0x1b508010u,
-        ABGR128_FLOAT = 0x1b608010u,
-        YV12 = 0x32315659,
-        IYUV = 0x56555949,
-        YUY2 = 0x32595559,
-        UYVY = 0x59565955,
-        YVYU = 0x55595659,
-        NV12 = 0x3231564e,
-        NV21 = 0x3132564e,
-        P010 = 0x30313050,
-        EXTERNAL_OES = 0x2053454f,
-        MJPG = 0x47504a4d
-    };
-}
-
-namespace YAML
+constexpr TwoD::SDL::TextureUsageFlags operator|(TwoD::SDL::TextureUsageFlags a, TwoD::SDL::TextureUsageFlags b) noexcept
 {
-    template<>
-    struct convert<TwoD::SDL::Filter>
-    {
-        static Node encode(const TwoD::SDL::Filter rhs)
-        {
-            if (rhs == TwoD::SDL::Filter::NEAREST)
-            {
-                return Node("nearest");
-            }
-            else
-            {
-                return Node("linear");
-            }
-        }
-        static bool decode(const Node& node, TwoD::SDL::Filter& rhs)
-        {
-            auto str = node.as<std::string>();
-            if (str == "nearest")
-            {
-                rhs = TwoD::SDL::Filter::NEAREST;
-                return true;
-            }
-            if (str == "linear")
-            {
-                rhs = TwoD::SDL::Filter::LINEAR;
-                return true;
-            }
-            return false;
-        }
-    };
-
-    template<>
-    struct convert<TwoD::SDL::PixelFormat>
-    {
-        static Node encode(const TwoD::SDL::PixelFormat rhs)
-        {
-            switch (rhs)
-            {
-            case TwoD::SDL::PixelFormat::INDEX1LSB:
-                return Node("index1lsb");
-            case TwoD::SDL::PixelFormat::INDEX1MSB:
-                return Node("index1msb");
-            case TwoD::SDL::PixelFormat::INDEX2LSB:
-                return Node("index2lsb");
-            case TwoD::SDL::PixelFormat::INDEX2MSB:
-                return Node("index2msb");
-            case TwoD::SDL::PixelFormat::INDEX4LSB:
-                return Node("index4lsb");
-            case TwoD::SDL::PixelFormat::INDEX4MSB:
-                return Node("index4msb");
-            case TwoD::SDL::PixelFormat::INDEX8:
-                return Node("index8");
-            case TwoD::SDL::PixelFormat::RGB332:
-                return Node("rgb332");
-            case TwoD::SDL::PixelFormat::XRGB4444:
-                return Node("xrgb4444");
-            case TwoD::SDL::PixelFormat::XBGR4444:
-                return Node("xbgr4444");
-            case TwoD::SDL::PixelFormat::XRGB1555:
-                return Node("xrgb1555");
-            case TwoD::SDL::PixelFormat::XBGR1555:
-                return Node("xbgr1555");
-            case TwoD::SDL::PixelFormat::ARGB4444:
-                return Node("argb4444");
-            case TwoD::SDL::PixelFormat::RGBA4444:
-                return Node("rgba4444");
-            case TwoD::SDL::PixelFormat::ABGR4444:
-                return Node("abgr4444");
-            case TwoD::SDL::PixelFormat::BGRA4444:
-                return Node("bgra4444");
-            case TwoD::SDL::PixelFormat::ARGB1555:
-                return Node("argb1555");
-            case TwoD::SDL::PixelFormat::RGBA5551:
-                return Node("rgba5551");
-            case TwoD::SDL::PixelFormat::ABGR1555:
-                return Node("abgr1555");
-            case TwoD::SDL::PixelFormat::BGRA5551:
-                return Node("bgra5551");
-            case TwoD::SDL::PixelFormat::RGB565:
-                return Node("rgb565");
-            case TwoD::SDL::PixelFormat::BGR565:
-                return Node("bgr565");
-            case TwoD::SDL::PixelFormat::RGB24:
-                return Node("rgb24");
-            case TwoD::SDL::PixelFormat::BGR24:
-                return Node("bgr24");
-            case TwoD::SDL::PixelFormat::XRGB8888:
-                return Node("xrgb8888");
-            case TwoD::SDL::PixelFormat::RGBX8888:
-                return Node("rgbx8888");
-            case TwoD::SDL::PixelFormat::XBGR8888:
-                return Node("xbgr8888");
-            case TwoD::SDL::PixelFormat::BGRX8888:
-                return Node("bgrx8888");
-            case TwoD::SDL::PixelFormat::ARGB8888:
-                return Node("argb8888");
-            case TwoD::SDL::PixelFormat::RGBA8888:
-                return Node("rgba8888");
-            case TwoD::SDL::PixelFormat::ABGR8888:
-                return Node("abgr8888");
-            case TwoD::SDL::PixelFormat::BGRA8888:
-                return Node("bgra8888");
-            case TwoD::SDL::PixelFormat::XRGB2101010:
-                return Node("xrgb2101010");
-            case TwoD::SDL::PixelFormat::XBGR2101010:
-                return Node("xbgr2101010");
-            case TwoD::SDL::PixelFormat::ARGB2101010:
-                return Node("argb2101010");
-            case TwoD::SDL::PixelFormat::ABGR2101010:
-                return Node("abgr2101010");
-            case TwoD::SDL::PixelFormat::RGB48:
-                return Node("rgb48");
-            case TwoD::SDL::PixelFormat::BGR48:
-                return Node("bgr48");
-            case TwoD::SDL::PixelFormat::RGBA64:
-                return Node("rgba64");
-            case TwoD::SDL::PixelFormat::ARGB64:
-                return Node("argb64");
-            case TwoD::SDL::PixelFormat::BGRA64:
-                return Node("bgra64");
-            case TwoD::SDL::PixelFormat::ABGR64:
-                return Node("abgr64");
-            case TwoD::SDL::PixelFormat::RGB48_FLOAT:
-                return Node("rgb48-float");
-            case TwoD::SDL::PixelFormat::BGR48_FLOAT:
-                return Node("bgr48-float");
-            case TwoD::SDL::PixelFormat::RGBA64_FLOAT:
-                return Node("rgba64-float");
-            case TwoD::SDL::PixelFormat::ARGB64_FLOAT:
-                return Node("argb64-float");
-            case TwoD::SDL::PixelFormat::BGRA64_FLOAT:
-                return Node("bgra64-float");
-            case TwoD::SDL::PixelFormat::ABGR64_FLOAT:
-                return Node("abgr64-float");
-            case TwoD::SDL::PixelFormat::RGB96_FLOAT:
-                return Node("rgb96-float");
-            case TwoD::SDL::PixelFormat::BGR96_FLOAT:
-                return Node("bgr96-float");
-            case TwoD::SDL::PixelFormat::RGBA128_FLOAT:
-                return Node("rgba128-float");
-            case TwoD::SDL::PixelFormat::ARGB128_FLOAT:
-                return Node("argb128-float");
-            case TwoD::SDL::PixelFormat::BGRA128_FLOAT:
-                return Node("bgra128-float");
-            case TwoD::SDL::PixelFormat::ABGR128_FLOAT:
-                return Node("abgr128-float");
-            case TwoD::SDL::PixelFormat::YV12:
-                return Node("yv12");
-            case TwoD::SDL::PixelFormat::IYUV:
-                return Node("iyuv");
-            case TwoD::SDL::PixelFormat::YUY2:
-                return Node("yuy2");
-            case TwoD::SDL::PixelFormat::UYVY:
-                return Node("uyvy");
-            case TwoD::SDL::PixelFormat::YVYU:
-                return Node("yvyu");
-            case TwoD::SDL::PixelFormat::NV12:
-                return Node("nv12");
-            case TwoD::SDL::PixelFormat::NV21:
-                return Node("nv21");
-            case TwoD::SDL::PixelFormat::P010:
-                return Node("p010");
-            case TwoD::SDL::PixelFormat::EXTERNAL_OES:
-                return Node("external-oes");
-            case TwoD::SDL::PixelFormat::MJPG:
-                return Node("mjpg");
-            }
-        }
-        static bool decode(const Node& node, TwoD::SDL::PixelFormat& rhs)
-        {
-            auto str = node.as<std::string>();
-            if (str == "index1lsb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX1LSB;
-                return true;
-            }
-            if (str == "index1msb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX1MSB;
-                return true;
-            }
-            if (str == "index2lsb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX2LSB;
-                return true;
-            }
-            if (str == "index2msb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX2MSB;
-                return true;
-            }
-            if (str == "index4lsb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX4LSB;
-                return true;
-            }
-            if (str == "index4msb")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX4MSB;
-                return true;
-            }
-            if (str == "index8")
-            {
-                rhs = TwoD::SDL::PixelFormat::INDEX8;
-                return true;
-            }
-            if (str == "rgb332")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB332;
-                return true;
-            }
-            if (str == "xrgb4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::XRGB4444;
-                return true;
-            }
-            if (str == "xbgr4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::XBGR4444;
-                return true;
-            }
-            if (str == "xrgb1555")
-            {
-                rhs = TwoD::SDL::PixelFormat::XRGB1555;
-                return true;
-            }
-            if (str == "xbgr1555")
-            {
-                rhs = TwoD::SDL::PixelFormat::XBGR1555;
-                return true;
-            }
-            if (str == "argb4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB4444;
-                return true;
-            }
-            if (str == "rgba4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA4444;
-                return true;
-            }
-            if (str == "abgr4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR4444;
-                return true;
-            }
-            if (str == "bgra4444")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA4444;
-                return true;
-            }
-            if (str == "argb1555")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB1555;
-                return true;
-            }
-            if (str == "rgba5551")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA5551;
-                return true;
-            }
-            if (str == "abgr1555")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR1555;
-                return true;
-            }
-            if (str == "bgra5551")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA5551;
-                return true;
-            }
-            if (str == "rgb565")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB565;
-                return true;
-            }
-            if (str == "bgr565")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGR565;
-                return true;
-            }
-            if (str == "rgb24")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB24;
-                return true;
-            }
-            if (str == "bgr24")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGR24;
-                return true;
-            }
-            if (str == "xrgb8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::XRGB8888;
-                return true;
-            }
-            if (str == "rgbx8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBX8888;
-                return true;
-            }
-            if (str == "xbgr8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::XBGR8888;
-                return true;
-            }
-            if (str == "bgrx8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRX8888;
-                return true;
-            }
-            if (str == "argb8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB8888;
-                return true;
-            }
-            if (str == "rgba8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA8888;
-                return true;
-            }
-            if (str == "abgr8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR8888;
-                return true;
-            }
-            if (str == "bgra8888")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA8888;
-                return true;
-            }
-            if (str == "xrgb2101010")
-            {
-                rhs = TwoD::SDL::PixelFormat::XRGB2101010;
-                return true;
-            }
-            if (str == "xbgr2101010")
-            {
-                rhs = TwoD::SDL::PixelFormat::XBGR2101010;
-                return true;
-            }
-            if (str == "argb2101010")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB2101010;
-                return true;
-            }
-            if (str == "abgr2101010")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR2101010;
-                return true;
-            }
-            if (str == "rgb48")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB48;
-                return true;
-            }
-            if (str == "bgr48")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGR48;
-                return true;
-            }
-            if (str == "rgba64")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA64;
-                return true;
-            }
-            if (str == "argb64")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB64;
-                return true;
-            }
-            if (str == "bgra64")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA64;
-                return true;
-            }
-            if (str == "abgr64")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR64;
-                return true;
-            }
-            if (str == "rgb48-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB48_FLOAT;
-                return true;
-            }
-            if (str == "bgr48-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGR48_FLOAT;
-                return true;
-            }
-            if (str == "rgba64-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA64_FLOAT;
-                return true;
-            }
-            if (str == "argb64-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB64_FLOAT;
-                return true;
-            }
-            if (str == "bgra64-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA64_FLOAT;
-                return true;
-            }
-            if (str == "abgr64-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR64_FLOAT;
-                return true;
-            }
-            if (str == "rgb96-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGB96_FLOAT;
-                return true;
-            }
-            if (str == "bgr96-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGR96_FLOAT;
-                return true;
-            }
-            if (str == "rgba128-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::RGBA128_FLOAT;
-                return true;
-            }
-            if (str == "argb128-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::ARGB128_FLOAT;
-                return true;
-            }
-            if (str == "bgra128-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::BGRA128_FLOAT;
-                return true;
-            }
-            if (str == "abgr128-float")
-            {
-                rhs = TwoD::SDL::PixelFormat::ABGR128_FLOAT;
-                return true;
-            }
-            if (str == "yv12")
-            {
-                rhs = TwoD::SDL::PixelFormat::YV12;
-                return true;
-            }
-            if (str == "iyuv")
-            {
-                rhs = TwoD::SDL::PixelFormat::IYUV;
-                return true;
-            }
-            if (str == "yuy2")
-            {
-                rhs = TwoD::SDL::PixelFormat::YUY2;
-                return true;
-            }
-            if (str == "uyvy")
-            {
-                rhs = TwoD::SDL::PixelFormat::UYVY;
-                return true;
-            }
-            if (str == "yvyu")
-            {
-                rhs = TwoD::SDL::PixelFormat::YVYU;
-                return true;
-            }
-            if (str == "nv12")
-            {
-                rhs = TwoD::SDL::PixelFormat::NV12;
-                return true;
-            }
-            if (str == "nv21")
-            {
-                rhs = TwoD::SDL::PixelFormat::NV21;
-                return true;
-            }
-            if (str == "p010")
-            {
-                rhs = TwoD::SDL::PixelFormat::P010;
-                return true;
-            }
-            if (str == "external-oes")
-            {
-                rhs = TwoD::SDL::PixelFormat::EXTERNAL_OES;
-                return true;
-            }
-            if (str == "mjpg")
-            {
-                rhs = TwoD::SDL::PixelFormat::MJPG;
-                return true;
-            }
-            return false;
-        }
-    };
-
-    template<>
-    struct convert<TwoD::SDL::TextureFormat>
-    {
-        static Node encode(const TwoD::SDL::TextureFormat rhs)
-        {
-            switch(rhs)
-            {
-            case TwoD::SDL::TextureFormat::A8_UNORM:
-                return Node("a8-unorm");
-            case TwoD::SDL::TextureFormat::R8_UNORM:
-                return Node("r8-unorm");
-            case TwoD::SDL::TextureFormat::R8G8_UNORM:
-                return Node("r8g8-unorm");
-            case TwoD::SDL::TextureFormat::R8G8B8A8_UNORM:
-                return Node("r8g8b8a8-unorm");
-            case TwoD::SDL::TextureFormat::R16_UNORM:
-                return Node("r16-unorm");
-            case TwoD::SDL::TextureFormat::R16G16_UNORM:
-                return Node("r16b16-unorm");
-            case TwoD::SDL::TextureFormat::R16G16B16A16_UNORM:
-                return Node("r16g16b16a16-unorm");
-            case TwoD::SDL::TextureFormat::R10G10B10A2_UNORM:
-                return Node("r10g10b10a1-unorm");
-            case TwoD::SDL::TextureFormat::B5G6R5_UNORM:
-                return Node("b5g6r5-unorm");
-            case TwoD::SDL::TextureFormat::B5G5R5A1_UNORM:
-                return Node("b5g5r5a1-unorm");
-            case TwoD::SDL::TextureFormat::B4G4R4A4_UNORM:
-                return Node("b4g4r4a4-unorm");
-            case TwoD::SDL::TextureFormat::B8G8R8A8_UNORM:
-                return Node("b8g8r8a8-unorm");
-            case TwoD::SDL::TextureFormat::BC1_RGBA_UNORM:
-                return Node("bc1-rgba-unorm");
-            case TwoD::SDL::TextureFormat::BC2_RGBA_UNORM:
-                return Node("bc2-rgba-unorm");
-            case TwoD::SDL::TextureFormat::BC3_RGBA_UNORM:
-                return Node("bc3-rgba-unorm");
-            case TwoD::SDL::TextureFormat::BC4_R_UNORM:
-                return Node("bc4-r-unorm");
-            case TwoD::SDL::TextureFormat::BC5_RG_UNORM:
-                return Node("bc5-rg-unorm");
-            case TwoD::SDL::TextureFormat::BC7_RGBA_UNORM:
-                return Node("bc7-rgba-unorm");
-            case TwoD::SDL::TextureFormat::BC6H_RGB_FLOAT:
-                return Node("bc6h-rgb-float");
-            case TwoD::SDL::TextureFormat::BC6H_RGB_UFLOAT:
-                return Node("bc6h-rgb-ufloat");
-            case TwoD::SDL::TextureFormat::R8_SNORM:
-                return Node("r8-snorm");
-            case TwoD::SDL::TextureFormat::R8G8_SNORM:
-                return Node("r8g8-snorm");
-            case TwoD::SDL::TextureFormat::R8G8B8A8_SNORM:
-                return Node("r8g8b8a8-snorm");
-            case TwoD::SDL::TextureFormat::R16_SNORM:
-                return Node("r16-snorm");
-            case TwoD::SDL::TextureFormat::R16G16_SNORM:
-                return Node("r16g16-snorm");
-            case TwoD::SDL::TextureFormat::R16G16B16A16_SNORM:
-                return Node("r16g16b16a16-snorm");
-            case TwoD::SDL::TextureFormat::R16_FLOAT:
-                return Node("r16-float");
-            case TwoD::SDL::TextureFormat::R16G16_FLOAT:
-                return Node("r16g16-float");
-            case TwoD::SDL::TextureFormat::R16G16B16A16_FLOAT:
-                return Node("r16g16b16a16-float");
-            case TwoD::SDL::TextureFormat::R32_FLOAT:
-                return Node("r32-float");
-            case TwoD::SDL::TextureFormat::R32G32_FLOAT:
-                return Node("r32g32-float");
-            case TwoD::SDL::TextureFormat::R32G32B32A32_FLOAT:
-                return Node("r32g32b32a32-float");
-            case TwoD::SDL::TextureFormat::R11G11B10_UFLOAT:
-                return Node("r11g11b10-ufloat");
-            case TwoD::SDL::TextureFormat::R8_UINT:
-                return Node("r8-uint");
-            case TwoD::SDL::TextureFormat::R8G8_UINT:
-                return Node("r8g8-uint");
-            case TwoD::SDL::TextureFormat::R8G8B8A8_UINT:
-                return Node("r8g8b8a8-uint");
-            case TwoD::SDL::TextureFormat::R16_UINT:
-                return Node("r16-uint");
-            case TwoD::SDL::TextureFormat::R16G16_UINT:
-                return Node("r16g16-uint");
-            case TwoD::SDL::TextureFormat::R16G16B16A16_UINT:
-                return Node("r16g16b16a16-uint");
-            case TwoD::SDL::TextureFormat::R32_UINT:
-                return Node("r32-uint");
-            case TwoD::SDL::TextureFormat::R32G32_UINT:
-                return Node("r32g32-uint");
-            case TwoD::SDL::TextureFormat::R32G32B32A32_UINT:
-                return Node("r32g32b32a32-uint");
-            case TwoD::SDL::TextureFormat::R8_INT:
-                return Node("r8-int");
-            case TwoD::SDL::TextureFormat::R8G8_INT:
-                return Node("r8g8-int");
-            case TwoD::SDL::TextureFormat::R8G8B8A8_INT:
-                return Node("r8g8b8a8-int");
-            case TwoD::SDL::TextureFormat::R16_INT:
-                return Node("r16-int");
-            case TwoD::SDL::TextureFormat::R16G16_INT:
-                return Node("r16g16-int");
-            case TwoD::SDL::TextureFormat::R16G16B16A16_INT:
-                return Node("r16g16b16a16-int");
-            case TwoD::SDL::TextureFormat::R32_INT:
-                return Node("r32-int");
-            case TwoD::SDL::TextureFormat::R32G32_INT:
-                return Node("r32g32-int");
-            case TwoD::SDL::TextureFormat::R32G32B32A32_INT:
-                return Node("r32g32b32a32-int");
-            case TwoD::SDL::TextureFormat::R8G8B8A8_UNORM_SRGB:
-                return Node("r8g8b8a8-unorm-srgb");
-            case TwoD::SDL::TextureFormat::B8G8R8A8_UNORM_SRGB:
-                return Node("b8g8r8a8-unorm-srgb");
-            case TwoD::SDL::TextureFormat::BC1_RGBA_UNORM_SRGB:
-                return Node("bc1-rgba-unorm-srgb");
-            case TwoD::SDL::TextureFormat::BC2_RGBA_UNORM_SRGB:
-                return Node("bc2-rgba-unorm-srgb");
-            case TwoD::SDL::TextureFormat::BC3_RGBA_UNORM_SRGB:
-                return Node("bc3-rgba-unorm-srgb");
-            case TwoD::SDL::TextureFormat::BC7_RGBA_UNORM_SRGB:
-                return Node("bc7-rgba-unorm-srgb");
-            case TwoD::SDL::TextureFormat::D16_UNORM:
-                return Node("d16-unorm");
-            case TwoD::SDL::TextureFormat::D24_UNORM:
-                return Node("d24-unorm");
-            case TwoD::SDL::TextureFormat::D32_FLOAT:
-                return Node("d32-float");
-            case TwoD::SDL::TextureFormat::D24_UNORM_S8_UINT:
-                return Node("d24-unorm-s8-uint");
-            case TwoD::SDL::TextureFormat::D32_FLOAT_S8_UINT:
-                return Node("d32-float-s8-uint");
-            case TwoD::SDL::TextureFormat::ASTC_4x4_UNORM:
-                return Node("astc-4x4-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_5x4_UNORM:
-                return Node("astc-5x4-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_5x5_UNORM:
-                return Node("astc-5x5-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_6x5_UNORM:
-                return Node("astc-6x5-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_6x6_UNORM:
-                return Node("astc-6x6-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_8x5_UNORM:
-                return Node("astc-8x5-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_8x6_UNORM:
-                return Node("astc-8x6-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_8x8_UNORM:
-                return Node("astc-8x8-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_10x5_UNORM:
-                return Node("astc-10x5-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_10x6_UNORM:
-                return Node("astc-10x6-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_10x8_UNORM:
-                return Node("astc-10x8-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_10x10_UNORM:
-                return Node("astc-10x10-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_12x10_UNORM:
-                return Node("astc-12x10-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_12x12_UNORM:
-                return Node("astc-12x12-unorm");
-            case TwoD::SDL::TextureFormat::ASTC_4x4_UNORM_SRGB:
-                return Node("astc-4x4-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_5x4_UNORM_SRGB:
-                return Node("astc-5x4-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_5x5_UNORM_SRGB:
-                return Node("astc-5x5-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_6x5_UNORM_SRGB:
-                return Node("astc-6x5-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_6x6_UNORM_SRGB:
-                return Node("astc-6x6-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_8x5_UNORM_SRGB:
-                return Node("astc-8x5-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_8x6_UNORM_SRGB:
-                return Node("astc-8x6-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_8x8_UNORM_SRGB:
-                return Node("astc-8x8-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_10x5_UNORM_SRGB:
-                return Node("astc-10x5-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_10x6_UNORM_SRGB:
-                return Node("astc-10x6-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_10x8_UNORM_SRGB:
-                return Node("astc-10x8-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_10x10_UNORM_SRGB:
-                return Node("astc-10x10-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_12x10_UNORM_SRGB:
-                return Node("astc-12x10-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_12x12_UNORM_SRGB:
-                return Node("astc-12x12-unorm-srgb");
-            case TwoD::SDL::TextureFormat::ASTC_4x4_FLOAT:
-                return Node("astc-4x4-float");
-            case TwoD::SDL::TextureFormat::ASTC_5x4_FLOAT:
-                return Node("astc-5x4-float");
-            case TwoD::SDL::TextureFormat::ASTC_5x5_FLOAT:
-                return Node("astc-5x5-float");
-            case TwoD::SDL::TextureFormat::ASTC_6x5_FLOAT:
-                return Node("astc-6x5-float");
-            case TwoD::SDL::TextureFormat::ASTC_6x6_FLOAT:
-                return Node("astc-6x6-float");
-            case TwoD::SDL::TextureFormat::ASTC_8x5_FLOAT:
-                return Node("astc-8x5-float");
-            case TwoD::SDL::TextureFormat::ASTC_8x6_FLOAT:
-                return Node("astc-8x6-float");
-            case TwoD::SDL::TextureFormat::ASTC_8x8_FLOAT:
-                return Node("astc-8x8-float");
-            case TwoD::SDL::TextureFormat::ASTC_10x5_FLOAT:
-                return Node("astc-10x5-float");
-            case TwoD::SDL::TextureFormat::ASTC_10x6_FLOAT:
-                return Node("astc-10x6-float");
-            case TwoD::SDL::TextureFormat::ASTC_10x8_FLOAT:
-                return Node("astc-10x8-float");
-            case TwoD::SDL::TextureFormat::ASTC_10x10_FLOAT:
-                return Node("astc-10x10-float");
-            case TwoD::SDL::TextureFormat::ASTC_12x10_FLOAT:
-                return Node("astc-12x10-float");
-            case TwoD::SDL::TextureFormat::ASTC_12x12_FLOAT:
-                return Node("astc-12x12-float");
-            }
-        }
-        static bool decode(const Node& node, TwoD::SDL::TextureFormat& rhs)
-        {
-            auto str = node.as<std::string>();
-            
-            if (str == "a8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::A8_UNORM;
-                return true;
-            }
-            if (str == "r8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8_UNORM;
-                return true;
-            }
-            if (str == "r8g8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8_UNORM;
-                return true;
-            }
-            if (str == "r8g8b8a8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8B8A8_UNORM;
-                return true;
-            }
-            if (str == "r16-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16_UNORM;
-                return true;
-            }
-            if (str == "r16b16-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16_UNORM;
-                return true;
-            }
-            if (str == "r16g16b16a16-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16B16A16_UNORM;
-                return true;
-            }
-            if (str == "r10g10b10a1-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R10G10B10A2_UNORM;
-                return true;
-            }
-            if (str == "b5g6r5-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::B5G6R5_UNORM;
-                return true;
-            }
-            if (str == "b5g5r5a1-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::B5G5R5A1_UNORM;
-                return true;
-            }
-            if (str == "b4g4r4a4-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::B4G4R4A4_UNORM;
-                return true;
-            }
-            if (str == "b8g8r8a8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::B8G8R8A8_UNORM;
-                return true;
-            }
-            if (str == "bc1-rgba-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC1_RGBA_UNORM;
-                return true;
-            }
-            if (str == "bc2-rgba-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC2_RGBA_UNORM;
-                return true;
-            }
-            if (str == "bc3-rgba-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC3_RGBA_UNORM;
-                return true;
-            }
-            if (str == "bc4-r-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC4_R_UNORM;
-                return true;
-            }
-            if (str == "bc5-rg-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC5_RG_UNORM;
-                return true;
-            }
-            if (str == "bc7-rgba-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC7_RGBA_UNORM;
-                return true;
-            }
-            if (str == "bc6h-rgb-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC6H_RGB_FLOAT;
-                return true;
-            }
-            if (str == "bc6h-rgb-ufloat")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC6H_RGB_UFLOAT;
-                return true;
-            }
-            if (str == "r8-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8_SNORM;
-                return true;
-            }
-            if (str == "r8g8-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8_SNORM;
-                return true;
-            }
-            if (str == "r8g8b8a8-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8B8A8_SNORM;
-                return true;
-            }
-            if (str == "r16-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16_SNORM;
-                return true;
-            }
-            if (str == "r16g16-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16_SNORM;
-                return true;
-            }
-            if (str == "r16g16b16a16-snorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16B16A16_SNORM;
-                return true;
-            }
-            if (str == "r16-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16_FLOAT;
-                return true;
-            }
-            if (str == "r16g16-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16_FLOAT;
-                return true;
-            }
-            if (str == "r16g16b16a16-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16B16A16_FLOAT;
-                return true;
-            }
-            if (str == "r32-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32_FLOAT;
-                return true;
-            }
-            if (str == "r32g32-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32_FLOAT;
-                return true;
-            }
-            if (str == "r32g32b32a32-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32B32A32_FLOAT;
-                return true;
-            }
-            if (str == "r11g11b10-ufloat")
-            {
-                rhs = TwoD::SDL::TextureFormat::R11G11B10_UFLOAT;
-                return true;
-            }
-            if (str == "r8-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8_UINT;
-                return true;
-            }
-            if (str == "r8g8-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8_UINT;
-                return true;
-            }
-            if (str == "r8g8b8a8-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8B8A8_UINT;
-                return true;
-            }
-            if (str == "r16-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16_UINT;
-                return true;
-            }
-            if (str == "r16g16-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16_UINT;
-                return true;
-            }
-            if (str == "r16g16b16a16-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16B16A16_UINT;
-                return true;
-            }
-            if (str == "r32-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32_UINT;
-                return true;
-            }
-            if (str == "r32g32-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32_UINT;
-                return true;
-            }
-            if (str == "r32g32b32a32-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32B32A32_UINT;
-                return true;
-            }
-            if (str == "r8-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8_INT;
-                return true;
-            }
-            if (str == "r8g8-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8_INT;
-                return true;
-            }
-            if (str == "r8g8b8a8-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8B8A8_INT;
-                return true;
-            }
-            if (str == "r16-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16_INT;
-                return true;
-            }
-            if (str == "r16g16-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16_INT;
-                return true;
-            }
-            if (str == "r16g16b16a16-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R16G16B16A16_INT;
-                return true;
-            }
-            if (str == "r32-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32_INT;
-                return true;
-            }
-            if (str == "r32g32-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32_INT;
-                return true;
-            }
-            if (str == "r32g32b32a32-int")
-            {
-                rhs = TwoD::SDL::TextureFormat::R32G32B32A32_INT;
-                return true;
-            }
-            if (str == "r8g8b8a8-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::R8G8B8A8_UNORM_SRGB;
-                return true;
-            }
-            if (str == "b8g8r8a8-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::B8G8R8A8_UNORM_SRGB;
-                return true;
-            }
-            if (str == "bc1-rgba-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC1_RGBA_UNORM_SRGB;
-                return true;
-            }
-            if (str == "bc2-rgba-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC2_RGBA_UNORM_SRGB;
-                return true;
-            }
-            if (str == "bc3-rgba-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC3_RGBA_UNORM_SRGB;
-                return true;
-            }
-            if (str == "bc7-rgba-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::BC7_RGBA_UNORM_SRGB;
-                return true;
-            }
-            if (str == "d16-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::D16_UNORM;
-                return true;
-            }
-            if (str == "d24-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::D24_UNORM;
-                return true;
-            }
-            if (str == "d32-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::D32_FLOAT;
-                return true;
-            }
-            if (str == "d24-unorm-s8-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::D24_UNORM_S8_UINT;
-                return true;
-            }
-            if (str == "d32-float-s8-uint")
-            {
-                rhs = TwoD::SDL::TextureFormat::D32_FLOAT_S8_UINT;
-                return true;
-            }
-            if (str == "astc-4x4-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_4x4_UNORM;
-                return true;
-            }
-            if (str == "astc-5x4-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x4_UNORM;
-                return true;
-            }
-            if (str == "astc-5x5-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x5_UNORM;
-                return true;
-            }
-            if (str == "astc-6x5-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x5_UNORM;
-                return true;
-            }
-            if (str == "astc-6x6-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x6_UNORM;
-                return true;
-            }
-            if (str == "astc-8x5-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x5_UNORM;
-                return true;
-            }
-            if (str == "astc-8x6-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x6_UNORM;
-                return true;
-            }
-            if (str == "astc-8x8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x8_UNORM;
-                return true;
-            }
-            if (str == "astc-10x5-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x5_UNORM;
-                return true;
-            }
-            if (str == "astc-10x6-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x6_UNORM;
-                return true;
-            }
-            if (str == "astc-10x8-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x8_UNORM;
-                return true;
-            }
-            if (str == "astc-10x10-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x10_UNORM;
-                return true;
-            }
-            if (str == "astc-12x10-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x10_UNORM;
-                return true;
-            }
-            if (str == "astc-12x12-unorm")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x12_UNORM;
-                return true;
-            }
-            if (str == "astc-4x4-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_4x4_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-5x4-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x4_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-5x5-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x5_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-6x5-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x5_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-6x6-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x6_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-8x5-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x5_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-8x6-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x6_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-8x8-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x8_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-10x5-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x5_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-10x6-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x6_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-10x8-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x8_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-10x10-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x10_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-12x10-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x10_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-12x12-unorm-srgb")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x12_UNORM_SRGB;
-                return true;
-            }
-            if (str == "astc-4x4-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_4x4_FLOAT;
-                return true;
-            }
-            if (str == "astc-5x4-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x4_FLOAT;
-                return true;
-            }
-            if (str == "astc-5x5-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_5x5_FLOAT;
-                return true;
-            }
-            if (str == "astc-6x5-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x5_FLOAT;
-                return true;
-            }
-            if (str == "astc-6x6-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_6x6_FLOAT;
-                return true;
-            }
-            if (str == "astc-8x5-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x5_FLOAT;
-                return true;
-            }
-            if (str == "astc-8x6-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x6_FLOAT;
-                return true;
-            }
-            if (str == "astc-8x8-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_8x8_FLOAT;
-                return true;
-            }
-            if (str == "astc-10x5-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x5_FLOAT;
-                return true;
-            }
-            if (str == "astc-10x6-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x6_FLOAT;
-                return true;
-            }
-            if (str == "astc-10x8-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x8_FLOAT;
-                return true;
-            }
-            if (str == "astc-10x10-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_10x10_FLOAT;
-                return true;
-            }
-            if (str == "astc-12x10-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x10_FLOAT;
-                return true;
-            }
-            if (str == "astc-12x12-float")
-            {
-                rhs = TwoD::SDL::TextureFormat::ASTC_12x12_FLOAT;
-                return true;
-            }
-            return false;
-        }
-    };
+    return static_cast<TwoD::SDL::TextureUsageFlags>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
 }
+
+// *****************************************************
+// Sampler *********************************************
+// *****************************************************
+
+TD_YAML_ENUM(TwoD::SDL, SamplerMipmapMode,
+    TD_YAML_ENUM_FIELD(NEAREST),
+    TD_YAML_ENUM_FIELD(LINEAR)
+)
+TD_YAML_ENUM(TwoD::SDL, SamplerAddressMode,
+    TD_YAML_ENUM_FIELD(REPEAT),
+    TD_YAML_ENUM_FIELD(MIRRORED_REPEAT),
+    TD_YAML_ENUM_FIELD(CLAMP_TO_EDGE)
+)
+TD_YAML_STRUCT(TwoD::SDL, SamplerInfo,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Filter, minFilter),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Filter, magFilter),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SamplerMipmapMode, mipmapMode),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SamplerAddressMode, addressModeU),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SamplerAddressMode, addressModeV),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SamplerAddressMode, addressModeW),
+    TD_YAML_STRUCT_FIELD(float, mipLodBias),
+    TD_YAML_STRUCT_FIELD(float, maxAnisotropy),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::CompareOp, compareOp),
+    TD_YAML_STRUCT_FIELD(float, minLod),
+    TD_YAML_STRUCT_FIELD(float, maxLod),
+    TD_YAML_STRUCT_FIELD(bool, enableAnisotropy),
+    TD_YAML_STRUCT_FIELD(bool, enableCompare)
+)
+
+// *****************************************************
+// Shader **********************************************
+// *****************************************************
+
+TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ShaderFormat, uint32_t,
+    TD_YAML_ENUM_FIELD(INVALID,  0),
+    TD_YAML_ENUM_FIELD(PRIVATE,  (1u << 0)),
+    TD_YAML_ENUM_FIELD(SPIRV,    (1u << 1)),
+    TD_YAML_ENUM_FIELD(DXBC,     (1u << 2)),
+    TD_YAML_ENUM_FIELD(DXIL,     (1u << 3)),
+    TD_YAML_ENUM_FIELD(MSL,      (1u << 4)),
+    TD_YAML_ENUM_FIELD(METALLIB, (1u << 5))
+)
+TD_YAML_ENUM(TwoD::SDL, ShaderStage,
+    TD_YAML_ENUM_FIELD(VERTEX),
+    TD_YAML_ENUM_FIELD(FRAGMENT)
+)
+TD_YAML_STRUCT(TwoD::SDL, ShaderInfo,
+    TD_YAML_STRUCT_FIELD(uint32_t, codeSize),
+    TD_YAML_STRUCT_FIELD(uint8_t*, code),
+    TD_YAML_STRUCT_FIELD(std::string, entrypoint),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::ShaderFormat, format),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::ShaderStage, stage),
+    TD_YAML_STRUCT_FIELD(uint32_t, numSamplers),
+    TD_YAML_STRUCT_FIELD(uint32_t, numStorageTextures),
+    TD_YAML_STRUCT_FIELD(uint32_t, numStorageBuffers),
+    TD_YAML_STRUCT_FIELD(uint32_t, numUniformBuffers)
+)
+
+constexpr TwoD::SDL::ShaderFormat operator|(TwoD::SDL::ShaderFormat a, TwoD::SDL::ShaderFormat b) noexcept
+{
+    return static_cast<TwoD::SDL::ShaderFormat>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+constexpr TwoD::SDL::ShaderFormat operator&(TwoD::SDL::ShaderFormat a, TwoD::SDL::ShaderFormat b) noexcept
+{
+    return static_cast<TwoD::SDL::ShaderFormat>(static_cast<uint32_t>(a) & static_cast<uint32_t>(b));
+}
+constexpr bool operator==(TwoD::SDL::ShaderFormat a, TwoD::SDL::ShaderFormat b) noexcept
+{
+    return static_cast<uint32_t>(a) == static_cast<uint32_t>(b);
+}
+constexpr bool operator!=(TwoD::SDL::ShaderFormat a, TwoD::SDL::ShaderFormat b) noexcept
+{
+    return static_cast<uint32_t>(a) != static_cast<uint32_t>(b);
+}
+
+// *****************************************************
+// RenderPass ******************************************
+// *****************************************************
+
+TD_YAML_ENUM(TwoD::SDL, IndexElementSize,
+    TD_YAML_ENUM_FIELD(SIXTEEN_BIT),
+    TD_YAML_ENUM_FIELD(THIRTY_TWO_BIT)
+)
+TD_YAML_STRUCT(TwoD::SDL, TextureSamplerBinding,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Texture*, texture),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Sampler*, sampler)
+)
+TD_YAML_STRUCT(TwoD::SDL, BufferBinding,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Buffer*, buffer),
+    TD_YAML_STRUCT_FIELD(uint32_t, offset)
+)
+
+// *****************************************************
+// CopyPass ********************************************
+// *****************************************************
+
+TD_YAML_STRUCT(TwoD::SDL, TextureTransferInfo,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TransferBuffer*, transferBuffer),
+    TD_YAML_STRUCT_FIELD(uint32_t, offset),
+    TD_YAML_STRUCT_FIELD(uint32_t, pixelsPerRow),
+    TD_YAML_STRUCT_FIELD(uint32_t, rowsPerLayer)
+)
+TD_YAML_STRUCT(TwoD::SDL, TextureRegion,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Texture*, texture),
+    TD_YAML_STRUCT_FIELD(uint32_t, mipLevel),
+    TD_YAML_STRUCT_FIELD(uint32_t, layer),
+    TD_YAML_STRUCT_FIELD(uint32_t, x),
+    TD_YAML_STRUCT_FIELD(uint32_t, y),
+    TD_YAML_STRUCT_FIELD(uint32_t, z),
+    TD_YAML_STRUCT_FIELD(uint32_t, w),
+    TD_YAML_STRUCT_FIELD(uint32_t, h),
+    TD_YAML_STRUCT_FIELD(uint32_t, d)
+)
+TD_YAML_STRUCT(TwoD::SDL, TransferBufferLocation,
+    TD_YAML_STRUCT_FIELD(const TwoD::SDL::TransferBuffer*, transferBuffer),
+    TD_YAML_STRUCT_FIELD(uint32_t, offset)
+)
+TD_YAML_STRUCT(TwoD::SDL, BufferRegion,
+    TD_YAML_STRUCT_FIELD(const TwoD::SDL::Buffer*, buffer),
+    TD_YAML_STRUCT_FIELD(uint32_t, offset),
+    TD_YAML_STRUCT_FIELD(uint32_t, size)
+)
+
+// *****************************************************
+// GraphicsPipeline ************************************
+// *****************************************************
+
+TD_YAML_ENUM(TwoD::SDL, VertexElementFormat,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(INT),
+    TD_YAML_ENUM_FIELD(INT2),
+    TD_YAML_ENUM_FIELD(INT3),
+    TD_YAML_ENUM_FIELD(INT4),
+    TD_YAML_ENUM_FIELD(UINT),
+    TD_YAML_ENUM_FIELD(UINT2),
+    TD_YAML_ENUM_FIELD(UINT3),
+    TD_YAML_ENUM_FIELD(UINT4),
+    TD_YAML_ENUM_FIELD(FLOAT),
+    TD_YAML_ENUM_FIELD(FLOAT2),
+    TD_YAML_ENUM_FIELD(FLOAT3),
+    TD_YAML_ENUM_FIELD(FLOAT4),
+    TD_YAML_ENUM_FIELD(BYTE2),
+    TD_YAML_ENUM_FIELD(BYTE4),
+    TD_YAML_ENUM_FIELD(UBYTE2),
+    TD_YAML_ENUM_FIELD(UBYTE4),
+    TD_YAML_ENUM_FIELD(BYTE2_NORM),
+    TD_YAML_ENUM_FIELD(BYTE4_NORM)
+)
+TD_YAML_ENUM(TwoD::SDL, VertexInputRate,
+    TD_YAML_ENUM_FIELD(VERTEX),
+    TD_YAML_ENUM_FIELD(INSTANCE)
+)
+TD_YAML_ENUM(TwoD::SDL, PrimitiveType,
+    TD_YAML_ENUM_FIELD(TRIANGLELIST),
+    TD_YAML_ENUM_FIELD(TRIANGLESTRIP),
+    TD_YAML_ENUM_FIELD(LINELIST),
+    TD_YAML_ENUM_FIELD(LINESTRIP),
+    TD_YAML_ENUM_FIELD(POINTLIST)
+)
+TD_YAML_ENUM(TwoD::SDL, FrontFace,
+    (COUNTER_CLOCKWISE),
+    (CLOCKWISE)
+)
+TD_YAML_ENUM(TwoD::SDL, CullMode,
+    TD_YAML_ENUM_FIELD(NONE),
+    TD_YAML_ENUM_FIELD(FRONT),
+    TD_YAML_ENUM_FIELD(BACK)
+)
+TD_YAML_ENUM(TwoD::SDL, FillMode,
+    TD_YAML_ENUM_FIELD(FILL),
+    TD_YAML_ENUM_FIELD(LINE)
+)
+TD_YAML_ENUM(TwoD::SDL, StencilOp,
+    TD_YAML_ENUM_FIELD(INVALID),
+    TD_YAML_ENUM_FIELD(KEEP),
+    TD_YAML_ENUM_FIELD(ZERO),
+    TD_YAML_ENUM_FIELD(REPLACE),
+    TD_YAML_ENUM_FIELD(INCREMENT_AND_CLAMP),
+    TD_YAML_ENUM_FIELD(DECREMENT_AND_CLAMP),
+    TD_YAML_ENUM_FIELD(INVERT),
+    TD_YAML_ENUM_FIELD(INCREMENT_AND_WRAP),
+    TD_YAML_ENUM_FIELD(DECREMENT_AND_WRAP)
+)
+TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ColorComponentFlags, uint8_t,
+    TD_YAML_ENUM_FIELD(R, (1u << 0)),
+    TD_YAML_ENUM_FIELD(G, (1u << 1)),
+    TD_YAML_ENUM_FIELD(B, (1u << 2)),
+    TD_YAML_ENUM_FIELD(A, (1u << 3))
+)
+TD_YAML_STRUCT(TwoD::SDL, ColorTargetBlendState,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcColorBlendfactor),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstColorBlendfactor),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, colorBlendOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcAlphaBlendfactor),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstAlphaBlendfactor),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, alphaBlendOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorComponentFlags, colorWriteMask),
+    TD_YAML_STRUCT_FIELD(bool, enableBlend),
+    TD_YAML_STRUCT_FIELD(bool, enableColorWriteMask)
+)
+TD_YAML_STRUCT(TwoD::SDL, VertexBufferDescription,
+    TD_YAML_STRUCT_FIELD(uint32_t, slot),
+    TD_YAML_STRUCT_FIELD(uint32_t, pitch),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputRate, inputRate)
+)
+TD_YAML_STRUCT(TwoD::SDL, VertexAttribute,
+    TD_YAML_STRUCT_FIELD(uint32_t, location),
+    TD_YAML_STRUCT_FIELD(uint32_t, bufferSlot),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexElementFormat, format),
+    TD_YAML_STRUCT_FIELD(uint32_t, offset)
+)
+TD_YAML_STRUCT(TwoD::SDL, StencilOpState,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, failOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, passOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, depthFailOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::CompareOp, compareOp)
+)
+TD_YAML_STRUCT(TwoD::SDL, ColorTargetDescription,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, format),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorTargetBlendState, blendState)
+)
+TD_YAML_STRUCT(TwoD::SDL, VertexInputState,
+    TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexBufferDescription>, vertexBufferDescriptions),
+    TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexAttribute>, vertexAttributes)
+)
+TD_YAML_STRUCT(TwoD::SDL, RasterizerState,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::FillMode, fillMode),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::CullMode, cullMode),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::FrontFace, frontFace),
+    TD_YAML_STRUCT_FIELD(float, depthBiasConstantFactor),
+    TD_YAML_STRUCT_FIELD(float, depthBiasClamp),
+    TD_YAML_STRUCT_FIELD(float, depthBiasSlopeFactor),
+    TD_YAML_STRUCT_FIELD(bool, enableDepthBias),
+    TD_YAML_STRUCT_FIELD(bool, enableDepthClip)
+)
+TD_YAML_STRUCT(TwoD::SDL, MultisampleState,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::SampleCount, sampleCount),
+    TD_YAML_STRUCT_FIELD(uint32_t, sampleMask),
+    TD_YAML_STRUCT_FIELD(bool, enableMask)
+)
+TD_YAML_STRUCT(TwoD::SDL, DepthStencilState,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::CompareOp, compareOp),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOpState, backStencilState),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOpState, frontStencilState),
+    TD_YAML_STRUCT_FIELD(uint8_t, compareMask),
+    TD_YAML_STRUCT_FIELD(uint8_t, writeMask),
+    TD_YAML_STRUCT_FIELD(bool, enableDepthTest),
+    TD_YAML_STRUCT_FIELD(bool, enableDepthWrite),
+    TD_YAML_STRUCT_FIELD(bool, enableStencilTest)
+)
+TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineTargetInfo,
+    TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::ColorTargetDescription>, colorTargetDescriptions),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, depthStencilFormat),
+    TD_YAML_STRUCT_FIELD(bool, hasDepthStencilTarget)
+)
+TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineInfo,
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Shader*, vertexShader),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::Shader*, fragmentShader),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputState, vertexInputState),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::PrimitiveType, primitiveType),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::RasterizerState, rasterizerState),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::MultisampleState, multisampleState),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::DepthStencilState, depthStencilState),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::GraphicsPipelineTargetInfo, targetInfo)
+)
+
+constexpr TwoD::SDL::ColorComponentFlags operator|(TwoD::SDL::ColorComponentFlags a, TwoD::SDL::ColorComponentFlags b) noexcept
+{
+    return static_cast<TwoD::SDL::ColorComponentFlags>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+
+// *****************************************************
+// Surface *********************************************
+// *****************************************************
+
+TD_YAML_ENUM(TwoD::SDL, PixelFormat,
+    TD_YAML_ENUM_FIELD(UNKNOWN, 0),
+    TD_YAML_ENUM_FIELD(INDEX1LSB, 0x11100100u),
+    TD_YAML_ENUM_FIELD(INDEX1MSB, 0x11200100u),
+    TD_YAML_ENUM_FIELD(INDEX2LSB, 0x1c100200u),
+    TD_YAML_ENUM_FIELD(INDEX2MSB, 0x1c200200u),
+    TD_YAML_ENUM_FIELD(INDEX4LSB, 0x12100400u),
+    TD_YAML_ENUM_FIELD(INDEX4MSB, 0x12200400u),
+    TD_YAML_ENUM_FIELD(INDEX8, 0x13000801u),
+    TD_YAML_ENUM_FIELD(RGB332, 0x14110801u),
+    TD_YAML_ENUM_FIELD(XRGB4444, 0x15120c02u),
+    TD_YAML_ENUM_FIELD(XBGR4444, 0x15520c02u),
+    TD_YAML_ENUM_FIELD(XRGB1555, 0x15130f02u),
+    TD_YAML_ENUM_FIELD(XBGR1555, 0x15530f02u),
+    TD_YAML_ENUM_FIELD(ARGB4444, 0x15321002u),
+    TD_YAML_ENUM_FIELD(RGBA4444, 0x15421002u),
+    TD_YAML_ENUM_FIELD(ABGR4444, 0x15721002u),
+    TD_YAML_ENUM_FIELD(BGRA4444, 0x15821002u),
+    TD_YAML_ENUM_FIELD(ARGB1555, 0x15331002u),
+    TD_YAML_ENUM_FIELD(RGBA5551, 0x15441002u),
+    TD_YAML_ENUM_FIELD(ABGR1555, 0x15731002u),
+    TD_YAML_ENUM_FIELD(BGRA5551, 0x15841002u),
+    TD_YAML_ENUM_FIELD(RGB565, 0x15151002u),
+    TD_YAML_ENUM_FIELD(BGR565, 0x15551002u),
+    TD_YAML_ENUM_FIELD(RGB24, 0x17101803u),
+    TD_YAML_ENUM_FIELD(BGR24, 0x17401803u),
+    TD_YAML_ENUM_FIELD(XRGB8888, 0x16161804u),
+    TD_YAML_ENUM_FIELD(RGBX8888, 0x16261804u),
+    TD_YAML_ENUM_FIELD(XBGR8888, 0x16561804u),
+    TD_YAML_ENUM_FIELD(BGRX8888, 0x16661804u),
+    TD_YAML_ENUM_FIELD(ARGB8888, 0x16362004u),
+    TD_YAML_ENUM_FIELD(RGBA8888, 0x16462004u),
+    TD_YAML_ENUM_FIELD(ABGR8888, 0x16762004u),
+    TD_YAML_ENUM_FIELD(BGRA8888, 0x16862004u),
+    TD_YAML_ENUM_FIELD(XRGB2101010, 0x16172004u),
+    TD_YAML_ENUM_FIELD(XBGR2101010, 0x16572004u),
+    TD_YAML_ENUM_FIELD(ARGB2101010, 0x16372004u),
+    TD_YAML_ENUM_FIELD(ABGR2101010, 0x16772004u),
+    TD_YAML_ENUM_FIELD(RGB48, 0x18103006u),
+    TD_YAML_ENUM_FIELD(BGR48, 0x18403006u),
+    TD_YAML_ENUM_FIELD(RGBA64, 0x18204008u),
+    TD_YAML_ENUM_FIELD(ARGB64, 0x18304008u),
+    TD_YAML_ENUM_FIELD(BGRA64, 0x18504008u),
+    TD_YAML_ENUM_FIELD(ABGR64, 0x18604008u),
+    TD_YAML_ENUM_FIELD(RGB48_FLOAT, 0x1a103006u),
+    TD_YAML_ENUM_FIELD(BGR48_FLOAT, 0x1a403006u),
+    TD_YAML_ENUM_FIELD(RGBA64_FLOAT, 0x1a204008u),
+    TD_YAML_ENUM_FIELD(ARGB64_FLOAT, 0x1a304008u),
+    TD_YAML_ENUM_FIELD(BGRA64_FLOAT, 0x1a504008u),
+    TD_YAML_ENUM_FIELD(ABGR64_FLOAT, 0x1a604008u),
+    TD_YAML_ENUM_FIELD(RGB96_FLOAT, 0x1b10600cu),
+    TD_YAML_ENUM_FIELD(BGR96_FLOAT, 0x1b40600cu),
+    TD_YAML_ENUM_FIELD(RGBA128_FLOAT, 0x1b208010u),
+    TD_YAML_ENUM_FIELD(ARGB128_FLOAT, 0x1b308010u),
+    TD_YAML_ENUM_FIELD(BGRA128_FLOAT, 0x1b508010u),
+    TD_YAML_ENUM_FIELD(ABGR128_FLOAT, 0x1b608010u),
+    TD_YAML_ENUM_FIELD(YV12, 0x32315659),
+    TD_YAML_ENUM_FIELD(IYUV, 0x56555949),
+    TD_YAML_ENUM_FIELD(YUY2, 0x32595559),
+    TD_YAML_ENUM_FIELD(UYVY, 0x59565955),
+    TD_YAML_ENUM_FIELD(YVYU, 0x55595659),
+    TD_YAML_ENUM_FIELD(NV12, 0x3231564e),
+    TD_YAML_ENUM_FIELD(NV21, 0x3132564e),
+    TD_YAML_ENUM_FIELD(P010, 0x30313050),
+    TD_YAML_ENUM_FIELD(EXTERNAL_OES, 0x2053454f),
+    TD_YAML_ENUM_FIELD(MJPG, 0x47504a4d)
+)
