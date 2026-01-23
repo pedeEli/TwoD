@@ -1,5 +1,5 @@
 type: class TwoD::SpriteAtlas
 name: sprite-atlas
-filter: nearest
-textureFormat: r8g8b8a8-unorm
-pixelFormat: abgr8888
+filter: NEAREST
+textureFormat: R8G8B8A8_UNORM
+pixelFormat: ABGR8888

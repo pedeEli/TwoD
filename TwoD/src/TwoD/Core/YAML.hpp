@@ -3,17 +3,18 @@
 #include <yaml-cpp/yaml.h>
 #include "TwoD/Core/Base.hpp"
 
-#define TD_INTERNAL_YAML_STRUCT_FIELD(values) TD_CHOOSE_MACRO_3(TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT, TD_INTERNAL_YAML_STRUCT_FIELD_WITH_DEFAULT, values)
-#define TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT(type, name) type name;
-#define TD_INTERNAL_YAML_STRUCT_FIELD_WITH_DEFAULT(type, name, value) type name = value;
+#define TD_INTERNAL_YAML_STRUCT_FIELD(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT, TD_INTERNAL_YAML_STRUCT_FIELD_WITH_DEFAULT, values)
+#define TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT(preprocess, type, name) type name;
+#define TD_INTERNAL_YAML_STRUCT_FIELD_WITH_DEFAULT(preprocess, type, name, value) type name = value;
 
+#define TD_INTERNAL_YAML_STRUCT_FIELD_NO_PARSING(...)
 #define TD_INTERNAL_YAML_STRUCT_ENCODE(values) TD_INTERNAL_YAML_STRUCT_ENCODE_UNWRAP values
-#define TD_INTERNAL_YAML_STRUCT_ENCODE_UNWRAP(type, name, ...) node[#name] = rhs.name;
+#define TD_INTERNAL_YAML_STRUCT_ENCODE_UNWRAP(preprocess, type, name, ...) preprocess(node[#name] = rhs.name;)
 
-#define TD_INTERNAL_YAML_STRUCT_DECODE(values) TD_CHOOSE_MACRO_3(TD_INTERNAL_YAML_STRUCT_DECODE_NO_DEFAULT, TD_INTERNAL_YAML_STRUCT_DECODE_WITH_DEFAULT, values)
-#define TD_INTERNAL_YAML_STRUCT_DECODE_NO_DEFAULT(type, name) if (!node[#name]) { return false; } \
-	rhs.name = node[#name].as<type>();
-#define TD_INTERNAL_YAML_STRUCT_DECODE_WITH_DEFAULT(type, name, ...) if (node[#name]) { rhs.name = node[#name].as<type>(); }
+#define TD_INTERNAL_YAML_STRUCT_DECODE(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_YAML_STRUCT_DECODE_NO_DEFAULT, TD_INTERNAL_YAML_STRUCT_DECODE_WITH_DEFAULT, values)
+#define TD_INTERNAL_YAML_STRUCT_DECODE_NO_DEFAULT(preprocess, type, vname) preprocess(if (!node[#vname]) { TD_CORE_ERROR("missing field {} in {}", #vname, typeid(decltype(rhs)).name()); return false; } \
+	rhs.vname = node[#vname].as<type>();)
+#define TD_INTERNAL_YAML_STRUCT_DECODE_WITH_DEFAULT(preprocess, type, name, ...) preprocess(if (node[#name]) { rhs.name = node[#name].as<type>(); })
 
 #define TD_YAML_STRUCT(ns_name, struct_name, ...) namespace ns_name { \
 	struct struct_name { \
@@ -34,7 +35,8 @@ namespace YAML { \
 		} \
 	}; \
 }
-#define TD_YAML_STRUCT_FIELD(...) (__VA_ARGS__)
+#define TD_YAML_STRUCT_FIELD(...) (TD_EXPAND_MACRO, __VA_ARGS__)
+#define TD_YAML_STRUCT_FIELD_NO_PARSING(...) (TD_INTERNAL_YAML_STRUCT_FIELD_NO_PARSING, __VA_ARGS__)
 
 
 #define TD_INTERNAL_YAML_ENUM_FIELD(values) TD_CHOOSE_MACRO_2(TD_INTERNAL_YAML_ENUM_FIELD_NO_DEFAULT, TD_INTERNAL_YAML_ENUM_FIELD_WITH_DEFAULT, values)
@@ -46,10 +48,26 @@ namespace YAML { \
 #define TD_INTERNAL_YAML_ENUM_DECODE(values) TD_INTERNAL_YAML_ENUM_DECODE_UNWRAP values
 #define TD_INTERNAL_YAML_ENUM_DECODE_UNWRAP(name, ...) if (str == #name) { rhs = internal_enum::name; return true; }
 
+#define TD_INTERNAL_YAML_ENUM_BIT_OPERATOR(enum_name, op) constexpr enum_name operator op(enum_name a, enum_name b) noexcept { \
+	return static_cast<enum_name>(static_cast<std::underlying_type_t<enum_name>>(a) op static_cast<std::underlying_type_t<enum_name>>(b)); \
+} \
+constexpr enum_name& operator op=(enum_name& a, enum_name b) noexcept { \
+	a = a op b; \
+	return a; \
+}
+#define TD_INTERNAL_YAML_ENUM_BOOL_OPERATOR(enum_name, op) constexpr bool operator op(enum_name a, enum_name b) noexcept { \
+	return static_cast<std::underlying_type_t<enum_name>>(a) op static_cast<std::underlying_type_t<enum_name>>(b); \
+}
+
 #define TD_INTERNAL_YAML_ENUM(ns_name, enum_name, enum_name_with_base, ...) namespace ns_name { \
 	enum class enum_name_with_base { \
 		TD_APPLY_EACH(TD_INTERNAL_YAML_ENUM_FIELD, __VA_ARGS__) \
 	}; \
+	TD_INTERNAL_YAML_ENUM_BIT_OPERATOR(enum_name, |) \
+	TD_INTERNAL_YAML_ENUM_BIT_OPERATOR(enum_name, &) \
+	TD_INTERNAL_YAML_ENUM_BIT_OPERATOR(enum_name, ^) \
+	TD_INTERNAL_YAML_ENUM_BOOL_OPERATOR(enum_name, ==) \
+	TD_INTERNAL_YAML_ENUM_BOOL_OPERATOR(enum_name, !=) \
 } \
 namespace YAML { \
 	template<> \
@@ -62,8 +80,24 @@ namespace YAML { \
 		} \
 		static bool decode(const Node& node, ns_name::enum_name& rhs) { \
 			using internal_enum = ns_name::enum_name; \
+			auto f = [](const std::string& str, ns_name::enum_name& rhs) { \
+				TD_APPLY_EACH(TD_INTERNAL_YAML_ENUM_DECODE, __VA_ARGS__) \
+			}; \
+			if (node.IsSequence()) { \
+				for (auto n : node) { \
+					ns_name::enum_name temp; \
+					auto str = n.as<std::string>(); \
+					if (!f(str, temp)) { \
+						TD_CORE_ERROR("{} does not match any values of {}", str, typeid(decltype(rhs)).name()); \
+						return false; \
+					} \
+					rhs |= temp; \
+				} \
+				return true; \
+			} \
 			auto str = node.as<std::string>(); \
-			TD_APPLY_EACH(TD_INTERNAL_YAML_ENUM_DECODE, __VA_ARGS__) \
+			if (f(str, rhs)) { return true; } \
+			TD_CORE_ERROR("{} does not match any values of {}", str, typeid(decltype(rhs)).name()); \
 			return false; \
 		} \
 	}; \
@@ -71,6 +105,9 @@ namespace YAML { \
 #define TD_YAML_ENUM_WITH_BASE(ns_name, enum_name, base, ...) TD_INTERNAL_YAML_ENUM(ns_name, enum_name, enum_name : base, __VA_ARGS__)
 #define TD_YAML_ENUM(ns_name, enum_name, ...) TD_INTERNAL_YAML_ENUM(ns_name, enum_name, enum_name, __VA_ARGS__)
 #define TD_YAML_ENUM_FIELD(...) (__VA_ARGS__)
+
+//TD_YAML_STRUCT(Foo, Bar, TD_YAML_STRUCT_FIELD(uint32_t, age))
+//TD_YAML_ENUM(Foo, Bar, TD_YAML_ENUM_FIELD(ONE))
 
 namespace YAML
 {
