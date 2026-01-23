@@ -4,7 +4,7 @@
 
 #include "TwoD/Renderer/RenderLayer.hpp"
 #include "TwoDLib/Components/SpriteRenderer.hpp"
-#include "TwoD/Renderer/Shader.hpp"
+#include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
 
 #include "TwoD/SDL/TransferBuffer.hpp"
@@ -15,9 +15,6 @@ namespace TwoD
 	class SpriteRenderLayer : public RenderLayer
 	{
 	public:
-		static std::optional<Shader> LoadShader();
-
-	public:
 		SpriteRenderLayer();
 		~SpriteRenderLayer() = default;
 
@@ -27,7 +24,7 @@ namespace TwoD
 		virtual const std::vector<std::type_index>& GetRendererTypes() const override;
 
 	private:
-		Shader m_shader;
+		Shader* m_shader;
 		std::vector<size_t> m_indices;
 		SDL::TransferBuffer m_transferBuffer;
 		SDL::Buffer m_buffer;

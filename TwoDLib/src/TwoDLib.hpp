@@ -3,6 +3,7 @@
 
 #include "TwoDLib/Assets/Font.hpp"
 #include "TwoDLib/Assets/Sprite.hpp"
+#include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
 
 #include "TwoDLib/Components/Camera.hpp"
@@ -18,13 +19,14 @@ namespace TwoDLib
 {
 	constexpr static void Initialize(Init& init)
 	{
-		//info.AddBasePath(".")
+		init.AddBasePath("../TwoDLib/assets");
 	}
 
 	constexpr static void RegisterResources(Resources& resources)
 	{
 		resources.Register<TwoD::Sprite>();
 		resources.Register<TwoD::Font>();
+		resources.Register<TwoD::Shader>();
 		resources.Register<TwoD::SpriteAtlas>();
 	}
 

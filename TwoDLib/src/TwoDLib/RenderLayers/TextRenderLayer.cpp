@@ -5,104 +5,18 @@
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Components/Camera.hpp"
 
-extern const char* vertex;
-extern const char* fragment;
-
 namespace TwoD
 {
-	std::optional<Shader> TextRenderLayer::LoadShader()
-	{
-		auto& window = App::Get<Window>();
-
-		auto vertexShader = SDL::Shader::Load(
-			window,
-			vertex,
-			SDL::ShaderStage::VERTEX,
-			0, 0, 1, 1
-		);
-		if (!vertexShader)
-		{
-			TD_CORE_ERROR("Failed to load text vertex shader");
-			return {};
-		}
-
-		auto fragmentShader = SDL::Shader::Load(
-			window,
-			fragment,
-			SDL::ShaderStage::FRAGMENT,
-			1, 0, 0, 0
-		);
-		if (!fragmentShader)
-		{
-			TD_CORE_ERROR("Failed to load text fragment shader");
-			return {};
-		}
-
-		SDL::ColorTargetDescription colorTargetDescription{
-			.format = window.GetSwapchainTextureFormat(),
-			.blendState = {
-				.srcColorBlendfactor = SDL::BlendFactor::SRC_ALPHA,
-				.dstColorBlendfactor = SDL::BlendFactor::ONE_MINUS_SRC_ALPHA,
-				.colorBlendOp = SDL::BlendOp::ADD,
-				.srcAlphaBlendfactor = SDL::BlendFactor::ONE,
-				.dstAlphaBlendfactor = SDL::BlendFactor::ZERO,
-				.alphaBlendOp = SDL::BlendOp::ADD,
-				.colorWriteMask = SDL::ColorComponentFlags::R | SDL::ColorComponentFlags::G | SDL::ColorComponentFlags::B | SDL::ColorComponentFlags::A,
-				.enableBlend = true,
-				.enableColorWriteMask = true
-			}
-		};
-
-		SDL::VertexBufferDescription vertexBufferDescription{
-			.slot = 0,
-			.pitch = 0,
-			.inputRate = SDL::VertexInputRate::VERTEX
-		};
-
-		SDL::GraphicsPipelineInfo pipelineInfo{
-			.vertexShader = &vertexShader.value(),
-			.fragmentShader = &fragmentShader.value(),
-			.vertexInputState = {
-				.vertexBufferDescriptions = {vertexBufferDescription},
-				.vertexAttributes = {},
-			},
-			.primitiveType = SDL::PrimitiveType::TRIANGLELIST,
-			.rasterizerState = {
-				.fillMode = SDL::FillMode::FILL
-			},
-			.depthStencilState = {
-				.compareOp = SDL::CompareOp::LESS,
-				.enableDepthTest = true,
-				.enableDepthWrite = false
-			},
-			.targetInfo = {
-				.colorTargetDescriptions = {colorTargetDescription},
-				.depthStencilFormat = SDL::TextureFormat::D24_UNORM,
-				.hasDepthStencilTarget = true
-			}
-		};
-
-		auto pipeline = window.CreateGraphicsPipeline(pipelineInfo);
-		Shader shader;
-		shader.pipeline = std::move(pipeline);
-		return shader;
-	}
-
 	TextRenderLayer::TextRenderLayer()
 	{
-		auto shader = LoadShader();
-		if (shader)
-		{
-			m_shader = std::move(*shader);
-		}
-		App::Get<AssetManager>().Get<SpriteAtlas>("font-atlas").Pack();
+		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::TextRenderer");
 	}
 
 	void TextRenderLayer::Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const
 	{
 		auto& renderers = ecs.GetComponents<TextRenderer>();
 
-		m_shader.Bind(&renderPass);
+		m_shader->Bind(&renderPass);
 
 		int width, height;
 		App::Get<Window>().GetSize(width, height);
@@ -207,103 +121,3 @@ namespace TwoD
 		return s_types;
 	}
 }
-
-static const char* vertex = R"(
-struct Instance
-{
-    float4 color;
-    float2 texMin;
-    float2 texMax;
-    float2 quadMin;
-    float2 quadMax;
-};
-
-StructuredBuffer<Instance> dataBuffer : register(t0, space0);
-
-struct Output
-{
-    float4 position : SV_POSITION;
-    float4 color : TEXCOORD0;
-    float2 texCoord : TEXCOORD1;
-};
-
-static const uint indices[6] = { 0, 1, 2, 3, 2, 1 };
-
-cbuffer UniformBlock : register(b0, space1)
-{
-    float4x4 projection;
-    float4x4 view;
-    float4x4 model;
-}
-
-
-Output main(uint id : SV_VertexID)
-{
-    uint spriteIndex = id / 6;
-    uint index = indices[id % 6];
-    Instance data = dataBuffer[spriteIndex];
-    
-    const float2 texCoords[4] =
-    {
-        data.texMin,
-        { data.texMax.x, data.texMin.y },
-        { data.texMin.x, data.texMax.y },
-        data.texMax
-    };
-    
-    const float2 positions[4] =
-    {
-        data.quadMin,
-        { data.quadMax.x, data.quadMin.y },
-        { data.quadMin.x, data.quadMax.y },
-        data.quadMax
-    };
-    
-    Output output;
-    output.position = mul(projection, mul(view, mul(model, float4(positions[index], 0.0f, 1.0f))));
-    output.texCoord = texCoords[index];
-    output.color = data.color;
-    return output;
-}
-)";
-static const char* fragment = R"(
-Texture2D<float4> Texture : register(t0, space2);
-SamplerState Sampler : register(s0, space2);
-
-struct Input
-{
-    float4 color : TEXCOORD0;
-    float2 texCoord : TEXCOORD1;
-};
-
-const static float pxRange = 4.0;
-
-float2 sqr(float2 x)
-{
-	return x*x;
-}
-
-float screenPxRange(float2 texCoord)
-{
-    const float2 unitRange = float2(pxRange, pxRange) / float2(270.0f, 270.0f);
-    // If inversesqrt is not available, use vec2(1.0)/sqrt
-    const float2 screenTexSize = rsqrt(sqr(ddx(texCoord)) + sqr(ddy(texCoord)));
-    // Can also be approximated as screenTexSize = vec2(1.0)/fwidth(texCoord);
-    return max(0.5 * dot(unitRange, screenTexSize), 1.0);
-}
-
-float median(float r, float g, float b)
-{
-    return max(min(r, g), min(max(r, g), b));
-}
-
-float4 main(Input input) : SV_TARGET0
-{
-	//return float4(Texture.Sample(Sampler, input.texCoord).agb, 1.0f);
-    const float3 msd = Texture.Sample(Sampler, input.texCoord).agb;
-    const float sd = median(msd.r, msd.g, msd.b);
-    const float screenPxDistance = screenPxRange(input.texCoord) * (sd - 0.5);
-    const float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
-    return float4(input.color.rgb, input.color.a * opacity);
-}
-)";

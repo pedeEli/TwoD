@@ -7,10 +7,12 @@ const PER_ROW = 4
 const nStr = process.argv.at(2)
 if (nStr == undefined) {
 	console.log('Usage: node', process.argv[1], '<number>')
+	process.exit()
 }
 const n = parseInt(nStr)
 if (isNaN(n)) {
 	console.log('Usage:', nStr, 'is not a number')
+	process.exit()
 }
 
 const out = fs.createWriteStream(path.resolve('./TwoD/src/TwoD/Core/ApplyEachMacro.hpp'))
