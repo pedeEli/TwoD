@@ -453,8 +453,8 @@ TD_YAML_STRUCT(TwoD::SDL, ColorTargetDescription,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorTargetBlendState, blendState)
 )
 TD_YAML_STRUCT(TwoD::SDL, VertexInputState,
-    TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexBufferDescription>, vertexBufferDescriptions),
-    TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexAttribute>, vertexAttributes)
+	TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexBufferDescription>, vertexBufferDescriptions, {}),
+	TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexAttribute>, vertexAttributes, {})
 )
 TD_YAML_STRUCT(TwoD::SDL, RasterizerState,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::FillMode, fillMode, TwoD::SDL::FillMode::FILL),
@@ -489,7 +489,7 @@ TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineTargetInfo,
 TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineInfo,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Shader*, vertexShader, nullptr),
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Shader*, fragmentShader, nullptr),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputState, vertexInputState),
+	TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputState, vertexInputState, {}),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::PrimitiveType, primitiveType, TwoD::SDL::PrimitiveType::TRIANGLELIST),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::RasterizerState, rasterizerState, {}),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::MultisampleState, multisampleState, {}),
