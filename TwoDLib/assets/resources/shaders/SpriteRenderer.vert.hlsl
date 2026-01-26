@@ -54,8 +54,8 @@ Output main(uint id : SV_VertexID)
     float3x3 model =
     {
         data.model1.x, data.model2.x, data.model3.x,
-      data.model1.y, data.model2.y, data.model3.y,
-      0.0f, 0.0f, 1.0f
+        data.model1.y, data.model2.y, data.model3.y,
+        0.0f, 0.0f, 1.0f
     };
     float2 position = mul(model, positions[index]).xy;
     

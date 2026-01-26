@@ -11,9 +11,11 @@
 #include "TwoDLib/Components/Canvas.hpp"
 #include "TwoDLib/Components/SpriteRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
+#include "TwoDLib/Components/ColorRenderer.hpp"
 
 #include "TwoDLib/RenderLayers/SpriteRenderLayer.hpp"
 #include "TwoDLib/RenderLayers/TextRenderLayer.hpp"
+#include "TwoDLib/RenderLayers/ColorRenderLayer.hpp"
 
 namespace TwoDLib
 {
@@ -37,11 +39,13 @@ namespace TwoDLib
 		components.Register<TwoD::Canvas>();
 		components.Register<TwoD::SpriteRenderer>();
 		components.Register<TwoD::TextRenderer>();
+		components.Register<TwoD::ColorRenderer>();
 	}
 
 	constexpr static void RegisterRenderLayers(RenderLayers& renderLayers)
 	{
 		renderLayers.Register<TwoD::SpriteRenderLayer>();
 		renderLayers.Register<TwoD::TextRenderLayer>();
+		renderLayers.Register<TwoD::ColorRenderLayer>();
 	}
 }

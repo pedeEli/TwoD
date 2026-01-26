@@ -1,6 +1,7 @@
 name: test
 renderPipeline:
 - class TwoD::SpriteRenderLayer
+- class TwoD::ColorRenderLayer
 - class TwoD::TextRenderLayer
 entities:
 - name: ground
@@ -38,10 +39,23 @@ entities:
   components:
   - type: class TwoD::Canvas
   children:
-  - name: text
-    components:
-    - type: class TwoD::TextRenderer
-      layer: 5
-      font: Roboto
-      renderLocation: onScreen
-      text: Hello World!
+  - name: button
+    children:
+    - name: background
+      transform:
+        scale: { x: 15.0, y: 3.0 }
+      components:
+      - type: class TwoD::ColorRenderer
+        layer: 12
+        renderLocation: OnScreen
+        r: 255
+        g: 100
+        b: 100
+        a: 255
+    - name: text
+      components:
+      - type: class TwoD::TextRenderer
+        layer: 13
+        font: Roboto
+        renderLocation: OnScreen
+        text: Hello World!
