@@ -1,0 +1,29 @@
+#pragma once
+#include <typeindex>
+#include "TwoD/SDL/CommandBuffer.hpp"
+#include "TwoD/SDL/RenderPass.hpp"
+#include "TwoD/ECS/ECS.hpp"
+
+#include "Renderer.hpp"
+
+namespace TwoD
+{
+	class RenderHandler
+	{
+	public:
+		virtual ~RenderHandler() = default;
+
+		virtual void Init() = 0;
+		virtual void Update(const ECS& ecs, size_t handlerIndex) = 0;
+		virtual void Render(const ECS& ecs, Renderer& renderer, size_t index) = 0;
+		virtual void Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const = 0;
+
+		virtual const std::vector<std::type_index>& GetRendererTypes() const = 0;
+
+	protected:
+		std::vector<RendererHandlerInfo> m_rendererInfos;
+
+		friend class RenderSystem;
+	};
+}
+

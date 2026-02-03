@@ -7,6 +7,7 @@
 #include "TwoD/SDL/TransferBuffer.hpp"
 #include "TwoD/SDL/Texture.hpp"
 #include "TwoD/SDL/Sampler.hpp"
+#include "Renderer.hpp"
 #include "RenderHandler.hpp"
 
 namespace TwoD
@@ -64,48 +65,8 @@ namespace TwoD
 			}
 		}
 
-		void RenderQuad(
-			const glm::fmat3x3& transform,
-			const glm::fvec2& pos,
-			const glm::fvec2& size,
-			const glm::fvec4& color
-		);
-		void RenderQuad(
-			const glm::fmat3x3& transform,
-			const glm::fvec2& pos,
-			const glm::fvec2& size,
-			const glm::fvec2& tex1,
-			const glm::fvec2& tex2,
-			const TextureBinding& binding,
-			const glm::fvec4& color = { 1.0f, 1.0f, 1.0f, 1.0f }
-		);
-
-	private:
-		struct Vertex
-		{
-			glm::fvec2 pos;
-			glm::fvec2 tex;
-			glm::fvec4 color;
-		};
-		struct RenderCommand
-		{
-			size_t handlerIndex = 0;
-			size_t startIndex = 0;
-			size_t size = 0;
-			const glm::fmat4x4* projection;
-		};
-
 	private:
 		void Update(const ECS& ecs);
-		void NextBatch();
-		void RenderQuad(
-			const glm::fmat3x3& transform,
-			const glm::fvec2& pos,
-			const glm::fvec2& size,
-			const glm::fvec2& tex1,
-			const glm::fvec2& tex2,
-			const glm::fvec4& color
-		);
 
 	private:
 		std::vector<std::unique_ptr<RenderHandler>> m_renderHandlers;
@@ -113,27 +74,6 @@ namespace TwoD
 		std::vector<RendererHandlerInfo> m_rendererHandlerInfos;
 		bool m_dirty = true;
 		
-		SDL::Buffer m_vertexBuffer;
-		SDL::TransferBuffer m_vertexTransferBuffer;
-		Vertex* m_vertexBufferPtr = nullptr;
-		SDL::Buffer m_indexBuffer;
-		SDL::TransferBuffer m_indexTransferBuffer;
-		uint32_t* m_indexBufferPtr = nullptr;
-		size_t m_quadIndex = 0;
-
-		SDL::CommandBuffer* m_commandBuffer = nullptr;
-		SDL::RenderPass* m_renderPass = nullptr;
-		RenderCommand m_currentRenderCommand{};
-		std::vector<RenderCommand> m_renderCommands;
-
-		std::array<SDL::TextureSamplerBinding*, 4> m_textureBindings{};
-		SDL::Texture m_dummyTexture;
-		SDL::Sampler m_dummySampler;
-		SDL::TextureSamplerBinding m_dummyBinding;
-
-	private:
-		static inline constexpr size_t s_maxNumberOfQuads = 4000;
-		static inline constexpr size_t s_maxNumberOfVertices = s_maxNumberOfQuads * 4;
-		static inline constexpr size_t s_maxNumberOfIndices = s_maxNumberOfQuads * 6;
+		Renderer m_renderer;
 	};
 }
