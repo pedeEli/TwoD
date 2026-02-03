@@ -15,7 +15,7 @@ namespace TwoD
 			glm::fvec2 texMin;
 			glm::fvec2 texMax;
 			glm::fvec2 quadMin;
-			glm::fvec2 quadMax;
+			glm::fvec2 quadSize;
 		};
 
 	public:

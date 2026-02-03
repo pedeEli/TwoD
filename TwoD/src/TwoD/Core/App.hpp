@@ -10,6 +10,7 @@
 #include "TwoD/Assets/AssetManager.hpp"
 
 #include "TwoD/Renderer/RenderSystem.hpp"
+#include "TwoD/Renderer2/RenderSystem2.hpp"
 
 #include "TwoD/Systems/SceneSystem.hpp"
 #include "TwoD/Systems/InputSystem.hpp"
@@ -54,6 +55,10 @@ namespace TwoD
 			{
 				return Get().m_renderSystem;
 			}
+			else if constexpr (std::is_same_v<T, RenderSystem2>)
+			{
+				return Get().m_renderSystem2;
+			}
 			else if constexpr (std::is_same_v<T, InputSystem>)
 			{
 				return Get().m_inputSystem;
@@ -83,6 +88,10 @@ namespace TwoD
 		requires(std::is_base_of_v<RenderLayer, T>)
 		void RegisterRenderLayer() { m_renderSystem.RegisterLayer<T>(); }
 
+		template<class T>
+		requires(std::is_base_of_v<RenderLayer2, T>)
+		void RegisterRenderLayer2() { m_renderSystem2.RegisterLayer<T>(); }
+
 	private:
 		void HandleEvents();
 
@@ -97,6 +106,7 @@ namespace TwoD
 		Window m_window;
 		SceneSystem m_sceneSystem;
 		RenderSystem m_renderSystem;
+		RenderSystem2 m_renderSystem2;
 		ECS m_ecs;
 		AssetManager m_assetManager;
 		InputSystem m_inputSystem;

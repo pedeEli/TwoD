@@ -59,3 +59,14 @@ entities:
         font: Roboto
         renderLocation: OnScreen
         text: Hello World!
+
+- name: test
+  transform:
+    scale: { x: 3.0, y: 3.0 }
+  components:
+  - type: class TwoD::ColorRenderer
+    layer: 100
+    r: 100
+    g: 200
+    b: 200
+    a: 255

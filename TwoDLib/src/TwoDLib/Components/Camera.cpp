@@ -49,6 +49,8 @@ namespace TwoD
 		m_inverseViewMatrix = glm::inverse(m_viewMatrix);
 
 		m_mousePositionWorld = ScreenToWorldSpace(App::Get<InputSystem>().GetMousePosition());
+
+		m_projectionViewMatrix = m_projectionMatrix * m_inverseViewMatrix;
 	}
 
 	const glm::fvec2 Camera::ScreenToWorldSpace(const glm::fvec2 pos) const

@@ -21,17 +21,17 @@ namespace TwoD
 		{
 			SDL::Surface surface;
 			SDL::Rect src;
-			std::function<void(SpriteRect)> callback;
+			std::function<void(SpriteRect, float, float)> callback;
 		};
 
 	public:
 		~SpriteAtlas() = default;
 
-		void Add(SDL::Surface& surface, SDL::Rect& src, std::function<void(SpriteRect)> callback)
+		void Add(SDL::Surface& surface, SDL::Rect& src, decltype(SpriteInfo::callback) callback)
 		{
 			m_sprites.emplace_back(std::move(surface), src, callback);
 		}
-		void Add(SDL::Surface& surface, std::function<void(SpriteRect)> callback)
+		void Add(SDL::Surface& surface, decltype(SpriteInfo::callback) callback)
 		{
 			m_sprites.emplace_back(
 				std::move(surface),
@@ -52,6 +52,8 @@ namespace TwoD
 			TD_FIELD(SDL::TextureFormat, textureFormat),
 			TD_FIELD(uint32_t, gap, 0)
 		)
+
+		SDL::TextureSamplerBinding binding;
 
 	private:
 		std::vector<SpriteInfo> m_sprites{};

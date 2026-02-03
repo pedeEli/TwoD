@@ -39,6 +39,8 @@ namespace TwoD
 			TD_FIELD(std::string, file)
 		)
 
+		SDL::TextureSamplerBinding binding;
+
 	private:
 		glm::ivec2 m_atlasSize;
 		SDL::Texture m_texture;

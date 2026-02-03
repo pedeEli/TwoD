@@ -75,7 +75,7 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		std::vector<T>& GetComponents()
+		std::vector<T>& GetComponents() const
 		{
 			return GetStorage<T>()->GetAll();
 		}
@@ -88,11 +88,11 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		ComponentStorageImpl<T>* GetStorage()
+		ComponentStorageImpl<T>* GetStorage() const
 		{
 			return static_cast<ComponentStorageImpl<T>*>(GetStorage(typeid(T).name()));
 		}
-		ComponentStorage* GetStorage(const std::string& name)
+		ComponentStorage* GetStorage(const std::string& name) const
 		{
 			TD_CORE_ASSERT(m_storages.contains(name))
 			auto storage = m_storages.find(name);

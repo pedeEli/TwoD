@@ -36,18 +36,19 @@ namespace TwoD
 			rowHeight = std::max(rowHeight, height);
 		}
 
-
+		float halfPixelW = 0.5f / atlasWidthF;
+		float halfPixelH = 0.5f / atlasHeightF;
 		SDL::Surface surface(atlasWidth, atlasHeight, pixelFormat);
 		for (size_t i = 0; i < spritePositions.size(); i++)
 		{
 			auto& pos = spritePositions[i];
 			auto& sprite = m_sprites[i];
-			sprite.callback({ pos.x / atlasWidthF, pos.y / atlasHeightF, pos.w / atlasWidthF, pos.h / atlasHeightF });
+			sprite.callback({ pos.x / atlasWidthF, pos.y / atlasHeightF, pos.w / atlasWidthF, pos.h / atlasHeightF }, halfPixelW, halfPixelH);
 			sprite.surface.BlitTo(sprite.src, surface, pos);
 		}
 		m_sprites.clear();
 
-		//surface.SaveBMP(name + ".bmp");
+		surface.SaveBMP(name + ".bmp");
 
 		auto& window = App::Get<Window>();
 
@@ -96,6 +97,9 @@ namespace TwoD
 			.d = 1
 		};
 		copyPass.UploadToTexture(source, destination, false);
+
+		binding.texture = &m_texture;
+		binding.sampler = &m_sampler;
 	}
 
 	void SpriteAtlas::Bind(SDL::RenderPass* renderPass)

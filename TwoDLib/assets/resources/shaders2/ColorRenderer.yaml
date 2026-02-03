@@ -1,0 +1,50 @@
+type: class TwoD::Shader
+name: TwoDLib::ColorRenderer2
+vertex:
+  file: ColorRenderer.vert.hlsl
+  samplerCount: 0
+  storageTextureCount: 0
+  storageBufferCount: 0
+  uniformBufferCount: 1
+fragment:
+  file: ColorRenderer.frag.hlsl
+  samplerCount: 0
+  storageTextureCount: 0
+  storageBufferCount: 0
+  uniformBufferCount: 0
+pipelineInfo:
+  vertexInputState:
+    vertexBufferDescriptions:
+    - slot: 0
+      pitch: 32
+      inputRate: VERTEX
+    vertexAttributes:
+    - location: 0
+      bufferSlot: 0
+      format: FLOAT2
+      offset: 0
+    - location: 1
+      bufferSlot: 0
+      format: FLOAT2
+      offset: 8
+    - location: 2
+      bufferSlot: 0
+      format: FLOAT4
+      offset: 16
+  depthStencilState:
+    compareOp: LESS
+    enableDepthTest: true
+  targetInfo:
+    colorTargetDescriptions:
+    - blendState:
+        srcColorBlendfactor: SRC_ALPHA
+        dstColorBlendfactor: ONE_MINUS_SRC_ALPHA
+        colorBlendOp: ADD
+        srcAlphaBlendfactor: ONE
+        dstAlphaBlendfactor: ZERO
+        alphaBlendOp: ADD
+        colorWriteMask: [R, G, B, A]
+        enableBlend: true
+        enableColorWriteMask: true
+    depthStencilFormat: D24_UNORM
+    hasDepthStencilTarget: true

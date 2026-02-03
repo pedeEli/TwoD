@@ -37,7 +37,7 @@ namespace TwoD
 		)
 
 	private:
-		void Apply(uint32_t width, uint32_t height, SpriteRect rect);
+		void Apply(uint32_t width, uint32_t height, SpriteRect rect, float halfPixelW, float halfPixelH);
 
 	private:
 		SpriteRect m_rect = { 0, 0, 0, 0 };

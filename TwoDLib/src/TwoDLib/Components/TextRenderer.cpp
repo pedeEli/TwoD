@@ -14,6 +14,7 @@ namespace TwoD
 	void TextRenderer::Destroy()
 	{
 		App::Get<RenderSystem>().SetDirty<TextRenderer>();
+		App::Get<RenderSystem2>().UpdateLayerFor<TextRenderer>(layer);
 	}
 
 	void TextRenderer::SetText(const std::string& text)
@@ -52,7 +53,7 @@ namespace TwoD
 				{ al / width, at / height },
 				{ ar / width, ab / height },
 				{ x + pl * fsScale, metrics.lineHeight - pt * fsScale },
-				{ x + pr * fsScale, metrics.lineHeight - pb * fsScale }
+				{ (pr - pl) * fsScale, (pt - pb) * fsScale }
 			);
 
 			if (i + 1 < text.size())
@@ -64,5 +65,6 @@ namespace TwoD
 		}
 
 		App::Get<RenderSystem>().SetDirty<TextRenderer>();
+		App::Get<RenderSystem2>().UpdateLayerFor<TextRenderer>(layer);
 	}
 }

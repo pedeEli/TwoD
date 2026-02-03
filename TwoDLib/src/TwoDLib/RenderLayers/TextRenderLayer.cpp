@@ -48,7 +48,7 @@ namespace TwoD
 				data[i].texMin = glyph.texMin;
 				data[i].texMax = glyph.texMax;
 				data[i].quadMin = glyph.quadMin;
-				data[i].quadMax = glyph.quadMax;
+				data[i].quadMax = glyph.quadMin + glyph.quadSize;
 			}
 
 			auto size = static_cast<uint32_t>(sizeof(Instance) * glyphs.size());

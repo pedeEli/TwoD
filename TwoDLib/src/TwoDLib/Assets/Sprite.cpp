@@ -16,14 +16,17 @@ namespace TwoD
 		auto height = surface.GetHeight();
 
 		auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas");
-		atlas.Add(surface, [this, width, height](SpriteRect rect) {
-			Apply(width, height, rect);
+		atlas.Add(surface, [this, width, height](SpriteRect rect, float halfPixelW, float halfPixelH) {
+			Apply(width, height, rect, halfPixelW, halfPixelH);
 		});
 	}
 
-	void Sprite::Apply(uint32_t width, uint32_t height, SpriteRect rect)
+	void Sprite::Apply(uint32_t width, uint32_t height, SpriteRect rect, float halfPixelW, float halfPixelH)
 	{
-		m_rect = rect;
+		m_rect.u = rect.u + halfPixelW;
+		m_rect.v = rect.v + halfPixelH;
+		m_rect.w = rect.w - 2 * halfPixelW;
+		m_rect.h = rect.h - 2 * halfPixelH;
 		uint32_t currentX = 0;
 		uint32_t currentY = 0;
 
@@ -39,7 +42,7 @@ namespace TwoD
 			float v = (float)currentY / (float)height * rect.h + rect.v;
 			float w = (float)slices->width / (float)width * rect.w;
 			float h = (float)slices->height / (float)height * rect.h;
-			m_rects.emplace_back(u, v, w, h);
+			m_rects.emplace_back(u + halfPixelW, v + halfPixelH, w - 2 * halfPixelW, h - 2 * halfPixelH);
 			
 			currentX += slices->width;
 			if (currentX + slices->width >= width)

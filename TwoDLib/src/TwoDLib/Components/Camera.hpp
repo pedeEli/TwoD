@@ -20,6 +20,7 @@ namespace TwoD
 		const glm::fmat4x4& GetInverseProjectionMatrix() const { return m_inverseProjectionMatrix; }
 
 		const glm::fmat4x4& GetProjectionMatrixFixedZoom() const { return m_projectionMatrixFixedZoom; }
+		const glm::fmat4x4& GetProjectionViewMatrix() const { return m_projectionViewMatrix; }
 
 		const glm::fvec2& GetMousePositionWorld() const { return m_mousePositionWorld; }
 
@@ -43,6 +44,7 @@ namespace TwoD
 		glm::fmat4x4 m_inverseProjectionMatrix;
 
 		glm::fmat4x4 m_projectionMatrixFixedZoom;
+		glm::fmat4x4 m_projectionViewMatrix;
 
 		glm::fvec2 m_mousePositionWorld;
 		Window* m_window;

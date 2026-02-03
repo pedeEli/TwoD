@@ -119,10 +119,13 @@ namespace TwoD
 
 		msdfgen::destroyFont(font);
 		msdfgen::deinitializeFreetype(ft);
+
+		binding.texture = &m_texture;
+		binding.sampler = &m_sampler;
 	}
 
 	void Font::Bind(SDL::RenderPass* renderPass)
 	{
-		renderPass->BindFragmentSamplers(0, { { &m_texture, &m_sampler } });
+		renderPass->BindFragmentSamplers(1, { { &m_texture, &m_sampler } });
 	}
 }

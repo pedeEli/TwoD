@@ -17,6 +17,10 @@
 #include "TwoDLib/RenderLayers/TextRenderLayer.hpp"
 #include "TwoDLib/RenderLayers/ColorRenderLayer.hpp"
 
+#include "TwoDLib/RenderLayers2/SpriteRenderLayer2.hpp"
+#include "TwoDLib/RenderLayers2/ColorRenderLayer2.hpp"
+#include "TwoDLib/RenderLayers2/TextRenderLayer2.hpp"
+
 namespace TwoDLib
 {
 	constexpr static void Initialize(Init& init)
@@ -47,5 +51,9 @@ namespace TwoDLib
 		renderLayers.Register<TwoD::SpriteRenderLayer>();
 		renderLayers.Register<TwoD::TextRenderLayer>();
 		renderLayers.Register<TwoD::ColorRenderLayer>();
+
+		renderLayers.Register2<TwoD::SpriteRenderLayer2>();
+		renderLayers.Register2<TwoD::ColorRenderLayer2>();
+		renderLayers.Register2<TwoD::TextRenderLayer2>();
 	}
 }
