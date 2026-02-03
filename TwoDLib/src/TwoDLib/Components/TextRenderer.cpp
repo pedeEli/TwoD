@@ -13,8 +13,7 @@ namespace TwoD
 
 	void TextRenderer::Destroy()
 	{
-		App::Get<RenderSystem>().SetDirty<TextRenderer>();
-		App::Get<RenderSystem2>().UpdateLayerFor<TextRenderer>(layer);
+		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
 	}
 
 	void TextRenderer::SetText(const std::string& text)
@@ -64,7 +63,6 @@ namespace TwoD
 			}
 		}
 
-		App::Get<RenderSystem>().SetDirty<TextRenderer>();
-		App::Get<RenderSystem2>().UpdateLayerFor<TextRenderer>(layer);
+		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
 	}
 }

@@ -7,98 +7,61 @@
 
 namespace TwoD
 {
-	SpriteRenderLayer::SpriteRenderLayer()
+	void SpriteRenderLayer::Init()
 	{
 		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::SpriteRenderer");
-		App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas").Pack();
+		m_spriteAtlas = &App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas");
+		m_spriteAtlas->Pack();
 	}
 
-	void SpriteRenderLayer::Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const
+	void SpriteRenderLayer::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const
 	{
-		auto& renderers = ecs.GetComponents<SpriteRenderer>();
-		auto size = static_cast<uint32_t>(sizeof(Instance) * renderers.size());
-
-		auto data = m_transferBuffer.Map<Instance>(true);
-		for (size_t i = 0; i < m_indices.size(); i++)
-		{
-			auto& renderer = renderers[m_indices[i]];
-
-			auto& model = renderer.GetComponent<Transform>()->GetWorldMatrix();
-			data[i].model1.x = model[0].x;
-			data[i].model1.y = model[0].y;
-			data[i].model2.x = model[1].x;
-			data[i].model2.y = model[1].y;
-			data[i].model3.x = model[2].x;
-			data[i].model3.y = model[2].y;
-
-			data[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-			if (renderer.slice)
-			{
-				data[i].tex = renderer.sprite->GetRect(*renderer.slice);
-			}
-			else
-			{
-				data[i].tex = renderer.sprite->GetRect();
-			}
-		}
-
-		if (size == 0)
-		{
-			return;
-		}
-
-		auto copyPass = commandBuffer.BeginCopyPass();
-		copyPass.UploadToBuffer(
-			{ &m_transferBuffer, 0 },
-			{ &m_buffer, 0, size },
-			true
-		);
-
-		m_shader->Bind(&renderPass);
-		renderPass.BindVertexStorageBuffers(0, { &m_buffer });
-		auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas");
-		atlas.Bind(&renderPass);
-
-		auto camera = Camera::Get();
-		Uniform uniform{
-			camera->GetProjectionMatrix(),
-			camera->GetWorldToCameraMatrix(),
-			atlas.GetSize()
-		};
-		commandBuffer.PushVertexUniformData<Uniform>(0, uniform);
-
-		renderPass.DrawPrimitives(static_cast<uint32_t>(renderers.size() * 6), 1, 0, 0);
+		m_shader->Bind(renderPass);
 	}
 
-	void SpriteRenderLayer::Update(ECS& ecs, Window& window)
+	void SpriteRenderLayer::Render(const ECS& ecs, RenderSystem& renderSystem, SDL::RenderPass* renderPass, size_t index)
+	{
+		auto& renderer = ecs.GetComponents<SpriteRenderer>()[index];
+		auto transform = renderer.GetComponent<Transform>();
+		auto& rect = renderer.slice ? renderer.sprite->GetRect(*renderer.slice) : renderer.sprite->GetRect();
+		renderSystem.RenderQuad(
+			transform->GetWorldMatrix(),
+			{ -0.5f, -0.5f },
+			{ 1.0f, 1.0f },
+			{ rect.u, rect.v },
+			{ rect.u + rect.w, rect.v + rect.h },
+			{ &m_spriteAtlas->binding, 0 }
+		);
+	}
+
+	void SpriteRenderLayer::Update(const ECS& ecs)
 	{
 		auto& renderers = ecs.GetComponents<SpriteRenderer>();
 		auto size = renderers.size();
-		if (m_indices.size() < size)
+
+		if (m_indexLayers.size() != size)
 		{
-			m_indices.reserve(size);
-			for (size_t i = m_indices.size(); i < size; i++)
+			auto* camera = Camera::Get();
+			m_indexLayers.clear();
+			m_indexLayers.reserve(size);
+			for (size_t i = 0; i < size; i++)
 			{
-				m_indices.push_back(i);
+				m_indexLayers.emplace_back(
+					i,
+					renderers[i].layer,
+					&camera->GetProjectionViewMatrix()
+				);
 			}
 		}
-		else if (m_indices.size() > size)
-		{
-			m_indices.erase(std::find_if(m_indices.begin(), m_indices.end(), [size](size_t index)
-				{
-					return index >= size;
-				}));
-		}
-		std::sort(m_indices.begin(), m_indices.end(), [&renderers](auto a, auto b)
-			{
-				auto layerA = renderers[a].layer;
-				auto layerB = renderers[b].layer;
-				return layerA < layerB;
-			});
 
-		auto bufferSize = static_cast<uint32_t>(sizeof(Instance) * size);
-		m_buffer = window.CreateBuffer({ SDL::BufferUsage::GRAPHICS_STORAGE_READ, bufferSize });
-		m_transferBuffer = window.CreateTransferBuffer({ SDL::TransferBufferUsage::UPLOAD, bufferSize });
+		std::sort(m_indexLayers.begin(), m_indexLayers.end(), [&renderers](IndexLayer& a, IndexLayer& b)
+			{
+				if (a.layer == b.layer)
+				{
+					return a.projection < b.projection;
+				}
+				return a.layer < b.layer;
+			});
 	}
 
 	const std::vector<std::type_index>& SpriteRenderLayer::GetRendererTypes() const

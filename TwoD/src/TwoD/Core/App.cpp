@@ -45,7 +45,7 @@ namespace TwoD
 		m_ecs.Register<Transform>();
 		m_assetManager.Load();
 
-		m_renderSystem2.Init();
+		m_renderSystem.Init();
 
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
@@ -77,8 +77,7 @@ namespace TwoD
 			float delta = (currentTick - lastTick) / 1000.0f;
 			lastTick = currentTick;
 			m_ecs.Update(delta);
-			m_renderSystem2.Render();
-			//m_renderSystem.Render();
+			m_renderSystem.Render();
 		}
 
 		m_sceneSystem.Clear();

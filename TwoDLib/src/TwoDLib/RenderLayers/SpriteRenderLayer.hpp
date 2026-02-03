@@ -7,43 +7,22 @@
 #include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
 
-#include "TwoD/SDL/TransferBuffer.hpp"
-#include "TwoD/SDL/Buffer.hpp"
-
 namespace TwoD
 {
 	class SpriteRenderLayer : public RenderLayer
 	{
 	public:
-		SpriteRenderLayer();
-		~SpriteRenderLayer() = default;
+		void Init() override;
 
-		virtual void Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const override;
-		virtual void Update(ECS& ecs, Window& window) override;
+		void Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const override;
+		void Render(const ECS& ecs, RenderSystem& renderSystem, SDL::RenderPass* renderPass, size_t index) override;
+		void Update(const ECS& ecs) override;
 
-		virtual const std::vector<std::type_index>& GetRendererTypes() const override;
+		const std::vector<std::type_index>& GetRendererTypes() const override;
 
 	private:
+		SpriteAtlas* m_spriteAtlas;
 		Shader* m_shader;
-		std::vector<size_t> m_indices;
-		SDL::TransferBuffer m_transferBuffer;
-		SDL::Buffer m_buffer;
-
-		struct Instance
-		{
-			glm::fvec4 color;
-			SpriteRect tex;
-			glm::fvec2 model1;
-			glm::fvec2 model2;
-			glm::fvec2 model3;
-			glm::fvec2 padding;
-		};
-		struct Uniform
-		{
-			glm::fmat4x4 projection;
-			glm::fmat4x4 view;
-			glm::fvec2 atlasSize;
-		};
 
 	private:
 		static inline const std::vector<std::type_index> s_types = { typeid(SpriteRenderer) };

@@ -2,7 +2,6 @@
 #include "Sprite.hpp"
 
 #include "TwoD/Core/App.hpp"
-#include "TwoDLib/RenderLayers/SpriteRenderLayer.hpp"
 #include "SpriteAtlas.hpp"
 
 namespace TwoD

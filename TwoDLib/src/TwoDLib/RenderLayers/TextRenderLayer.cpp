@@ -7,113 +7,65 @@
 
 namespace TwoD
 {
-	TextRenderLayer::TextRenderLayer()
+	void TextRenderLayer::Init()
 	{
 		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::TextRenderer");
 	}
 
-	void TextRenderLayer::Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const
+	void TextRenderLayer::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const
 	{
-		auto& renderers = ecs.GetComponents<TextRenderer>();
+		m_shader->Bind(renderPass);
+	}
 
-		m_shader->Bind(&renderPass);
+	void TextRenderLayer::Render(const ECS& ecs, RenderSystem& renderSystem, SDL::RenderPass* renderPass, size_t index)
+	{
+		auto& renderer = ecs.GetComponents<TextRenderer>()[index];
+		auto& transform = renderer.GetComponent<Transform>()->GetWorldMatrix();
+		auto& glyphs = renderer.GetGlyphs();
 
-		int width, height;
-		App::Get<Window>().GetSize(width, height);
-
-		auto camera = Camera::Get();
-		Uniform uniformInWorld{
-			camera->GetProjectionMatrix(),
-			camera->GetWorldToCameraMatrix(),
-			{ 1.0f }
-		};
-		Uniform uniformOnScreen{
-			camera->GetProjectionMatrixFixedZoom(),
-			{ 1.0f },
-			{ 1.0f }
-		};
-
-		size_t i = 0;
-		auto data = m_transferBuffer.Map<Instance>(true);
-		for (auto index : m_indices)
+		for (auto& glyph : glyphs)
 		{
-			auto& renderer = renderers[index];
-			renderer.font->Bind(&renderPass);
-			const auto& glyphs = renderer.GetGlyphs();
-
-			for (size_t i = 0; i < glyphs.size(); i++)
-			{
-				auto& glyph = glyphs[i];
-				data[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
-				data[i].texMin = glyph.texMin;
-				data[i].texMax = glyph.texMax;
-				data[i].quadMin = glyph.quadMin;
-				data[i].quadMax = glyph.quadMin + glyph.quadSize;
-			}
-
-			auto size = static_cast<uint32_t>(sizeof(Instance) * glyphs.size());
-			auto copyPass = commandBuffer.BeginCopyPass();
-			copyPass.UploadToBuffer(
-				{ &m_transferBuffer, 0 },
-				{ &m_buffer, 0, size },
-				true
+			renderSystem.RenderQuad(
+				transform,
+				glyph.quadMin,
+				glyph.quadSize,
+				glyph.texMin,
+				glyph.texMax,
+				{ &renderer.font->binding, 1 }
 			);
-
-			Uniform& uniform = renderer.renderLocation == RenderLocation::InWorld ? uniformInWorld : uniformOnScreen;
-
-			auto& model = renderer.GetComponent<Transform>()->GetWorldMatrix();
-			uniform.model[0][0] = model[0][0];
-			uniform.model[0][1] = model[0][1];
-			uniform.model[1][0] = model[1][0];
-			uniform.model[1][1] = model[1][1];
-			uniform.model[3][0] = model[2][0];
-			uniform.model[3][1] = model[2][1];
-
-			renderPass.BindVertexStorageBuffers(0, { &m_buffer });
-			commandBuffer.PushVertexUniformData<Uniform>(0, uniform);
-			renderPass.DrawPrimitives(glyphs.size() * 6, 1, 0, 0);
 		}
 	}
 
-	void TextRenderLayer::Update(ECS& ecs, Window& window)
+	void TextRenderLayer::Update(const ECS& ecs)
 	{
 		auto& renderers = ecs.GetComponents<TextRenderer>();
 		auto size = renderers.size();
-		if (m_indices.size() < size)
+
+		if (m_indexLayers.size() != size)
 		{
-			m_indices.reserve(size);
-			for (size_t i = m_indices.size(); i < size; i++)
+			auto* camera = Camera::Get();
+			m_indexLayers.clear();
+			m_indexLayers.reserve(size);
+			for (size_t i = 0; i < size; i++)
 			{
-				m_indices.push_back(i);
+				m_indexLayers.emplace_back(
+					i,
+					renderers[i].layer,
+					renderers[i].renderLocation == RenderLocation::InWorld
+					? &camera->GetProjectionViewMatrix()
+					: &camera->GetProjectionMatrixFixedZoom()
+				);
 			}
 		}
-		else if (m_indices.size() > size)
-		{
-			m_indices.erase(std::find_if(m_indices.begin(), m_indices.end(), [size](size_t index)
-				{
-					return index >= size;
-				}));
-		}
-		std::sort(m_indices.begin(), m_indices.end(), [&renderers](auto a, auto b)
+
+		std::sort(m_indexLayers.begin(), m_indexLayers.end(), [&renderers](IndexLayer& a, IndexLayer& b)
 			{
-				auto layerA = renderers[a].layer;
-				auto layerB = renderers[b].layer;
-				return layerA < layerB;
+				if (a.layer == b.layer)
+				{
+					return a.projection < b.projection;
+				}
+				return a.layer < b.layer;
 			});
-
-		uint32_t bufferSize = 0;
-		for (auto& renderer : renderers)
-		{
-			bufferSize = std::max(bufferSize, static_cast<uint32_t>(renderer.GetGlyphs().size()));
-		}
-
-		if (bufferSize != m_bufferSize)
-		{
-			uint32_t size = bufferSize * sizeof(Instance);
-			m_buffer = window.CreateBuffer({ SDL::BufferUsage::GRAPHICS_STORAGE_READ, size });
-			m_transferBuffer = window.CreateTransferBuffer({ SDL::TransferBufferUsage::UPLOAD, size });
-			m_bufferSize = bufferSize;
-		}
 	}
 
 	const std::vector<std::type_index>& TextRenderLayer::GetRendererTypes() const

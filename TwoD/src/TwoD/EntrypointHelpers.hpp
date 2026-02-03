@@ -13,13 +13,6 @@ public:
 		m_app.RegisterRenderLayer<Layer>();
 	}
 
-	template<class Layer>
-	requires(std::is_base_of_v<TwoD::RenderLayer2, Layer>)
-	constexpr void Register2()
-	{
-		m_app.RegisterRenderLayer2<Layer>();
-	}
-
 private:
 	TwoD::App& m_app;
 };

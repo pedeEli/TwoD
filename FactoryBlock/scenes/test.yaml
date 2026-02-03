@@ -1,8 +1,4 @@
 name: test
-renderPipeline:
-- class TwoD::SpriteRenderLayer
-- class TwoD::ColorRenderLayer
-- class TwoD::TextRenderLayer
 entities:
 - name: ground
   components:

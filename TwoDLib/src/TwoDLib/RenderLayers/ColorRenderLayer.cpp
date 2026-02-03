@@ -7,90 +7,63 @@
 
 namespace TwoD
 {
-	ColorRenderLayer::ColorRenderLayer()
+	void ColorRenderLayer::Init()
 	{
 		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::ColorRenderer");
 	}
 
-	void ColorRenderLayer::Render(ECS& ecs, SDL::CommandBuffer& commandBuffer, SDL::RenderPass& renderPass) const
+	void ColorRenderLayer::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const
 	{
-		auto& renderers = ecs.GetComponents<ColorRenderer>();
-		auto size = static_cast<uint32_t>(sizeof(Instance) * renderers.size());
-
-		auto data = m_transferBuffer.Map<Instance>(true);
-		for (size_t i = 0; i < m_indices.size(); i++)
-		{
-			auto& renderer = renderers[m_indices[i]];
-
-			auto& model = renderer.GetComponent<Transform>()->GetWorldMatrix();
-			data[i].model1.x = model[0].x;
-			data[i].model1.y = model[0].y;
-			data[i].model2.x = model[1].x;
-			data[i].model2.y = model[1].y;
-			data[i].model3.x = model[2].x;
-			data[i].model3.y = model[2].y;
-			data[i].color.r = static_cast<float>(renderer.r) / 255.0f;
-			data[i].color.g = static_cast<float>(renderer.g) / 255.0f;
-			data[i].color.b = static_cast<float>(renderer.b) / 255.0f;
-			data[i].color.a = static_cast<float>(renderer.a) / 255.0f;
-			data[i].inWorld = renderer.renderLocation == TwoD::RenderLocation::InWorld;
-		}
-
-		if (size == 0)
-		{
-			return;
-		}
-
-		auto copyPass = commandBuffer.BeginCopyPass();
-		copyPass.UploadToBuffer(
-			{ &m_transferBuffer, 0 },
-			{ &m_buffer, 0, size },
-			true
-		);
-
-		m_shader->Bind(&renderPass);
-		renderPass.BindVertexStorageBuffers(0, { &m_buffer });
-
-		auto camera = Camera::Get();
-		Uniform uniform{
-			camera->GetProjectionMatrix(),
-			camera->GetProjectionMatrixFixedZoom(),
-			camera->GetWorldToCameraMatrix()
-		};
-		commandBuffer.PushVertexUniformData<Uniform>(0, uniform);
-
-		renderPass.DrawPrimitives(static_cast<uint32_t>(renderers.size() * 6), 1, 0, 0);
+		m_shader->Bind(renderPass);
 	}
 
-	void ColorRenderLayer::Update(ECS& ecs, Window& window)
+	void ColorRenderLayer::Render(const ECS& ecs, RenderSystem& renderSystem, SDL::RenderPass* renderPass, size_t index)
+	{
+		auto& renderer = ecs.GetComponents<ColorRenderer>()[index];
+		auto transform = renderer.GetComponent<Transform>();
+		renderSystem.RenderQuad(
+			transform->GetWorldMatrix(),
+			{ -0.5f, -0.5f },
+			{ 1.0f, 1.0f },
+			{
+				static_cast<float>(renderer.r) / 255.0f,
+				static_cast<float>(renderer.g) / 255.0f,
+				static_cast<float>(renderer.b) / 255.0f,
+				static_cast<float>(renderer.a) / 255.0f
+			}
+		);
+	}
+
+	void ColorRenderLayer::Update(const ECS& ecs)
 	{
 		auto& renderers = ecs.GetComponents<ColorRenderer>();
 		auto size = renderers.size();
-		if (m_indices.size() < size)
+
+		if (m_indexLayers.size() != size)
 		{
-			m_indices.reserve(size);
-			for (size_t i = m_indices.size(); i < size; i++)
+			auto* camera = Camera::Get();
+			m_indexLayers.clear();
+			m_indexLayers.reserve(size);
+			for (size_t i = 0; i < size; i++)
 			{
-				m_indices.push_back(i);
+				m_indexLayers.emplace_back(
+					i,
+					renderers[i].layer,
+					renderers[i].renderLocation == RenderLocation::InWorld
+						? &camera->GetProjectionViewMatrix()
+						: &camera->GetProjectionMatrixFixedZoom()
+				);
 			}
 		}
-		else if (m_indices.size() > size)
-		{
-			m_indices.erase(std::find_if(m_indices.begin(), m_indices.end(), [size](size_t index)
-				{
-					return index >= size;
-				}));
-		}
-		std::sort(m_indices.begin(), m_indices.end(), [&renderers](auto a, auto b)
-			{
-				auto layerA = renderers[a].layer;
-				auto layerB = renderers[b].layer;
-				return layerA < layerB;
-			});
 
-		auto bufferSize = static_cast<uint32_t>(sizeof(Instance) * size);
-		m_buffer = window.CreateBuffer({ SDL::BufferUsage::GRAPHICS_STORAGE_READ, bufferSize });
-		m_transferBuffer = window.CreateTransferBuffer({ SDL::TransferBufferUsage::UPLOAD, bufferSize });
+		std::sort(m_indexLayers.begin(), m_indexLayers.end(), [&renderers](IndexLayer& a, IndexLayer& b)
+			{
+				if (a.layer == b.layer)
+				{
+					return a.projection < b.projection;
+				}
+				return a.layer < b.layer;
+			});
 	}
 
 	const std::vector<std::type_index>& ColorRenderLayer::GetRendererTypes() const

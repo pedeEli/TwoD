@@ -1,10 +1,12 @@
-Texture2D<float4> Texture : register(t0, space2);
-SamplerState Sampler : register(s0, space2);
+Texture2D<float4> texture : register(t1, space2);
+SamplerState samplr : register(s1, space2);
+
+
 
 struct Input
 {
-    float4 color : TEXCOORD0;
-    float2 texCoord : TEXCOORD1;
+    float2 tex : TEXCOORD0;
+    float4 color : COLOR0;
 };
 
 const static float pxRange = 4.0;
@@ -30,10 +32,11 @@ float median(float r, float g, float b)
 
 float4 main(Input input) : SV_TARGET0
 {
-	//return float4(Texture.Sample(Sampler, input.texCoord).agb, 1.0f);
-    const float3 msd = Texture.Sample(Sampler, input.texCoord).agb;
+    //return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	//return float4(Texture.Sample(Sampler, input.tex).agb, 1.0f);
+    const float3 msd = texture.Sample(samplr, input.tex).agb;
     const float sd = median(msd.r, msd.g, msd.b);
-    const float screenPxDistance = screenPxRange(input.texCoord) * (sd - 0.5);
+    const float screenPxDistance = screenPxRange(input.tex) * (sd - 0.5);
     const float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
     return float4(input.color.rgb, input.color.a * opacity);
 }

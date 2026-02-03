@@ -60,29 +60,7 @@ namespace TwoD
 			}
 		}
 
-		auto layers = node["renderPipeline"];
-		if (!layers)
-		{
-			TD_CORE_ERROR("Failed to load scene: {}: missing layers field!", path);
-			return;
-		}
-		if (!layers.IsSequence())
-		{
-			TD_CORE_ERROR("Failed to load scene: {}: layers field has to be a list!", path);
-			return;
-		}
-		std::vector<std::string> renderLayers;
-		renderLayers.reserve(layers.size());
-		for (const auto& layer : layers)
-		{
-			renderLayers.push_back(layer.as<std::string>());
-		}
-
-		m_scenes.emplace(
-			std::piecewise_construct,
-			std::forward_as_tuple(name),
-			std::forward_as_tuple(entityInfos, renderLayers)
-		);
+		m_scenes.emplace(name, entityInfos);
 	}
 
 	void SceneSystem::SetActive(const std::string& name)
@@ -109,14 +87,6 @@ namespace TwoD
 
 	void Scene::Load()
 	{
-		auto& renderSystem = App::Get<RenderSystem>();
-		RenderPipeline pipeline;
-		for (const auto& layer : m_renderLayers)
-		{
-			renderSystem.GetLayerAdder(layer)(pipeline);
-		}
-		renderSystem.SetPipeline(pipeline);
-
 		auto& ecs = App::Get<ECS>();
 		for (auto& entityInfo : m_entityInfos)
 		{

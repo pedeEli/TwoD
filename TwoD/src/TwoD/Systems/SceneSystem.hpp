@@ -33,10 +33,7 @@ namespace TwoD
 	class Scene
 	{
 	public:
-		Scene(
-			const std::vector<EntityInfo> &entityInfos,
-			const std::vector<std::string>& renderLayers
-		) : m_entityInfos(entityInfos), m_renderLayers(renderLayers) {}
+		Scene(const std::vector<EntityInfo> &entityInfos) : m_entityInfos(entityInfos) {}
 
 		void Load();
 		void Unload();
@@ -46,7 +43,6 @@ namespace TwoD
 
 	private:
 		std::vector<EntityInfo> m_entityInfos;
-		std::vector<std::string> m_renderLayers;
 	};
 
 	class SceneSystem
