@@ -4,7 +4,7 @@
 extern constexpr void Initialize(Init init);
 extern constexpr void RegisterResources(Resources resources);
 extern constexpr void RegisterComponents(Components components);
-extern constexpr void RegisterRenderLayers(RenderLayers renderLayers);
+extern constexpr void RegisterRenderHandlers(RenderHandlers renderHandlers);
 
 int main(void)
 {
@@ -14,7 +14,7 @@ int main(void)
 	Initialize({info});
 	RegisterResources({app});
 	RegisterComponents({app});
-	RegisterRenderLayers({app});
+	RegisterRenderHandlers({app});
 
 	info.basePaths.push_back(".");
 

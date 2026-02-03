@@ -31,7 +31,7 @@ constexpr static void RegisterComponents(Components components)
 	components.Register<Ground>();
 }
 
-constexpr static void RegisterRenderLayers(RenderLayers renderLayers)
+constexpr static void RegisterRenderHandlers(RenderHandlers renderHandlers)
 {
-	TwoDLib::RegisterRenderLayers(renderLayers);
+	TwoDLib::RegisterRenderHandlers(renderHandlers);
 }

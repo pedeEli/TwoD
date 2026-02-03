@@ -34,7 +34,7 @@ namespace TwoD
 		m_vertexBufferPtr = m_vertexTransferBuffer.Map<Vertex>(false);
 		m_indexBufferPtr = m_indexTransferBuffer.Map<uint32_t>(false);
 
-		for (auto& renderLayer : m_renderLayers)
+		for (auto& renderLayer : m_renderHandlers)
 		{
 			renderLayer->Init();
 		}
@@ -81,20 +81,20 @@ namespace TwoD
 		}
 
 		m_currentRenderCommand = {};
-		for (auto& index : m_indices)
+		for (auto& info : m_rendererHandlerInfos)
 		{
-			if (m_currentRenderCommand.renderLayer != index.renderLayer || m_currentRenderCommand.projection != index.projection)
+			if (m_currentRenderCommand.handlerIndex != info.handlerIndex || m_currentRenderCommand.projection != info.projection)
 			{
 				if (m_currentRenderCommand.size != 0)
 				{
 					m_renderCommands.push_back(m_currentRenderCommand);
 				}
-				m_currentRenderCommand.renderLayer = index.renderLayer;
+				m_currentRenderCommand.handlerIndex = info.handlerIndex;
 				m_currentRenderCommand.startIndex += m_currentRenderCommand.size;
 				m_currentRenderCommand.size = 0;
-				m_currentRenderCommand.projection = index.projection;
+				m_currentRenderCommand.projection = info.projection;
 			}
-			m_renderLayers[index.renderLayer]->Render(ecs, *this, m_renderPass, index.index);
+			m_renderHandlers[info.handlerIndex]->Render(ecs, *this, m_renderPass, info.rendererIndex);
 		}
 		NextBatch();
 		m_renderCommands.clear();
@@ -229,7 +229,7 @@ namespace TwoD
 				currentProjection = renderCommand.projection;
 				m_commandBuffer->PushVertexUniformData<glm::fmat4x4>(0, *currentProjection);
 			}
-			m_renderLayers[renderCommand.renderLayer]->Bind(m_commandBuffer, m_renderPass);
+			m_renderHandlers[renderCommand.handlerIndex]->Bind(m_commandBuffer, m_renderPass);
 			m_renderPass->DrawIndexedPrimitives(renderCommand.size * 6, 1, renderCommand.startIndex * 6, 0, 0);
 		}
 
@@ -238,57 +238,28 @@ namespace TwoD
 
 	void RenderSystem::Update(const ECS& ecs)
 	{
-		struct LayerInfo
-		{
-			const std::vector<RenderLayer::IndexLayer>* layer;
-			size_t index;
-			size_t renderLayer;
-
-			bool operator==(const LayerInfo& b) const
-			{
-				return layer == b.layer && index == b.index && renderLayer == b.renderLayer;
-			}
-		};
-
-		std::vector<LayerInfo> layers;
-		layers.reserve(m_renderLayers.size());
 		size_t totalSize = 0;
-		for (size_t i = 0; i < m_renderLayers.size(); i++)
+		for (size_t i = 0; i < m_renderHandlers.size(); i++)
 		{
-			m_renderLayers[i]->Update(ecs);
-			auto& layer = m_renderLayers[i]->m_indexLayers;
-			if (layer.size() == 0)
-			{
-				continue;
-			}
-			totalSize += layer.size();
-			layers.push_back({ &layer, 0, i });
+			auto& handler = m_renderHandlers[i];
+			handler->Update(ecs, i);
+			totalSize += handler->m_rendererInfos.size();
 		}
 
-		m_indices.clear();
-		m_indices.reserve(totalSize);
+		m_rendererHandlerInfos.clear();
+		m_rendererHandlerInfos.reserve(totalSize);
+		std::vector<RendererHandlerInfo> temp;
+		temp.reserve(totalSize);
 
-		for (size_t i = 0; i < totalSize; i++)
+		for (auto& handler : m_renderHandlers)
 		{
-			auto* smallestLayer = &layers[0];
-			auto* smallestIndex = &(*layers[0].layer)[layers[0].index];
-			for (size_t j = 1; j < layers.size(); j++)
-			{
-				auto* currentIndex = &(*layers[j].layer)[layers[j].index];
-				if (currentIndex->layer < smallestIndex->layer)
-				{
-					smallestIndex = currentIndex;
-					smallestLayer = &layers[j];
-				}
-			}
-
-			m_indices.emplace_back(smallestLayer->renderLayer, smallestIndex->index, smallestIndex->layer, smallestIndex->projection);
-			smallestLayer->index++;
-			if (smallestLayer->index == smallestLayer->layer->size())
-			{
-				auto it = std::find(layers.begin(), layers.end(), *smallestLayer);
-				layers.erase(it);
-			}
+			std::merge(
+				handler->m_rendererInfos.begin(), handler->m_rendererInfos.end(),
+				m_rendererHandlerInfos.begin(), m_rendererHandlerInfos.end(),
+				std::back_inserter(temp)
+			);
+			std::swap(m_rendererHandlerInfos, temp);
+			temp.clear();
 		}
 	}
 }

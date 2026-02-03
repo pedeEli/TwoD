@@ -1,16 +1,16 @@
 #pragma once
 #include "TwoD.hpp"
 
-class RenderLayers
+class RenderHandlers
 {
 public:
-	constexpr RenderLayers(TwoD::App& app) : m_app(app) {}
+	constexpr RenderHandlers(TwoD::App& app) : m_app(app) {}
 
-	template<class Layer>
-	requires(std::is_base_of_v<TwoD::RenderLayer, Layer>)
+	template<class Handler>
+	requires(std::is_base_of_v<TwoD::RenderHandler, Handler>)
 	constexpr void Register()
 	{
-		m_app.RegisterRenderLayer<Layer>();
+		m_app.RegisterRenderHandler<Handler>();
 	}
 
 private:

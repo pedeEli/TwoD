@@ -7,7 +7,7 @@
 #include "TwoD/SDL/TransferBuffer.hpp"
 #include "TwoD/SDL/Texture.hpp"
 #include "TwoD/SDL/Sampler.hpp"
-#include "RenderLayer.hpp"
+#include "RenderHandler.hpp"
 
 namespace TwoD
 {
@@ -38,26 +38,26 @@ namespace TwoD
 			m_dirty = true;
 		}
 
-		template<class Layer>
-		requires(std::is_base_of_v<RenderLayer, Layer>)
-		void RegisterLayer()
+		template<class Handler>
+		requires(std::is_base_of_v<RenderHandler, Handler>)
+		void RegisterHandler()
 		{
-			TD_CORE_ASSERT(std::all_of(m_renderLayers.begin(), m_renderLayers.end(), [](std::unique_ptr<RenderLayer>& layer)
+			TD_CORE_ASSERT(std::all_of(m_renderHandlers.begin(), m_renderHandlers.end(), [](std::unique_ptr<RenderHandler>& handler)
 				{
-					return dynamic_cast<Layer*>(layer.get()) == nullptr;
-				}), "Cannot register RenderLayer twice!");
+					return dynamic_cast<Handler*>(handler.get()) == nullptr;
+				}), "Cannot register RenderHandler twice!");
 
-			auto layer = std::make_unique<Layer>();
-			const auto& types = layer->GetRendererTypes();
-			auto index = m_renderLayers.size();
-			m_renderLayers.push_back(std::move(layer));
+			auto handler = std::make_unique<Handler>();
+			const auto& types = handler->GetRendererTypes();
+			auto index = m_renderHandlers.size();
+			m_renderHandlers.push_back(std::move(handler));
 
 			for (const auto& type : types)
 			{
-				auto it = m_typesToLayers.find(type);
-				if (it == m_typesToLayers.end())
+				auto it = m_renderersToHandlers.find(type);
+				if (it == m_renderersToHandlers.end())
 				{
-					m_typesToLayers[type] = { index };
+					m_renderersToHandlers[type] = { index };
 					continue;
 				}
 				it->second.push_back(index);
@@ -81,13 +81,6 @@ namespace TwoD
 		);
 
 	private:
-		struct Index
-		{
-			size_t renderLayer;
-			size_t index;
-			int32_t layer;
-			const glm::fmat4x4* projection;
-		};
 		struct Vertex
 		{
 			glm::fvec2 pos;
@@ -96,7 +89,7 @@ namespace TwoD
 		};
 		struct RenderCommand
 		{
-			size_t renderLayer = 0;
+			size_t handlerIndex = 0;
 			size_t startIndex = 0;
 			size_t size = 0;
 			const glm::fmat4x4* projection;
@@ -115,21 +108,21 @@ namespace TwoD
 		);
 
 	private:
-		std::vector<std::unique_ptr<RenderLayer>> m_renderLayers;
-		std::unordered_map<std::type_index, std::vector<size_t>> m_typesToLayers;
-		std::vector<Index> m_indices;
+		std::vector<std::unique_ptr<RenderHandler>> m_renderHandlers;
+		std::unordered_map<std::type_index, std::vector<size_t>> m_renderersToHandlers;
+		std::vector<RendererHandlerInfo> m_rendererHandlerInfos;
 		bool m_dirty = true;
 		
 		SDL::Buffer m_vertexBuffer;
 		SDL::TransferBuffer m_vertexTransferBuffer;
-		Vertex* m_vertexBufferPtr;
+		Vertex* m_vertexBufferPtr = nullptr;
 		SDL::Buffer m_indexBuffer;
 		SDL::TransferBuffer m_indexTransferBuffer;
-		uint32_t* m_indexBufferPtr;
+		uint32_t* m_indexBufferPtr = nullptr;
 		size_t m_quadIndex = 0;
 
-		SDL::CommandBuffer* m_commandBuffer;
-		SDL::RenderPass* m_renderPass;
+		SDL::CommandBuffer* m_commandBuffer = nullptr;
+		SDL::RenderPass* m_renderPass = nullptr;
 		RenderCommand m_currentRenderCommand{};
 		std::vector<RenderCommand> m_renderCommands;
 

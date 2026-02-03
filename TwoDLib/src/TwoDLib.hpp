@@ -13,9 +13,9 @@
 #include "TwoDLib/Components/TextRenderer.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
 
-#include "TwoDLib/RenderLayers/SpriteRenderLayer.hpp"
-#include "TwoDLib/RenderLayers/ColorRenderLayer.hpp"
-#include "TwoDLib/RenderLayers/TextRenderLayer.hpp"
+#include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
+#include "TwoDLib/RenderHandlers/ColorRenderHandler.hpp"
+#include "TwoDLib/RenderHandlers/TextRenderHandler.hpp"
 
 namespace TwoDLib
 {
@@ -42,10 +42,10 @@ namespace TwoDLib
 		components.Register<TwoD::ColorRenderer>();
 	}
 
-	constexpr static void RegisterRenderLayers(RenderLayers& renderLayers)
+	constexpr static void RegisterRenderHandlers(RenderHandlers& renderHandlers)
 	{
-		renderLayers.Register<TwoD::SpriteRenderLayer>();
-		renderLayers.Register<TwoD::ColorRenderLayer>();
-		renderLayers.Register<TwoD::TextRenderLayer>();
+		renderHandlers.Register<TwoD::SpriteRenderHandler>();
+		renderHandlers.Register<TwoD::ColorRenderHandler>();
+		renderHandlers.Register<TwoD::TextRenderHandler>();
 	}
 }

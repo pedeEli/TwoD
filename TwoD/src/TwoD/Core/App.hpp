@@ -80,8 +80,8 @@ namespace TwoD
 		void RegisterResource() { m_assetManager.Register<T>(); }
 
 		template<class T>
-		requires(std::is_base_of_v<RenderLayer, T>)
-		void RegisterRenderLayer() { m_renderSystem.RegisterLayer<T>(); }
+		requires(std::is_base_of_v<RenderHandler, T>)
+		void RegisterRenderHandler() { m_renderSystem.RegisterHandler<T>(); }
 
 	private:
 		void HandleEvents();
