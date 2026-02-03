@@ -15,4 +15,4 @@ Library["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/lib/
 Dynamic = {}
 Dynamic["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/lib/SDL3.dll"
 Dynamic["SDL3_image"] = "%{wks.location}/TwoD/vendor/SDL3_image/lib/SDL3_image.dll"
-Dynamic["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/bin/*.dll"
+Dynamic["SDL3_shadercross"] = "%{wks.location}/TwoD/vendor/SDL3_shadercross/lib/*.dll"
