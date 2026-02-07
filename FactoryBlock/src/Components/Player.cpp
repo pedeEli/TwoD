@@ -12,19 +12,19 @@ void Player::Update(float delta)
 	auto& input = App::Get<InputSystem>();
 	glm::fvec3 dir(0.0f, 0.0f, 0.0f);
 
-	if (input.GetButtonDown(SDLK_A))
+	if (input.GetButtonDown(TwoD::Scancode::A))
 	{
 		dir.x -= 1.0f;
 	}
-	if (input.GetButtonDown(SDLK_D))
+	if (input.GetButtonDown(TwoD::Scancode::D))
 	{
 		dir.x += 1.0f;
 	}
-	if (input.GetButtonDown(SDLK_W))
+	if (input.GetButtonDown(TwoD::Scancode::W))
 	{
 		dir.y -= 1.0f;
 	}
-	if (input.GetButtonDown(SDLK_S))
+	if (input.GetButtonDown(TwoD::Scancode::S))
 	{
 		dir.y += 1.0f;
 	}
@@ -42,7 +42,7 @@ void Player::Update(float delta)
 	}
 
 	
-	if (input.GetMouseDown(1))
+	if (input.GetMouseDown(TwoD::MouseButton::LEFT))
 	{
 		auto& mousePos = camera->GetMousePositionWorld();
 		auto hit = Hitbox::Hit(mousePos);

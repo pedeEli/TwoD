@@ -1,29 +1,20 @@
 #include "tdpch.hpp"
 #include "InputSystem.hpp"
+#include <SDL3/SDL_events.h>
 
 namespace TwoD
 {
+	void InputSystem::Init()
+	{
+		m_keyboardState = SDL_GetKeyboardState(nullptr);
+	}
+
 	void InputSystem::Event(const SDL_Event& event)
 	{
 		switch (event.type)
 		{
-		case SDL_EVENT_KEY_DOWN:
-			if (!event.key.repeat)
-			{
-				m_downKeys.insert(event.key.key);
-			}
-			break;
-		case SDL_EVENT_KEY_UP:
-			m_downKeys.erase(event.key.key);
-			break;
 		case SDL_EVENT_MOUSE_WHEEL:
 			m_mouseWheel = event.wheel.y;
-			break;
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			m_downButtons.insert(event.button.button);
-			break;
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			m_downButtons.erase(event.button.button);
 			break;
 		}
 	}
@@ -31,16 +22,17 @@ namespace TwoD
 	void InputSystem::Update()
 	{
 		m_mouseWheel = 0.0f;
-		SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+		auto mouseState = SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+		m_mouseState = static_cast<MouseButton>(mouseState);
 	}
 
-	bool InputSystem::GetButtonDown(SDL_Keycode code) const
+	bool InputSystem::GetButtonDown(Scancode code) const
 	{
-		return m_downKeys.contains(code);
+		return m_keyboardState[static_cast<size_t>(code)];
 	}
-	bool InputSystem::GetMouseDown(uint8_t button) const
+	bool InputSystem::GetMouseDown(MouseButton button) const
 	{
-		return m_downButtons.contains(button);
+		return (m_mouseState & button) != MouseButton::NONE;
 	}
 	const glm::fvec2& InputSystem::GetMousePosition() const
 	{

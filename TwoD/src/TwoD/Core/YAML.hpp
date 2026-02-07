@@ -51,7 +51,7 @@ namespace YAML { \
 #define TD_INTERNAL_YAML_ENUM_BIT_OPERATOR(enum_name, op) constexpr enum_name operator op(enum_name a, enum_name b) noexcept { \
 	return static_cast<enum_name>(static_cast<std::underlying_type_t<enum_name>>(a) op static_cast<std::underlying_type_t<enum_name>>(b)); \
 } \
-constexpr enum_name& operator op=(enum_name& a, enum_name b) noexcept { \
+constexpr enum_name& operator op##=(enum_name& a, enum_name b) noexcept { \
 	a = a op b; \
 	return a; \
 }

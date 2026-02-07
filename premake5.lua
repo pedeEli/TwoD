@@ -13,6 +13,7 @@ workspace "TwoD"
 	flags {
 		"MultiProcessorCompile"
 	}
+	usestandardpreprocessor 'on'
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 

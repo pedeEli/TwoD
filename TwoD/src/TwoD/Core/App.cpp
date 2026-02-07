@@ -47,6 +47,8 @@ namespace TwoD
 
 		m_renderSystem.Init();
 
+		m_inputSystem.Init();
+
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
 
