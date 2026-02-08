@@ -17,7 +17,6 @@ project "FactoryBlock"
 		"%{wks.location}/TwoD/vendor/spdlog/include",
 		"%{wks.location}/TwoD/src",
 		"%{wks.location}/TwoDLib/src",
-		"%{IncludeDir.SDL3}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.yaml_cpp}"
 	}

@@ -4,6 +4,8 @@
 #include "TwoD/SDL/RenderPass.hpp"
 #include "TwoD/Core/App.hpp"
 
+#include <SDL3/SDL_error.h>
+
 namespace TwoD
 {
 	void Shader::Init(const std::filesystem::path& path)

@@ -1,6 +1,5 @@
 #pragma once
 #include "TwoD/Core/YAML.hpp"
-#include <SDL3/SDL.h>
 
 
 TD_YAML_ENUM_WITH_BASE(TwoD, Key, uint32_t,
