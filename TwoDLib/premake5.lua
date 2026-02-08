@@ -40,6 +40,7 @@ project "TwoDLib"
 	}
 
 	buildoptions { "/utf-8" }
+	fatalwarnings { "all" }
 
 	filter "system:windows"
 		systemversion "latest"

@@ -39,7 +39,7 @@ namespace TwoD
 		void Unload();
 
 	private:
-		Ref<Entity> LoadEntity(ECS& ecs, EntityInfo& entityInfo);
+		EntityHandle LoadEntity(ECS& ecs, EntityInfo& entityInfo);
 
 	private:
 		std::vector<EntityInfo> m_entityInfos;

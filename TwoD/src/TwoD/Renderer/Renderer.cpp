@@ -152,7 +152,7 @@ namespace TwoD
 			m_vertexBufferPtr[m_quadIndex * 4 + i].color = color;
 		}
 
-		auto indexBase = m_quadIndex * 4;
+		auto indexBase = static_cast<uint32_t>(m_quadIndex * 4);
 		m_indexBufferPtr[m_quadIndex * 6 + 0] = indexBase + 0;
 		m_indexBufferPtr[m_quadIndex * 6 + 1] = indexBase + 1;
 		m_indexBufferPtr[m_quadIndex * 6 + 2] = indexBase + 2;
@@ -204,7 +204,7 @@ namespace TwoD
 		for (size_t i = 0; i < m_textureBindings.size(); i++)
 		{
 			auto* binding = m_textureBindings[i];
-			m_renderPass->BindFragmentSamplers(i, { *binding });
+			m_renderPass->BindFragmentSamplers(static_cast<uint32_t>(i), { *binding });
 		}
 
 		m_renderPass->BindVertexBuffers(0, { { &m_vertexBuffer, 0 } });
@@ -219,7 +219,13 @@ namespace TwoD
 				m_commandBuffer->PushVertexUniformData<glm::fmat4x4>(0, *currentProjection);
 			}
 			(*m_handlers)[renderCommand.handlerIndex]->Bind(m_commandBuffer, m_renderPass);
-			m_renderPass->DrawIndexedPrimitives(renderCommand.size * 6, 1, renderCommand.startIndex * 6, 0, 0);
+			m_renderPass->DrawIndexedPrimitives(
+				static_cast<uint32_t>(renderCommand.size * 6),
+				1,
+				static_cast<uint32_t>(renderCommand.startIndex * 6),
+				0,
+				0
+			);
 		}
 
 		m_quadIndex = 0;

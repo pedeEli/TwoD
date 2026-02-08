@@ -6,7 +6,6 @@
 #include <memory>
 
 #include "TwoD/Core/Log.hpp"
-#include "TwoD/Core/Ref.hpp"
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "ComponentStorage.hpp"
@@ -48,7 +47,7 @@ namespace TwoD
 			}
 		}
 
-		Ref<Entity> CreateEntity(const std::string& name);
+		Entity& CreateEntity(const std::string& name);
 		void DestroyEntity(EntityHandle handle)
 		{
 			for (auto& storage : m_storages)
@@ -80,12 +79,12 @@ namespace TwoD
 			return GetStorage<T>()->GetAll();
 		}
 
-	private:
-		Ref<Entity> GetEntity(EntityHandle handle)
+		Entity& GetEntity(EntityHandle handle)
 		{
 			return m_entities.Get(handle);
 		}
 
+	private:
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
 		ComponentStorageImpl<T>* GetStorage() const
@@ -101,7 +100,7 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> AddComponent(EntityHandle entity)
+		T& AddComponent(EntityHandle entity)
 		{
 			m_unstartedComponents = true;
 			return GetStorage<T>()->Add(this, entity);
@@ -114,7 +113,7 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> GetComponent(EntityHandle entity)
+		T& GetComponent(EntityHandle entity)
 		{
 			return GetStorage<T>()->Get(entity);
 		}

@@ -4,11 +4,11 @@
 
 namespace TwoD
 {
-	Ref<Entity> ECS::CreateEntity(const std::string& name)
+	Entity& ECS::CreateEntity(const std::string& name)
 	{
 		auto handle = static_cast<EntityHandle>(m_nextEntity++);
-		auto entity = m_entities.Add(handle, this, handle, name);
-		entity->AddComponent<Transform>();
+		auto& entity = m_entities.Add(handle, this, handle, name);
+		entity.AddComponent<Transform>();
 		return entity;
 	}
 }

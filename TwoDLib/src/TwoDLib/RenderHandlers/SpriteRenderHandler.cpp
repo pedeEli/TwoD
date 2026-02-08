@@ -22,10 +22,10 @@ namespace TwoD
 	void SpriteRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
 	{
 		auto& spriteRenderer = ecs.GetComponents<SpriteRenderer>()[index];
-		auto transform = spriteRenderer.GetComponent<Transform>();
+		auto& transform = spriteRenderer.GetComponent<Transform>();
 		auto& rect = spriteRenderer.slice ? spriteRenderer.sprite->GetRect(*spriteRenderer.slice) : spriteRenderer.sprite->GetRect();
 		renderer.RenderQuad(
-			transform->GetWorldMatrix(),
+			transform.GetWorldMatrix(),
 			{ -0.5f, -0.5f },
 			{ 1.0f, 1.0f },
 			{ rect.u, rect.v },

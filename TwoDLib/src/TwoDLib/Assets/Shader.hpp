@@ -7,10 +7,10 @@
 
 TD_YAML_STRUCT(TwoD, ShaderInfo,
 	TD_YAML_STRUCT_FIELD(std::string, file),
-	TD_YAML_STRUCT_FIELD(uint32_t, samplerCount),
-	TD_YAML_STRUCT_FIELD(uint32_t, storageTextureCount),
-	TD_YAML_STRUCT_FIELD(uint32_t, storageBufferCount),
-	TD_YAML_STRUCT_FIELD(uint32_t, uniformBufferCount)
+	TD_YAML_STRUCT_FIELD(uint32_t, samplerCount, 0),
+	TD_YAML_STRUCT_FIELD(uint32_t, storageTextureCount, 0),
+	TD_YAML_STRUCT_FIELD(uint32_t, storageBufferCount, 0),
+	TD_YAML_STRUCT_FIELD(uint32_t, uniformBufferCount, 0)
 )
 
 namespace TwoD

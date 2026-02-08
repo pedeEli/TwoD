@@ -1,6 +1,7 @@
 #include "tdpch.hpp"
 #include "Transform.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include "TwoD/Core/App.hpp"
 
 namespace TwoD
 {
@@ -91,9 +92,10 @@ namespace TwoD
 	}
 	void Transform::UpdateParentAndChildren()
 	{
-		if (m_parent)
+		auto& ecs = App::Get<ECS>();
+		if (m_parent != 0)
 		{
-			const auto& parentMatrix = m_parent->GetComponent<Transform>()->GetWorldMatrix();
+			auto& parentMatrix = ecs.GetEntity(m_parent).GetComponent<Transform>().GetWorldMatrix();
 			m_worldMatrix = parentMatrix * m_localMatrix;
 		}
 		else
@@ -102,32 +104,38 @@ namespace TwoD
 		}
 		m_inverseWorldMatrix = glm::inverse(m_worldMatrix);
 
-		for (const auto& child : m_children)
+		for (auto child : m_children)
 		{
-			child->GetComponent<Transform>()->UpdateParentAndChildren();
+			ecs.GetEntity(child).GetComponent<Transform>().UpdateParentAndChildren();
 		}
 	}
 
-	void Transform::SetParent(const Ref<Entity>& parent)
+	void Transform::SetParent(const Entity* parent)
 	{
-		auto entity = GetEntity();
-		if (m_parent)
+		if (parent != nullptr && parent->GetHandle() == m_parent)
 		{
-			auto& children = m_parent->GetComponent<Transform>()->m_children;
-			children.erase(std::remove(children.begin(), children.end(), entity));
+			return;
 		}
-		m_parent = parent;
+
+		auto& ecs = App::Get<ECS>();
+		auto& entity = GetEntity();
+		if (m_parent != 0)
+		{
+			auto& children = ecs.GetEntity(m_parent).GetComponent<Transform>().m_children;
+			children.erase(std::remove(children.begin(), children.end(), &entity));
+		}
+		m_parent = parent->GetHandle();
 		if (parent)
 		{
-			parent->GetComponent<Transform>()->m_children.push_back(entity);
+			parent->GetComponent<Transform>().m_children.push_back(&entity);
 		}
 		UpdateParentAndChildren();
 	}
-	Ref<Entity> Transform::GetParent() const
+	const Entity* Transform::GetParent() const
 	{
 		return m_parent;
 	}
-	const std::vector<Ref<Entity>>& Transform::GetChildren() const
+	const std::vector<const Entity*>& Transform::GetChildren() const
 	{
 		return m_children;
 	}

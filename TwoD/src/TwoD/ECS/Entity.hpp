@@ -2,12 +2,16 @@
 #include <concepts>
 #include <string>
 
-#include "TwoD/Core/Ref.hpp"
 #include "TwoD/Core/Storage.hpp"
 
 namespace TwoD
 {
 	enum class EntityHandle : uint32_t {};
+	static bool operator==(const EntityHandle a, const uint32_t b)
+	{
+		return static_cast<uint32_t>(a) == b;
+	}
+
 	class Component;
 	class ECS;
 
@@ -18,12 +22,12 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> AddComponent();
+		T& AddComponent();
 		Component& AddComponent(const std::string& name);
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> GetComponent() const;
+		T& GetComponent() const;
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)

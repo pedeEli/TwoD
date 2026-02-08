@@ -82,6 +82,7 @@ namespace YAML { \
 			using internal_enum = ns_name::enum_name; \
 			auto f = [](const std::string& str, ns_name::enum_name& rhs) { \
 				TD_APPLY_EACH(TD_INTERNAL_YAML_ENUM_DECODE, __VA_ARGS__) \
+				return false; \
 			}; \
 			if (node.IsSequence()) { \
 				for (auto n : node) { \

@@ -20,7 +20,7 @@ namespace TwoD
 	void TextRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
 	{
 		auto& textRenderer = ecs.GetComponents<TextRenderer>()[index];
-		auto& transform = textRenderer.GetComponent<Transform>()->GetWorldMatrix();
+		auto& transform = textRenderer.GetComponent<Transform>().GetWorldMatrix();
 		auto& glyphs = textRenderer.GetGlyphs();
 
 		for (auto& glyph : glyphs)

@@ -8,12 +8,12 @@ namespace TwoD
 	class KeyboardEvent : public Event<EventType>
 	{
 	public:
-		uint32_t windowID;
-		uint32_t keyboardID;
-		Scancode scancode;
-		Key key;
-		Keymod mod;
-		bool down;
+		uint32_t windowID{};
+		uint32_t keyboardID{};
+		Scancode scancode{};
+		Key key{};
+		Keymod mod{};
+		bool down{};
 	};
 
 	class KeyDownEvent : public KeyboardEvent

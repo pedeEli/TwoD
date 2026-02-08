@@ -1,7 +1,6 @@
 #pragma once
 
 #include "TwoD/Core/YAML.hpp"
-#include "TwoD/Core/Ref.hpp"
 #include "TwoD/Core/Storage.hpp"
 #include "Entity.hpp"
 #include "ComponentStorage.hpp"
@@ -32,17 +31,17 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> AddComponent() const;
+		T& AddComponent() const;
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		Ref<T> GetComponent() const;
+		T& GetComponent() const;
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
 		void DestroyComponent() const;
 
-		Ref<Entity> GetEntity() const;
+		Entity& GetEntity() const;
 
 		EntityHandle GetHandle() const override
 		{

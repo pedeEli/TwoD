@@ -60,8 +60,8 @@ namespace TwoD
 		}
 		Component& AddComponent(ECS* ecs, EntityHandle entity) override
 		{
-			auto ref = Add(ecs, entity);
-			return static_cast<Component&>(*ref);
+			auto& ref = Add(ecs, entity);
+			return static_cast<Component&>(ref);
 		}
 		void Destroy(EntityHandle entity) override
 		{
@@ -75,7 +75,7 @@ namespace TwoD
 		void UpdateBefore(float delta) override;
 		void Update(float delta) override;
 		
-		Ref<T> Add(ECS* ecs, EntityHandle entity)
+		T& Add(ECS* ecs, EntityHandle entity)
 		{
 			m_unstartedItems = true;
 			return storage::Add(entity, ecs, entity);

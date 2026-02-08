@@ -33,6 +33,7 @@ project "FactoryBlock"
 	}
 
 	buildoptions { "/utf-8" }
+	fatalwarnings { "all" }
 	
 	defines {
 		"YAML_CPP_STATIC_DEFINE"

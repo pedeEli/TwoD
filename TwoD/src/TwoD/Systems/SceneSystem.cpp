@@ -94,12 +94,13 @@ namespace TwoD
 		}
 	}
 
-	Ref<Entity> Scene::LoadEntity(ECS& ecs, EntityInfo& entityInfo)
+	EntityHandle Scene::LoadEntity(ECS& ecs, EntityInfo& entityInfo)
 	{
-		auto entity = ecs.CreateEntity(entityInfo.name);
+		auto& entity = ecs.CreateEntity(entityInfo.name);
+		auto handle = entity.GetHandle();
 
 		auto& transformInfo = entityInfo.transform;
-		auto& transform = *entity->GetComponent<Transform>();
+		auto& transform = entity.GetComponent<Transform>();
 		if (transformInfo.position)
 		{
 			transform.SetPosition(*transformInfo.position);
@@ -115,17 +116,18 @@ namespace TwoD
 
 		for (auto& componentInfo : entityInfo.components)
 		{
-			auto& component = entity->AddComponent(componentInfo.type);
+			auto& component = entity.AddComponent(componentInfo.type);
 			component.Load(componentInfo.data);
 		}
 
 		for (auto& childInfo : entityInfo.children)
 		{
-			auto child = LoadEntity(ecs, childInfo);
-			child->GetComponent<Transform>()->SetParent(entity);
+			auto childHandle = LoadEntity(ecs, childInfo);
+			auto& e = ecs.GetEntity(handle);
+			ecs.GetEntity(childHandle).GetComponent<Transform>().SetParent(&e);
 		}
 
-		return entity;
+		return handle;
 	}
 
 	void Scene::Unload()

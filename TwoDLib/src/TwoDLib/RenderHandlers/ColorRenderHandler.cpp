@@ -20,9 +20,9 @@ namespace TwoD
 	void ColorRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
 	{
 		auto& colorRenderer = ecs.GetComponents<ColorRenderer>()[index];
-		auto transform = colorRenderer.GetComponent<Transform>();
+		auto& transform = colorRenderer.GetComponent<Transform>();
 		renderer.RenderQuad(
-			transform->GetWorldMatrix(),
+			transform.GetWorldMatrix(),
 			{ -0.5f, -0.5f },
 			{ 1.0f, 1.0f },
 			{

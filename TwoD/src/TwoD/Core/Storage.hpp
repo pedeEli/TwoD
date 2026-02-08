@@ -3,7 +3,6 @@
 #include <concepts>
 #include <unordered_map>
 
-#include "TwoD/Core/Ref.hpp"
 #include "TwoD/Core/Asserts.hpp"
 
 namespace TwoD
@@ -23,19 +22,19 @@ namespace TwoD
 		virtual ~Storage() = default;
 
 		template<typename... Args>
-		Ref<T> Add(Handle handle, Args&&... args)
+		T& Add(Handle handle, Args&&... args)
 		{
 			TD_CORE_ASSERT(!m_indices.contains(handle))
 			m_items.emplace_back(std::forward<Args>(args)...);
 			auto index = m_items.size() - 1;
 			m_indices.emplace(handle, index);
-			return Ref<T>(&m_items, index);
+			return m_items[index];
 		}
-		Ref<T> Get(Handle handle)
+		T& Get(Handle handle)
 		{
 			TD_CORE_ASSERT(m_indices.contains(handle))
 			auto it = m_indices.find(handle);
-			return Ref<T>(&m_items, it->second);
+			return m_items[it->second];
 		}
 		std::vector<T>& GetAll()
 		{

@@ -67,7 +67,7 @@ namespace TwoD
 			mouseDownEvent.mouseID = event.button.which;
 			mouseDownEvent.x = event.button.x;
 			mouseDownEvent.y = event.button.y;
-			mouseDownEvent.button = static_cast<MouseButton>(1u << event.button.button - 1);
+			mouseDownEvent.button = static_cast<MouseButton>(1u << (event.button.button - 1));
 			mouseDownEvent.down = true;
 			mouseDownEvent.clicks = event.button.clicks;
 			emitter(mouseDownEvent);

@@ -4,7 +4,7 @@
 
 namespace TwoD
 {
-	Ref<Entity> Component::GetEntity() const
+	Entity& Component::GetEntity() const
 	{
 		return m_ecs->GetEntity(m_handle);
 	}

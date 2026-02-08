@@ -421,15 +421,15 @@ TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ColorComponentFlags, uint8_t,
     TD_YAML_ENUM_FIELD(A, (1u << 3))
 )
 TD_YAML_STRUCT(TwoD::SDL, ColorTargetBlendState,
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcColorBlendfactor),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstColorBlendfactor),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, colorBlendOp),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcAlphaBlendfactor),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstAlphaBlendfactor),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, alphaBlendOp),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorComponentFlags, colorWriteMask),
-    TD_YAML_STRUCT_FIELD(bool, enableBlend),
-    TD_YAML_STRUCT_FIELD(bool, enableColorWriteMask)
+	TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcColorBlendfactor, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstColorBlendfactor, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, colorBlendOp, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcAlphaBlendfactor, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstAlphaBlendfactor, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, alphaBlendOp, {}),
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorComponentFlags, colorWriteMask, {}),
+    TD_YAML_STRUCT_FIELD(bool, enableBlend, false),
+    TD_YAML_STRUCT_FIELD(bool, enableColorWriteMask, false)
 )
 TD_YAML_STRUCT(TwoD::SDL, VertexBufferDescription,
     TD_YAML_STRUCT_FIELD(uint32_t, slot),
@@ -450,7 +450,7 @@ TD_YAML_STRUCT(TwoD::SDL, StencilOpState,
 )
 TD_YAML_STRUCT(TwoD::SDL, ColorTargetDescription,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, format, TwoD::SDL::TextureFormat::INVALID),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorTargetBlendState, blendState)
+	TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorTargetBlendState, blendState)
 )
 TD_YAML_STRUCT(TwoD::SDL, VertexInputState,
 	TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexBufferDescription>, vertexBufferDescriptions, {}),
@@ -483,8 +483,8 @@ TD_YAML_STRUCT(TwoD::SDL, DepthStencilState,
 )
 TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineTargetInfo,
     TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::ColorTargetDescription>, colorTargetDescriptions),
-    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, depthStencilFormat),
-    TD_YAML_STRUCT_FIELD(bool, hasDepthStencilTarget)
+    TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, depthStencilFormat, TwoD::SDL::TextureFormat::INVALID),
+    TD_YAML_STRUCT_FIELD(bool, hasDepthStencilTarget, false)
 )
 TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineInfo,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Shader*, vertexShader, nullptr),

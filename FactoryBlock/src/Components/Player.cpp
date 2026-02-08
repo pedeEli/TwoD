@@ -36,7 +36,7 @@ void Player::Update(float delta)
 	if (dir.x != 0.0 || dir.y != 0.0)
 	{
 		glm::fvec3 normalized = glm::normalize(dir) * speed * delta;
-		GetComponent<Transform>()->Translate(normalized);
+		GetComponent<Transform>().Translate(normalized);
 	}
 
 	
@@ -44,9 +44,9 @@ void Player::Update(float delta)
 	{
 		auto& mousePos = camera->GetMousePositionWorld();
 		auto hit = Hitbox::Hit(mousePos);
-		if (hit && (*hit)->GetEntity()->name == "iron ore")
+		if (hit && (*hit)->GetEntity().name == "iron ore")
 		{
-			(*hit)->GetEntity()->Destroy();
+			(*hit)->GetEntity().Destroy();
 		}
 	}
 }

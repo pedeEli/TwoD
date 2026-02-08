@@ -37,7 +37,7 @@ namespace TwoD
 		packer.setMiterLimit(1.0);
 		packer.setScale(40.0);
 		packer.setPixelRange(4.0);
-		packer.pack(m_data->glyphs.data(), m_data->glyphs.size());
+		packer.pack(m_data->glyphs.data(), static_cast<int>(m_data->glyphs.size()));
 		packer.getDimensions(m_atlasSize.x, m_atlasSize.y);
 
 		msdf_atlas::ImmediateAtlasGenerator<
@@ -50,7 +50,7 @@ namespace TwoD
 		msdf_atlas::GeneratorAttributes attributes;
 		generator.setAttributes(attributes);
 		generator.setThreadCount(4);
-		generator.generate(m_data->glyphs.data(), m_data->glyphs.size());
+		generator.generate(m_data->glyphs.data(), static_cast<int>(m_data->glyphs.size()));
 
 		auto atlas = static_cast<msdfgen::BitmapConstRef<uint8_t, 3>>(generator.atlasStorage());
 

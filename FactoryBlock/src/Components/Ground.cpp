@@ -17,12 +17,12 @@ void Ground::Start()
 			float x = left + j;
 			float y = top + i;
 
-			auto ground = ecs.CreateEntity("ground");
-			auto& transform = *ground->GetComponent<Transform>();
+			auto& ground = ecs.CreateEntity("ground");
+			auto& transform = ground.GetComponent<Transform>();
 			transform.SetPosition(x, y);
-			transform.SetParent(GetEntity());
+			transform.SetParent(&GetEntity());
 
-			auto& renderer = *ground->AddComponent<SpriteRenderer>();
+			auto& renderer = ground.AddComponent<SpriteRenderer>();
 			renderer.sprite = &assetManager.Get<Sprite>("grass");
 			renderer.layer = 0;
 		}
@@ -38,12 +38,12 @@ void Ground::Start()
 	{
 		auto x = distrX(gen);
 		auto y = distrY(gen);
-		auto entity = ecs.CreateEntity("foliage");
-		auto& transform = *entity->GetComponent<Transform>();
+		auto& entity = ecs.CreateEntity("foliage");
+		auto& transform = entity.GetComponent<Transform>();
 		transform.SetPosition(x, y);
-		transform.SetParent(GetEntity());
+		transform.SetParent(&GetEntity());
 		
-		auto& renderer = *entity->AddComponent<SpriteRenderer>();
+		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		renderer.slice = distrS(gen);
 		renderer.sprite = &assetManager.Get<Sprite>("foliage");
 		renderer.layer = 1;
