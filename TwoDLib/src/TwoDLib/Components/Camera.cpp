@@ -48,7 +48,7 @@ namespace TwoD
 		m_viewMatrix[3][1] = transform[2][1];
 		m_inverseViewMatrix = glm::inverse(m_viewMatrix);
 
-		m_mousePositionWorld = ScreenToWorldSpace(App::Get<InputSystem>().GetMousePosition());
+		m_mousePositionWorld = ScreenToWorldSpace(Inputs::GetMousePosition());
 
 		m_projectionViewMatrix = m_projectionMatrix * m_inverseViewMatrix;
 	}

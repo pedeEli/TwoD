@@ -1,7 +1,7 @@
 #pragma once
 #include "Event.hpp"
 #include "EventTypes.hpp"
-#include "TwoD/Systems/InputDefines.hpp"
+#include "TwoD/Inputs/InputDefines.hpp"
 
 namespace TwoD
 {

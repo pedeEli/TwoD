@@ -8,11 +8,11 @@
 #include "TwoD/ECS/ECS.hpp"
 
 #include "TwoD/Assets/AssetManager.hpp"
-
 #include "TwoD/Renderer/RenderSystem.hpp"
+#include "TwoD/Inputs/Inputs.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 
 #include "TwoD/Systems/SceneSystem.hpp"
-#include "TwoD/Systems/InputSystem.hpp"
 
 namespace TwoD
 {
@@ -54,10 +54,6 @@ namespace TwoD
 			{
 				return Get().m_renderSystem;
 			}
-			else if constexpr (std::is_same_v<T, InputSystem>)
-			{
-				return Get().m_inputSystem;
-			}
 			else
 			{
 				static_assert(false, "Unsuported type for App::Get<T>()");
@@ -96,7 +92,6 @@ namespace TwoD
 		RenderSystem m_renderSystem;
 		ECS m_ecs;
 		AssetManager m_assetManager;
-		InputSystem m_inputSystem;
 
 		bool m_running = false;
 		bool m_initialized = false;

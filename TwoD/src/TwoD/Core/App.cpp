@@ -48,7 +48,7 @@ namespace TwoD
 
 		m_renderSystem.Init();
 
-		m_inputSystem.Init();
+		Inputs::Init();
 
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
@@ -79,8 +79,8 @@ namespace TwoD
 		m_running = true;
 		while (m_running)
 		{
-			m_inputSystem.Update();
 			EventHandler::PollEvents();
+			Inputs::Update();
 
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
