@@ -84,9 +84,6 @@ namespace TwoD
 		void RegisterRenderHandler() { m_renderSystem.RegisterHandler<T>(); }
 
 	private:
-		void HandleEvents();
-
-	private:
 		class SDLQuiter
 		{
 		public:

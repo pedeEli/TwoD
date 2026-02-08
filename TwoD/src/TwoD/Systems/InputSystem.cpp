@@ -1,22 +1,17 @@
 #include "tdpch.hpp"
 #include "InputSystem.hpp"
-#include <SDL3/SDL_events.h>
+#include "TwoD/Events/EventHandler.hpp"
 
 namespace TwoD
 {
 	void InputSystem::Init()
 	{
 		m_keyboardState = SDL_GetKeyboardState(nullptr);
-	}
-
-	void InputSystem::Event(const SDL_Event& event)
-	{
-		switch (event.type)
-		{
-		case SDL_EVENT_MOUSE_WHEEL:
-			m_mouseWheel = event.wheel.y;
-			break;
-		}
+		EventHandler::On<MouseWheelEvent>([this](auto& event)
+			{
+				m_mouseWheel = event.y;
+				return false;
+			});
 	}
 
 	void InputSystem::Update()

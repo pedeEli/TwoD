@@ -2,6 +2,7 @@
 #include "Window.hpp"
 
 #include "Raw/Window.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 
 namespace TwoD
 {
@@ -68,17 +69,20 @@ namespace TwoD
 		m_depthTextureInfo.format = SDL::TextureFormat::D16_UNORM;
 		m_depthTextureInfo.usage = SDL::TextureUsageFlags::DEPTH_STENCIL_TARGET | SDL::TextureUsageFlags::SAMPLER;
 		m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
+
+		EventHandler::On<WindowResizedEvent>([this](auto& event)
+			{
+				m_width = event.x;
+				m_height = event.y;
+				m_depthTextureInfo.width = event.x;
+				m_depthTextureInfo.height = event.y;
+				m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
+				return false;
+			});
+
 		return true;
 	}
 	
-	void Window::SetSize(int width, int height)
-	{
-		m_width = width;
-		m_height = height;
-		m_depthTextureInfo.width = width;
-		m_depthTextureInfo.height = height;
-		m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
-	}
 	void Window::GetSize(int& width, int& height) const
 	{
 		width = m_width;

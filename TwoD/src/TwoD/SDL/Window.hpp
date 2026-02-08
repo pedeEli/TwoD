@@ -69,7 +69,6 @@ namespace TwoD
 
 		bool Init(const WindowInfo& info);
 		
-		void SetSize(int width, int height);
 		void GetSize(int& width, int& height) const;
 		SDL::ShaderFormat GetShaderFormats();
 		SDL::TextureFormat GetSwapchainTextureFormat();
@@ -111,8 +110,8 @@ namespace TwoD
 		}
 
 	private:
-		int m_width;
-		int m_height;
+		int m_width = 0;
+		int m_height = 0;
 
 		SDL::TextureInfo m_depthTextureInfo;
 		SDL::Texture m_depthTexture;

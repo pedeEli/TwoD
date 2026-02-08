@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include "TwoD/ECS/Transform.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 
 namespace TwoD
 {
@@ -52,6 +53,12 @@ namespace TwoD
 		m_sceneSystem.Load();
 		m_sceneSystem.SetActive(info.startScene);
 
+		EventHandler::On<QuitEvent>([this](auto& e)
+			{
+				m_running = false;
+				return false;
+			});
+
 		m_initialized = true;
 	}
 	App::~App()
@@ -73,7 +80,7 @@ namespace TwoD
 		while (m_running)
 		{
 			m_inputSystem.Update();
-			HandleEvents();
+			EventHandler::PollEvents();
 
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
@@ -83,24 +90,6 @@ namespace TwoD
 		}
 
 		m_sceneSystem.Clear();
-	}
-
-	void App::HandleEvents()
-	{
-		SDL_Event event;
-		while (SDL_PollEvent(&event))
-		{
-			m_inputSystem.Event(event);
-			switch (event.type)
-			{
-			case SDL_EVENT_QUIT:
-				m_running = false;
-				break;
-			case SDL_EVENT_WINDOW_RESIZED:
-				m_window.SetSize(event.window.data1, event.window.data2);
-				break;
-			}
-		}
 	}
 
 

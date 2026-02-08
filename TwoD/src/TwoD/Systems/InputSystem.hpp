@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL3/SDL_events.h>
 #include <glm/glm.hpp>
 #include <unordered_set>
 #include "InputDefines.hpp"
@@ -18,7 +17,6 @@ namespace TwoD
 
 		void Init();
 		void Update();
-		void Event(const SDL_Event& event);
 
 		bool GetButtonDown(Scancode code) const;
 		bool GetMouseDown(MouseButton button) const;
