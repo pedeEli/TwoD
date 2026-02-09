@@ -87,17 +87,16 @@ namespace TwoD
 
 	void Scene::Load()
 	{
-		auto& ecs = App::Get<ECS>();
 		for (auto& entityInfo : m_entityInfos)
 		{
-			LoadEntity(ecs, entityInfo);
+			LoadEntity(entityInfo);
 		}
 	}
 
-	EntityHandle Scene::LoadEntity(ECS& ecs, EntityInfo& entityInfo)
+	EntityHandle Scene::LoadEntity(EntityInfo& entityInfo)
 	{
-		auto& entity = ecs.CreateEntity(entityInfo.name);
-		auto handle = entity.GetHandle();
+		auto& entity = ECS::CreateEntity(entityInfo.name);
+		EntityHandle handle = entity;
 
 		auto& transformInfo = entityInfo.transform;
 		auto& transform = entity.GetComponent<Transform>();
@@ -122,9 +121,8 @@ namespace TwoD
 
 		for (auto& childInfo : entityInfo.children)
 		{
-			auto childHandle = LoadEntity(ecs, childInfo);
-			auto& e = ecs.GetEntity(handle);
-			ecs.GetEntity(childHandle).GetComponent<Transform>().SetParent(&e);
+			auto child = LoadEntity(childInfo);
+			child->GetComponent<Transform>().SetParent(handle);
 		}
 
 		return handle;

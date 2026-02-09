@@ -57,7 +57,7 @@ namespace TwoD
 
 	private:
 		void Init();
-		void Render(ECS& ecs, const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers);
+		void Render(const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers);
 		void NextBatch();
 		void RenderQuad(
 			const glm::fmat3x3& transform,

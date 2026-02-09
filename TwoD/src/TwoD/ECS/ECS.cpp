@@ -6,8 +6,8 @@ namespace TwoD
 {
 	Entity& ECS::CreateEntity(const std::string& name)
 	{
-		auto handle = static_cast<EntityHandle>(m_nextEntity++);
-		auto& entity = m_entities.Add(handle, this, handle, name);
+		EntityHandle handle{ m_nextEntity++ };
+		auto& entity = m_entities.Add(handle, handle, name);
 		entity.AddComponent<Transform>();
 		return entity;
 	}

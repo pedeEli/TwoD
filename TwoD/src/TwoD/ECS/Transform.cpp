@@ -92,10 +92,9 @@ namespace TwoD
 	}
 	void Transform::UpdateParentAndChildren()
 	{
-		auto& ecs = App::Get<ECS>();
-		if (m_parent != 0)
+		if (m_parent)
 		{
-			auto& parentMatrix = ecs.GetEntity(m_parent).GetComponent<Transform>().GetWorldMatrix();
+			auto& parentMatrix = m_parent->GetComponent<Transform>().GetWorldMatrix();
 			m_worldMatrix = parentMatrix * m_localMatrix;
 		}
 		else
@@ -106,36 +105,35 @@ namespace TwoD
 
 		for (auto child : m_children)
 		{
-			ecs.GetEntity(child).GetComponent<Transform>().UpdateParentAndChildren();
+			child->GetComponent<Transform>().UpdateParentAndChildren();
 		}
 	}
 
-	void Transform::SetParent(const Entity* parent)
+	void Transform::SetParent(EntityHandle parent)
 	{
-		if (parent != nullptr && parent->GetHandle() == m_parent)
+		if (parent == m_parent)
 		{
 			return;
 		}
 
-		auto& ecs = App::Get<ECS>();
 		auto& entity = GetEntity();
-		if (m_parent != 0)
+		if (m_parent)
 		{
-			auto& children = ecs.GetEntity(m_parent).GetComponent<Transform>().m_children;
-			children.erase(std::remove(children.begin(), children.end(), &entity));
+			auto& children = m_parent->GetComponent<Transform>().m_children;
+			children.erase(std::remove(children.begin(), children.end(), entity));
 		}
-		m_parent = parent->GetHandle();
+		m_parent = parent;
 		if (parent)
 		{
-			parent->GetComponent<Transform>().m_children.push_back(&entity);
+			parent->GetComponent<Transform>().m_children.push_back(entity);
 		}
 		UpdateParentAndChildren();
 	}
-	const Entity* Transform::GetParent() const
+	EntityHandle Transform::GetParent() const
 	{
 		return m_parent;
 	}
-	const std::vector<const Entity*>& Transform::GetChildren() const
+	const std::vector<EntityHandle>& Transform::GetChildren() const
 	{
 		return m_children;
 	}

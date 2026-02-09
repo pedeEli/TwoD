@@ -17,9 +17,9 @@ namespace TwoD
 		m_shader->Bind(renderPass);
 	}
 
-	void ColorRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
+	void ColorRenderHandler::Render(Renderer& renderer, size_t index)
 	{
-		auto& colorRenderer = ecs.GetComponents<ColorRenderer>()[index];
+		auto& colorRenderer = GetComponents<ColorRenderer>()[index];
 		auto& transform = colorRenderer.GetComponent<Transform>();
 		renderer.RenderQuad(
 			transform.GetWorldMatrix(),
@@ -34,9 +34,9 @@ namespace TwoD
 		);
 	}
 
-	void ColorRenderHandler::Update(const ECS& ecs, size_t handlerIndex)
+	void ColorRenderHandler::Update(size_t handlerIndex)
 	{
-		auto& renderers = ecs.GetComponents<ColorRenderer>();
+		auto& renderers = GetComponents<ColorRenderer>();
 		auto size = renderers.size();
 
 		if (m_rendererInfos.size() != size)

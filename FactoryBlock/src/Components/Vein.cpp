@@ -4,7 +4,6 @@
 
 void Vein::Start()
 {
-	auto& ecs = App::Get<ECS>();
 	auto& assetManager = App::Get<AssetManager>();
 	auto& iron = assetManager.Get<Sprite>("iron");
 
@@ -16,14 +15,15 @@ void Vein::Start()
 	{
 		int x = distr(gen);
 		int y = distr(gen);
-		auto& entity = ecs.CreateEntity("iron ore");
-		auto& transform = entity.GetComponent<Transform>();
-		transform.SetPosition((float)x, (float)y);
-		transform.SetParent(&GetEntity());
+		auto& entity = CreateEntity("iron ore");
+		ComponentHandle<Transform> transform = entity;
+		transform->SetPosition((float)x, (float)y);
+		transform->SetParent(GetEntity());
 
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
-		renderer.sprite = &iron;
-		renderer.layer = 2;
+		ComponentHandle<SpriteRenderer> rendererHandle = renderer;
+		rendererHandle->sprite = &iron;
+		rendererHandle->layer = 2;
 
 		auto& hitbox = entity.AddComponent<Hitbox>();
 		hitbox.layer = 0;

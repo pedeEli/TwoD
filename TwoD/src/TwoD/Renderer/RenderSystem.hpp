@@ -66,7 +66,7 @@ namespace TwoD
 		}
 
 	private:
-		void Update(const ECS& ecs);
+		void Update();
 
 	private:
 		std::vector<std::unique_ptr<RenderHandler>> m_renderHandlers;

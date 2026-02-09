@@ -11,8 +11,7 @@ namespace TwoD
 
 	std::optional<const Hitbox*> Hitbox::Hit(const glm::fvec2& pos)
 	{
-		auto& ecs = App::Get<ECS>();
-		auto& hitboxs = ecs.GetComponents<Hitbox>();
+		auto& hitboxs = ECS::GetComponents<Hitbox>();
 
 		int32_t currentLayer = std::numeric_limits<int32_t>::min();
 		std::optional<const Hitbox*> currentHitbox = {};

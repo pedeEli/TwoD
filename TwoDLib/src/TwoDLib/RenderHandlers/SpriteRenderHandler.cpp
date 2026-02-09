@@ -19,9 +19,9 @@ namespace TwoD
 		m_shader->Bind(renderPass);
 	}
 
-	void SpriteRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
+	void SpriteRenderHandler::Render(Renderer& renderer, size_t index)
 	{
-		auto& spriteRenderer = ecs.GetComponents<SpriteRenderer>()[index];
+		auto& spriteRenderer = GetComponents<SpriteRenderer>()[index];
 		auto& transform = spriteRenderer.GetComponent<Transform>();
 		auto& rect = spriteRenderer.slice ? spriteRenderer.sprite->GetRect(*spriteRenderer.slice) : spriteRenderer.sprite->GetRect();
 		renderer.RenderQuad(
@@ -34,9 +34,9 @@ namespace TwoD
 		);
 	}
 
-	void SpriteRenderHandler::Update(const ECS& ecs, size_t handlerIndex)
+	void SpriteRenderHandler::Update(size_t handlerIndex)
 	{
-		auto& renderers = ecs.GetComponents<SpriteRenderer>();
+		auto& renderers = GetComponents<SpriteRenderer>();
 		auto size = renderers.size();
 
 		if (m_rendererInfos.size() != size)

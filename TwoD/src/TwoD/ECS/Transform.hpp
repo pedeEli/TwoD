@@ -11,9 +11,9 @@ namespace TwoD
 	public:
 		void Load(const YAML::Node& node) override;
 
-		void SetParent(const Entity* parent);
-		const Entity* GetParent() const;
-		const std::vector<const Entity*>& GetChildren() const;
+		void SetParent(EntityHandle parent);
+		EntityHandle GetParent() const;
+		const std::vector<EntityHandle>& GetChildren() const;
 
 		void SetPosition(float x, float y);
 		void SetPosition(glm::fvec2 pos);
@@ -67,7 +67,7 @@ namespace TwoD
 			0.0f, 0.0f, 1.0f
 		};
 
-		EntityHandle m_parent = static_cast<EntityHandle>(0);
+		EntityHandle m_parent;
 		std::vector<EntityHandle> m_children;
 	};
 }

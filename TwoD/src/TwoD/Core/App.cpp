@@ -43,7 +43,7 @@ namespace TwoD
 		s_application = this;
 
 		m_basePaths = info.basePaths;
-		m_ecs.Register<Transform>();
+		RegisterComponent<Transform>();
 		m_assetManager.Load();
 
 		m_renderSystem.Init();
@@ -85,7 +85,7 @@ namespace TwoD
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
 			lastTick = currentTick;
-			m_ecs.Update(delta);
+			ECS::Update(delta);
 			m_renderSystem.Render();
 		}
 

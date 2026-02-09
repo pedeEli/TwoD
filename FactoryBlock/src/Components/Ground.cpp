@@ -4,7 +4,6 @@
 
 void Ground::Start()
 {
-	auto& ecs = App::Get<ECS>();
 	auto& assetManager = App::Get<AssetManager>();
 
 	float left = -(float)width * 0.5f;
@@ -17,10 +16,10 @@ void Ground::Start()
 			float x = left + j;
 			float y = top + i;
 
-			auto& ground = ecs.CreateEntity("ground");
+			auto& ground = CreateEntity("ground");
 			auto& transform = ground.GetComponent<Transform>();
 			transform.SetPosition(x, y);
-			transform.SetParent(&GetEntity());
+			transform.SetParent(GetEntity());
 
 			auto& renderer = ground.AddComponent<SpriteRenderer>();
 			renderer.sprite = &assetManager.Get<Sprite>("grass");
@@ -38,10 +37,10 @@ void Ground::Start()
 	{
 		auto x = distrX(gen);
 		auto y = distrY(gen);
-		auto& entity = ecs.CreateEntity("foliage");
+		auto& entity = CreateEntity("foliage");
 		auto& transform = entity.GetComponent<Transform>();
 		transform.SetPosition(x, y);
-		transform.SetParent(&GetEntity());
+		transform.SetParent(GetEntity());
 		
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		renderer.slice = distrS(gen);

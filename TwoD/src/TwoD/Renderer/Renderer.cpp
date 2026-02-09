@@ -48,7 +48,7 @@ namespace TwoD
 		m_dummyBinding = { &m_dummyTexture, &m_dummySampler };
 	}
 
-	void Renderer::Render(ECS& ecs, const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers)
+	void Renderer::Render(const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers)
 	{
 		m_handlers = handlers;
 		auto& window = App::Get<Window>();
@@ -83,7 +83,7 @@ namespace TwoD
 				m_currentRenderCommand.size = 0;
 				m_currentRenderCommand.projection = info.projection;
 			}
-			(*handlers)[info.handlerIndex]->Render(ecs, *this, info.rendererIndex);
+			(*handlers)[info.handlerIndex]->Render(*this, info.rendererIndex);
 		}
 		NextBatch();
 		m_renderCommands.clear();

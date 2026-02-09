@@ -6,6 +6,11 @@ namespace TwoD
 {
 	Entity& Component::GetEntity() const
 	{
-		return m_ecs->GetEntity(m_handle);
+		return ECS::GetEntity(m_storageHandle);
+	}
+
+	Entity& Component::CreateEntity(const std::string& name) const
+	{
+		return ECS::CreateEntity(name);
 	}
 }

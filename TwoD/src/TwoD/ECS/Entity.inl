@@ -4,22 +4,29 @@ namespace TwoD
 {
 	template<typename T>
 	requires(std::is_base_of_v<Component, T>)
-	T& Entity::AddComponent()
+	T& Entity::AddComponent() const
 	{
-		return m_ecs->AddComponent<T>(m_handle);
+		return ECS::AddComponent<T>(m_storageHandle);
 	}
 
 	template<typename T>
 	requires(std::is_base_of_v<Component, T>)
 	T& Entity::GetComponent() const
 	{
-		return m_ecs->GetComponent<T>(m_handle);
+		return ECS::GetComponent<T>(m_storageHandle);
 	}
 
 	template<typename T>
 	requires(std::is_base_of_v<Component, T>)
-	void Entity::DestroyComponent()
+	void Entity::DestroyComponent() const
 	{
-		m_ecs->DestroyComponent<T>(m_handle);
+		ECS::DestroyComponent<T>(m_storageHandle);
+	}
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
+	Entity::operator ComponentHandle<T>() const
+	{
+		return {m_storageHandle};
 	}
 }

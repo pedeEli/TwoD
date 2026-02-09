@@ -4,7 +4,9 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <typeindex>
 
+#include "ECSDefines.hpp"
 #include "TwoD/Core/Log.hpp"
 #include "Entity.hpp"
 #include "Component.hpp"
@@ -15,14 +17,14 @@ namespace TwoD
 	class ECS
 	{
 	public:
-		ECS() = default;
-		~ECS() = default;
-		ECS(ECS& other) = delete;
-		ECS(ECS&& other) = delete;
-		ECS& operator=(ECS& other) = delete;
-		ECS& operator=(ECS&& other) = delete;
+		ECS() = delete;
+		~ECS() = delete;
+		ECS(const ECS&) = delete;
+		ECS(ECS&&) = delete;
+		ECS& operator=(const ECS&) = delete;
+		ECS& operator=(ECS&&) = delete;
 
-		void Update(float delta)
+		static void Update(float delta)
 		{
 			while (m_unstartedComponents)
 			{
@@ -47,8 +49,8 @@ namespace TwoD
 			}
 		}
 
-		Entity& CreateEntity(const std::string& name);
-		void DestroyEntity(EntityHandle handle)
+		static Entity& CreateEntity(const std::string& name);
+		static void DestroyEntity(EntityHandle handle)
 		{
 			for (auto& storage : m_storages)
 			{
@@ -59,80 +61,80 @@ namespace TwoD
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		void Register()
+		static void Register(const std::string& name)
 		{
-			Register<T>(typeid(T).name());
+			TD_CORE_ASSERT(!m_storages.contains(typeid(T)));
+			static ComponentStorageImpl<T> storage;
+			m_storages[typeid(T)] = &storage;
+			m_storagesStr[name] = &storage;
 		}
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		void Register(const std::string& name)
-		{
-			TD_CORE_ASSERT(!m_storages.contains(name))
-			m_storages[name] = std::make_unique<ComponentStorageImpl<T>>();
-		}
-
-		template<typename T>
-		requires(std::is_base_of_v<Component, T>)
-		std::vector<T>& GetComponents() const
+		static std::vector<T>& GetComponents()
 		{
 			return GetStorage<T>()->GetAll();
 		}
 
-		Entity& GetEntity(EntityHandle handle)
+		static Entity& GetEntity(EntityHandle handle)
 		{
 			return m_entities.Get(handle);
 		}
 
 	private:
-		template<typename T>
+		template<class T>
 		requires(std::is_base_of_v<Component, T>)
-		ComponentStorageImpl<T>* GetStorage() const
+		static ComponentStorageImpl<T>* GetStorage()
 		{
-			return static_cast<ComponentStorageImpl<T>*>(GetStorage(typeid(T).name()));
+			TD_CORE_ASSERT(m_storages.contains(typeid(T)));
+			return static_cast<ComponentStorageImpl<T>*>(m_storages[typeid(T)]);
 		}
-		ComponentStorage* GetStorage(const std::string& name) const
+
+		static ComponentStorage* GetStorage(const std::string& name)
 		{
-			TD_CORE_ASSERT(m_storages.contains(name))
-			auto storage = m_storages.find(name);
-			return storage->second.get();
+			TD_CORE_ASSERT(m_storagesStr.contains(name));
+			return m_storagesStr[name];
 		}
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		T& AddComponent(EntityHandle entity)
+		static T& AddComponent(EntityHandle entity)
 		{
 			m_unstartedComponents = true;
-			return GetStorage<T>()->Add(this, entity);
+			return GetStorage<T>()->Add(entity);
 		}
-		Component& AddComponent(EntityHandle entity, const std::string& name)
+		static Component& AddComponent(EntityHandle entity, const std::string& name)
 		{
 			m_unstartedComponents = true;
-			return GetStorage(name)->AddComponent(this, entity);
+			return GetStorage(name)->AddComponent(entity);
 		}
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		T& GetComponent(EntityHandle entity)
+		static T& GetComponent(EntityHandle entity)
 		{
 			return GetStorage<T>()->Get(entity);
 		}
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
-		void DestroyComponent(EntityHandle entity)
+		static void DestroyComponent(EntityHandle entity)
 		{
-			GetStorage<T>()->Destory(entity);
+			GetStorage<T>()->Destroy(entity);
 		}
 
 	private:
-		Storage<Entity, EntityHandle> m_entities;
-		std::unordered_map<std::string, std::unique_ptr<ComponentStorage>> m_storages;
-		uint32_t m_nextEntity = 1;
-		bool m_unstartedComponents = false;
+		static inline Storage<Entity, EntityHandle> m_entities;
+		static inline std::unordered_map<std::type_index, ComponentStorage*> m_storages;
+		static inline std::unordered_map<std::string, ComponentStorage*> m_storagesStr;
+		static inline uint32_t m_nextEntity = 1;
+		static inline bool m_unstartedComponents = false;
 
 		friend class Component;
 		friend class Entity;
+		template<class T>
+		requires(std::is_base_of_v<Component, T>)
+		friend class ComponentHandle;
 	};
 }
 

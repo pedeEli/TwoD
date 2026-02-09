@@ -17,9 +17,9 @@ namespace TwoD
 		m_shader->Bind(renderPass);
 	}
 
-	void TextRenderHandler::Render(const ECS& ecs, Renderer& renderer, size_t index)
+	void TextRenderHandler::Render(Renderer& renderer, size_t index)
 	{
-		auto& textRenderer = ecs.GetComponents<TextRenderer>()[index];
+		auto& textRenderer = GetComponents<TextRenderer>()[index];
 		auto& transform = textRenderer.GetComponent<Transform>().GetWorldMatrix();
 		auto& glyphs = textRenderer.GetGlyphs();
 
@@ -36,9 +36,9 @@ namespace TwoD
 		}
 	}
 
-	void TextRenderHandler::Update(const ECS& ecs, size_t handlerIndex)
+	void TextRenderHandler::Update(size_t handlerIndex)
 	{
-		auto& renderers = ecs.GetComponents<TextRenderer>();
+		auto& renderers = GetComponents<TextRenderer>();
 		auto size = renderers.size();
 
 		if (m_rendererInfos.size() != size)

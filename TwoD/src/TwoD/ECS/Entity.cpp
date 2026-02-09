@@ -4,13 +4,45 @@
 
 namespace TwoD
 {
-	Component& Entity::AddComponent(const std::string& name)
+	bool EntityHandle::operator==(const EntityHandle other) const noexcept
 	{
-		return m_ecs->AddComponent(m_handle, name);
+		return other.id == id;
+	}
+	bool EntityHandle::operator!=(const EntityHandle other) const noexcept
+	{
+		return other.id != id;
+	}
+	EntityHandle::operator bool() const noexcept
+	{
+		return id != 0;
+	}
+	Entity& EntityHandle::operator*() const noexcept
+	{
+		return ECS::GetEntity(*this);
+	}
+	Entity* EntityHandle::operator->() const noexcept
+	{
+		return &ECS::GetEntity(*this);
 	}
 
-	void Entity::Destroy()
+
+	Component& Entity::AddComponent(const std::string& name) const
 	{
-		m_ecs->DestroyEntity(m_handle);
+		return ECS::AddComponent(m_storageHandle, name);
 	}
+
+	void Entity::Destroy() const
+	{
+		ECS::DestroyEntity(m_storageHandle);
+	}
+
+	Entity::operator EntityHandle() const noexcept
+	{
+		return m_storageHandle;
+	}
+}
+
+std::size_t std::hash<TwoD::EntityHandle>::operator()(const TwoD::EntityHandle& handle) const noexcept
+{
+	return std::hash<uint32_t>{}(handle.id);
 }

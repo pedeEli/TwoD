@@ -7,15 +7,23 @@
 
 namespace TwoD
 {
-	template<typename Handle>
-	class HasHandle
+	struct StorageProbe
 	{
-	public:
-		virtual Handle GetHandle() const = 0;
+		template<class T>
+		static auto handle(T& t) -> decltype((t.m_storageHandle))
+		{
+			return t.m_storageHandle;
+		}
 	};
 
-	template<typename T, typename Handle>
-	requires(std::is_base_of_v<HasHandle<Handle>, T>)
+	template<class T, typename H>
+	concept HasHandle = requires(T t)
+	{
+		{ StorageProbe::handle(t) } -> std::same_as<H&>;
+	};
+
+	template<class T, typename Handle>
+	requires(HasHandle<T, Handle>)
 	class Storage
 	{
 	public:
@@ -24,7 +32,7 @@ namespace TwoD
 		template<typename... Args>
 		T& Add(Handle handle, Args&&... args)
 		{
-			TD_CORE_ASSERT(!m_indices.contains(handle))
+			TD_CORE_ASSERT(!m_indices.contains(handle));
 			m_items.emplace_back(std::forward<Args>(args)...);
 			auto index = m_items.size() - 1;
 			m_indices.emplace(handle, index);
@@ -32,7 +40,7 @@ namespace TwoD
 		}
 		T& Get(Handle handle)
 		{
-			TD_CORE_ASSERT(m_indices.contains(handle))
+			TD_CORE_ASSERT(m_indices.contains(handle));
 			auto it = m_indices.find(handle);
 			return m_items[it->second];
 		}
@@ -42,7 +50,7 @@ namespace TwoD
 		}
 		T Destroy(Handle handle)
 		{
-			TD_CORE_ASSERT(m_indices.contains(handle))
+			TD_CORE_ASSERT(m_indices.contains(handle));
 			
 			auto it = m_indices.find(handle);
 			auto index = it->second;
@@ -58,7 +66,7 @@ namespace TwoD
 			auto& back = m_items.back();
 			auto item = std::move(m_items[index]);
 			m_items[index] = std::move(back);
-			m_indices[back.GetHandle()] = index;
+			m_indices[StorageProbe::handle(back)] = index;
 			m_items.pop_back();
 			return item;
 		}

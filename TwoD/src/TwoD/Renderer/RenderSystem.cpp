@@ -17,23 +17,22 @@ namespace TwoD
 
 	void RenderSystem::Render()
 	{
-		auto& ecs = App::Get<ECS>();
 		if (m_dirty)
 		{
-			Update(ecs);
+			Update();
 			m_dirty = false;
 		}
 
-		m_renderer.Render(ecs, m_rendererHandlerInfos, &m_renderHandlers);
+		m_renderer.Render(m_rendererHandlerInfos, &m_renderHandlers);
 	}
 
-	void RenderSystem::Update(const ECS& ecs)
+	void RenderSystem::Update()
 	{
 		size_t totalSize = 0;
 		for (size_t i = 0; i < m_renderHandlers.size(); i++)
 		{
 			auto& handler = m_renderHandlers[i];
-			handler->Update(ecs, i);
+			handler->Update(i);
 			totalSize += handler->m_rendererInfos.size();
 		}
 

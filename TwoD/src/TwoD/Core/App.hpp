@@ -5,8 +5,8 @@
 #include "TwoD/Core/Base.hpp"
 
 #include "TwoD/SDL/Window.hpp"
-#include "TwoD/ECS/ECS.hpp"
 
+#include "TwoD/ECS/ECS.hpp"
 #include "TwoD/Assets/AssetManager.hpp"
 #include "TwoD/Renderer/RenderSystem.hpp"
 #include "TwoD/Inputs/Inputs.hpp"
@@ -38,10 +38,6 @@ namespace TwoD
 			{
 				return Get().m_window;
 			}
-			else if constexpr (std::is_same_v<T, ECS>)
-			{
-				return Get().m_ecs;
-			}
 			else if constexpr (std::is_same_v<T, AssetManager>)
 			{
 				return Get().m_assetManager;
@@ -69,7 +65,7 @@ namespace TwoD
 
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
-		void RegisterComponent() { m_ecs.Register<T>(); }
+		void RegisterComponent() { ECS::Register<T>(typeid(T).name()); }
 
 		template<class T>
 		requires(std::is_base_of_v<Asset, T>)
@@ -90,7 +86,6 @@ namespace TwoD
 		Window m_window;
 		SceneSystem m_sceneSystem;
 		RenderSystem m_renderSystem;
-		ECS m_ecs;
 		AssetManager m_assetManager;
 
 		bool m_running = false;
