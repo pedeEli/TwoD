@@ -4,8 +4,7 @@
 
 void Vein::Start()
 {
-	auto& assetManager = App::Get<AssetManager>();
-	auto& iron = assetManager.Get<Sprite>("iron");
+	auto& iron = TwoD::AssetManager::Get<Sprite>("iron");
 
 	std::random_device rd;
 	std::mt19937 gen(rd());

@@ -4,8 +4,6 @@
 
 void Ground::Start()
 {
-	auto& assetManager = App::Get<AssetManager>();
-
 	float left = -(float)width * 0.5f;
 	float top = -(float)height * 0.5f;
 
@@ -22,7 +20,7 @@ void Ground::Start()
 			transform.SetParent(GetEntity());
 
 			auto& renderer = ground.AddComponent<SpriteRenderer>();
-			renderer.sprite = &assetManager.Get<Sprite>("grass");
+			renderer.sprite = &TwoD::AssetManager::Get<Sprite>("grass");
 			renderer.layer = 0;
 		}
 	}
@@ -44,7 +42,7 @@ void Ground::Start()
 		
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		renderer.slice = distrS(gen);
-		renderer.sprite = &assetManager.Get<Sprite>("foliage");
+		renderer.sprite = &TwoD::AssetManager::Get<Sprite>("foliage");
 		renderer.layer = 1;
 	}
 }

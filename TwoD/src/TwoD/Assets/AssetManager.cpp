@@ -34,6 +34,14 @@ namespace TwoD
 		}
 	}
 
+	void AssetManager::Unload()
+	{
+		for (auto& storage : m_storages)
+		{
+			storage.second->RemoveAll();
+		}
+	}
+
 	const AssetManager::Callbacks AssetManager::LoadFile(const std::filesystem::path& path)
 	{
 		YAML::Node node = YAML::LoadFile(path.string());
@@ -52,10 +60,9 @@ namespace TwoD
 		};
 	}
 
-	AssetStorage* AssetManager::GetStorage(const std::string& name) const
+	AssetStorage* AssetManager::GetStorage(const std::string& name)
 	{
-		TD_CORE_ASSERT(m_storages.contains(name));
-		auto it = m_storages.find(name);
-		return it->second.get();
+		TD_CORE_ASSERT(m_storagesStr.contains(name));
+		return m_storagesStr[name];
 	}
 }

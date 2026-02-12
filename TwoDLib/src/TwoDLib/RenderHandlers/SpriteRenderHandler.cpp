@@ -9,8 +9,8 @@ namespace TwoD
 {
 	void SpriteRenderHandler::Init()
 	{
-		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::SpriteRenderer");
-		m_spriteAtlas = &App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas");
+		m_shader = &AssetManager::Get<Shader>("TwoDLib::SpriteRenderer");
+		m_spriteAtlas = &AssetManager::Get<SpriteAtlas>("sprite-atlas");
 		m_spriteAtlas->Pack();
 	}
 

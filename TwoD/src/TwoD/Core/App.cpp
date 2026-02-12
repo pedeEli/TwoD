@@ -44,7 +44,7 @@ namespace TwoD
 
 		m_basePaths = info.basePaths;
 		RegisterComponent<Transform>();
-		m_assetManager.Load();
+		AssetManager::Load();
 
 		m_renderSystem.Init();
 
@@ -63,6 +63,9 @@ namespace TwoD
 	}
 	App::~App()
 	{
+		ECS::Destroy();
+		AssetManager::Unload();
+
 		m_initialized = false;
 		s_application = nullptr;
 	}

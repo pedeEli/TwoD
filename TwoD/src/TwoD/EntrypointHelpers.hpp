@@ -39,7 +39,7 @@ public:
 	constexpr Resources(TwoD::App& app) : m_app(app) {}
 
 	template<class T>
-		requires(std::is_base_of_v<TwoD::Asset, T>)
+	requires(std::is_base_of_v<TwoD::Asset, T>)
 	constexpr void Register()
 	{
 		m_app.RegisterResource<T>();

@@ -1,47 +1,40 @@
 #pragma once
+#include <typeindex>
+
+#include "AssetDefines.hpp"
 #include "AssetStorage.hpp"
-#include "TwoD/Core/YAML.hpp"
+#include "Asset.hpp"
+
 #include "TwoD/Core/Storage.hpp"
 
 namespace TwoD
 {
-	class Asset
-	{
-	public:
-		virtual ~Asset() = default;
-
-		virtual void Load(const YAML::Node& node) = 0;
-		virtual void Init(const std::filesystem::path& path) {}
-	};
-
 	class AssetManager
 	{
 	public:
-		AssetManager() = default;
-		~AssetManager() = default;
+		AssetManager() = delete;
+		~AssetManager() = delete;
 		AssetManager(AssetManager& other) = delete;
 		AssetManager(AssetManager&& other) = delete;
 		AssetManager& operator=(AssetManager& other) = delete;
 		AssetManager& operator=(AssetManager&& other) = delete;
 
-		void Load();
+		static void Load();
+		static void Unload();
 		
 		template<typename T>
 		requires(std::is_base_of_v<Asset, T>)
-		void Register()
+		static void Register(const std::string& name)
 		{
-			Register<T>(typeid(T).name());
-		}
-		template<typename T>
-		requires(std::is_base_of_v<Asset, T>)
-		void Register(const std::string& name)
-		{
-			m_storages.emplace(name, std::make_unique<AssetStorageImpl<T>>());
+			TD_CORE_ASSERT(!m_storages.contains(typeid(T)), "Cannot register assets twice!");
+			static AssetStorageImpl<T> storage;
+			m_storages[typeid(T)] = &storage;
+			m_storagesStr[name] = &storage;
 		}
 
 		template<typename T>
 		requires(std::is_base_of_v<Asset, T>)
-		T& Get(const std::string& name)
+		static T& Get(const std::string& name)
 		{
 			return GetStorage<T>()->Get(name);
 		}
@@ -54,29 +47,22 @@ namespace TwoD
 		};
 
 	private:
-		const Callbacks LoadFile(const std::filesystem::path& path);
+		static const Callbacks LoadFile(const std::filesystem::path& path);
 		
 		template<typename T>
 		requires(std::is_base_of_v<Asset, T>)
-		AssetStorageImpl<T>* GetStorage() const
+		static AssetStorageImpl<T>* GetStorage()
 		{
-			return static_cast<AssetStorageImpl<T>*>(GetStorage(typeid(T).name()));
+			TD_CORE_ASSERT(m_storages.contains(typeid(T)));
+			return static_cast<AssetStorageImpl<T>*>(m_storages[typeid(T)]);
 		}
-		AssetStorage* GetStorage(const std::string& name) const;
+		static AssetStorage* GetStorage(const std::string& name);
 
 	private:
-		std::unordered_map<std::string, std::unique_ptr<AssetStorage>> m_storages;
+		static inline std::unordered_map<std::type_index, AssetStorage*> m_storages;
+		static inline std::unordered_map<std::string, AssetStorage*> m_storagesStr;
 	};
 }
 
-namespace YAML
-{
-	template<class T>
-	requires(std::is_base_of_v<TwoD::Asset, T>)
-	struct convert<T*>
-	{
-		using pointer = T*;
-		static Node encode(const pointer& rhs);
-		static bool decode(const Node& node, pointer& rhs);
-	};
-}
+#include "Asset.inl"
+#include "AssetStorage.inl"

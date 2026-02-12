@@ -22,6 +22,7 @@ namespace TwoD
 		virtual void UpdateBefore(float delta) = 0;
 		virtual void Update(float delta) = 0;
 		virtual void Destroy(EntityHandle entity) = 0;
+		virtual void DestroyAll() = 0;
 	};
 
 	template<typename T>
@@ -44,6 +45,7 @@ namespace TwoD
 		void UpdateBefore(float delta) override;
 		void Update(float delta) override;
 		void Destroy(EntityHandle entity) override;
+		void DestroyAll() override;
 		
 		T& Add(EntityHandle entity);
 

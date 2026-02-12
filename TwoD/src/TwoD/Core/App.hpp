@@ -38,10 +38,6 @@ namespace TwoD
 			{
 				return Get().m_window;
 			}
-			else if constexpr (std::is_same_v<T, AssetManager>)
-			{
-				return Get().m_assetManager;
-			}
 			else if constexpr (std::is_same_v<T, SceneSystem>)
 			{
 				return Get().m_sceneSystem;
@@ -69,7 +65,7 @@ namespace TwoD
 
 		template<class T>
 		requires(std::is_base_of_v<Asset, T>)
-		void RegisterResource() { m_assetManager.Register<T>(); }
+		void RegisterResource() { AssetManager::Register<T>(typeid(T).name()); }
 
 		template<class T>
 		requires(std::is_base_of_v<RenderHandler, T>)
@@ -86,7 +82,6 @@ namespace TwoD
 		Window m_window;
 		SceneSystem m_sceneSystem;
 		RenderSystem m_renderSystem;
-		AssetManager m_assetManager;
 
 		bool m_running = false;
 		bool m_initialized = false;
@@ -94,5 +89,3 @@ namespace TwoD
 		std::vector<std::filesystem::path> m_basePaths;
 	};
 }
-
-#include "TwoD/Assets/AssetManager.inl"

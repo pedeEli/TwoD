@@ -70,6 +70,11 @@ namespace TwoD
 			m_items.pop_back();
 			return item;
 		}
+		void DestroyAll()
+		{
+			m_items.clear();
+			m_indices.clear();
+		}
 
 	protected:
 		std::vector<T> m_items;

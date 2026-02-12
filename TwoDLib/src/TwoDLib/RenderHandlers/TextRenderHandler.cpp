@@ -9,7 +9,7 @@ namespace TwoD
 {
 	void TextRenderHandler::Init()
 	{
-		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::TextRenderer");
+		m_shader = &AssetManager::Get<Shader>("TwoDLib::TextRenderer");
 	}
 
 	void TextRenderHandler::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const

@@ -9,7 +9,7 @@ namespace TwoD
 {
 	void ColorRenderHandler::Init()
 	{
-		m_shader = &App::Get<AssetManager>().Get<Shader>("TwoDLib::ColorRenderer");
+		m_shader = &AssetManager::Get<Shader>("TwoDLib::ColorRenderer");
 	}
 
 	void ColorRenderHandler::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const

@@ -14,7 +14,7 @@ namespace TwoD
 		auto width = surface.GetWidth();
 		auto height = surface.GetHeight();
 
-		auto& atlas = App::Get<AssetManager>().Get<SpriteAtlas>("sprite-atlas");
+		auto& atlas = AssetManager::Get<SpriteAtlas>("sprite-atlas");
 		atlas.Add(surface, [this, width, height](SpriteRect rect, float halfPixelW, float halfPixelH) {
 			Apply(width, height, rect, halfPixelW, halfPixelH);
 		});

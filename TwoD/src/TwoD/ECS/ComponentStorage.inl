@@ -21,7 +21,6 @@ namespace TwoD
 		}
 	}
 
-
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
 	void ComponentStorageImpl<T>::Start()
@@ -48,7 +47,6 @@ namespace TwoD
 		return static_cast<Component&>(ref);
 	}
 
-
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
 	void ComponentStorageImpl<T>::Destroy(EntityHandle entity)
@@ -58,6 +56,13 @@ namespace TwoD
 			auto item = storage::Destroy(entity);
 			item.Destroy();
 		}
+	}
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
+	void ComponentStorageImpl<T>::DestroyAll()
+	{
+		storage::DestroyAll();
 	}
 
 	template<typename T>

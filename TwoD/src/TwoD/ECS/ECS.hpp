@@ -24,40 +24,11 @@ namespace TwoD
 		ECS& operator=(const ECS&) = delete;
 		ECS& operator=(ECS&&) = delete;
 
-		static void Update(float delta)
-		{
-			while (m_unstartedComponents)
-			{
-				m_unstartedComponents = false;
-				for (auto& storage : m_storages)
-				{
-					storage.second->StartBefore();
-				}
-				for (auto& storage : m_storages)
-				{
-					storage.second->Start();
-				}
-			}
-
-			for (auto& storage : m_storages)
-			{
-				storage.second->UpdateBefore(delta);
-			}
-			for (auto& storage : m_storages)
-			{
-				storage.second->Update(delta);
-			}
-		}
+		static void Destroy();
+		static void Update(float delta);
 
 		static Entity& CreateEntity(const std::string& name);
-		static void DestroyEntity(EntityHandle handle)
-		{
-			for (auto& storage : m_storages)
-			{
-				storage.second->Destroy(handle);
-			}
-			m_entities.Destroy(handle);
-		}
+		static void DestroyEntity(EntityHandle handle);
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)

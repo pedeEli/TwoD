@@ -65,6 +65,9 @@ namespace TwoD
 
 		friend struct ComponentProbe;
 		friend struct StorageProbe;
+		template<class T>
+		requires(std::is_base_of_v<Component, T>)
+		friend class ComponentHandle;
 	};
 
 	/**
