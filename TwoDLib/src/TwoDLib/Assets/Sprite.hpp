@@ -30,10 +30,10 @@ namespace TwoD
 		}
 
 	public:
-		TD_ASSET_FIELDS(
-			TD_FIELD(std::string, file),
-			TD_FIELD(std::string, name),
-			TD_FIELD(std::optional<Slices>, slices)
+		TD_ASSET(
+			TD_ASSET_FIELD(std::string, file),
+			TD_ASSET_FIELD(std::string, name),
+			TD_ASSET_FIELD(std::optional<Slices>, slices, {})
 		)
 
 	private:

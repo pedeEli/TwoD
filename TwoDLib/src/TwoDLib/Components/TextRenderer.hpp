@@ -26,11 +26,11 @@ namespace TwoD
 		const std::vector<Glyph>& GetGlyphs() const;
 
 	public:
-		TD_COMPONENT_FIELDS(
-			TD_FIELD(int32_t, layer, 0),
-			TD_FIELD(Font*, font),
-			TD_FIELD(std::string, text),
-			TD_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
+		TD_COMPONENT(
+			TD_COMPONENT_FIELD(int32_t, layer, 0),
+			TD_COMPONENT_FIELD(Font*, font),
+			TD_COMPONENT_FIELD(std::string, text),
+			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
 		)
 
 	private:

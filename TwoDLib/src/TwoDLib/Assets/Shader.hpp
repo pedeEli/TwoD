@@ -21,12 +21,11 @@ namespace TwoD
 		void Init(const std::filesystem::path& path) override;
 
 	public:
-		TD_ASSET_FIELDS(
-			TD_FIELD(std::string, file),
-			TD_FIELD(std::string, name),
-			TD_FIELD(ShaderInfo, vertex),
-			TD_FIELD(ShaderInfo, fragment),
-			TD_FIELD(SDL::GraphicsPipelineInfo, pipelineInfo)
+		TD_ASSET(
+			TD_ASSET_FIELD(std::string, name),
+			TD_ASSET_FIELD(ShaderInfo, vertex),
+			TD_ASSET_FIELD(ShaderInfo, fragment),
+			TD_ASSET_FIELD(SDL::GraphicsPipelineInfo, pipelineInfo, {})
 		)
 
 	public:

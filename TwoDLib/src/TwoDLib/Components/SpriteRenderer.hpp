@@ -13,10 +13,10 @@ namespace TwoD
 		void Destroy() override;
 
 	public:
-		TD_COMPONENT_FIELDS(
-			TD_FIELD(int32_t, layer, 0),
-			TD_FIELD(Sprite*, sprite),
-			TD_FIELD(std::optional<uint32_t>, slice)
+		TD_COMPONENT(
+			TD_COMPONENT_FIELD(int32_t, layer, 0),
+			TD_COMPONENT_FIELD(Sprite*, sprite),
+			TD_COMPONENT_FIELD(std::optional<uint32_t>, slice, {})
 		)
 	};
 }

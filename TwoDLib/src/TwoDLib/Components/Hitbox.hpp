@@ -17,12 +17,12 @@ namespace TwoD
 		bool IsInside(const glm::fvec2& pos) const;
 	
 	public:
-		TD_COMPONENT_FIELDS(
-			TD_FIELD(float, x),
-			TD_FIELD(float, y),
-			TD_FIELD(float, w),
-			TD_FIELD(float, h),
-			TD_FIELD(int32_t, layer)
+		TD_COMPONENT(
+			TD_COMPONENT_FIELD(float, x),
+			TD_COMPONENT_FIELD(float, y),
+			TD_COMPONENT_FIELD(float, w),
+			TD_COMPONENT_FIELD(float, h),
+			TD_COMPONENT_FIELD(int32_t, layer)
 		)
 
 	};

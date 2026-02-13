@@ -27,8 +27,8 @@ namespace TwoD
 		const glm::fvec2 ScreenToWorldSpace(const glm::fvec2 pos) const;
 
 	public:
-		TD_COMPONENT_FIELDS(
-			TD_FIELD(float, zoom, 40.0f)
+		TD_COMPONENT(
+			TD_COMPONENT_FIELD(float, zoom, 40.0f)
 		)
 
 	private:

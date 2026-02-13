@@ -6,10 +6,11 @@
 
 namespace TwoD
 {
+	/* TODO: loadData is not being deleted */
 	struct ComponentInfo
 	{
 		std::string type;
-		YAML::Node data;
+		const void* loadData;
 	};
 
 	struct TransformInfo

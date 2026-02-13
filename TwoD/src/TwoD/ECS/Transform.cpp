@@ -5,20 +5,30 @@
 
 namespace TwoD
 {
-	void Transform::Load(const YAML::Node& node)
+	const void* Transform::CreateLoadData(const YAML::Node& node)
 	{
+		auto loadData = new internal_load_data();
 		if (node["position"])
 		{
-			SetPosition(node["position"].as<glm::fvec3>());
+			loadData->position = node["position"].as<glm::fvec3>();
 		}
 		if (node["rotation"])
 		{
-			SetRotation(node["rotation"].as<float>());
+			loadData->rotation = node["rotation"].as<float>();
 		}
 		if (node["scale"])
 		{
-			SetScale(node["scale"].as<glm::fvec2>());
+			loadData->scale = node["scale"].as<glm::fvec2>();
 		}
+		return loadData;
+	}
+	void Transform::Load(const void* data)
+	{
+		auto* loadData = static_cast<const internal_load_data*>(data);
+		m_position = loadData->position;
+		m_rotation = loadData->rotation;
+		m_scale = loadData->scale;
+		CalculateMatrices();
 	}
 
 	void Transform::SetPosition(glm::fvec2 pos)

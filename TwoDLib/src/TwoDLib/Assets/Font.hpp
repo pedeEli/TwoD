@@ -35,8 +35,8 @@ namespace TwoD
 		}
 
 	public:
-		TD_ASSET_FIELDS(
-			TD_FIELD(std::string, file)
+		TD_ASSET(
+			TD_ASSET_FIELD(std::string, file)
 		)
 
 		SDL::TextureSamplerBinding binding;

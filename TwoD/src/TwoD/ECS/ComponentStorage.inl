@@ -92,4 +92,18 @@ namespace TwoD
 		m_unstartedItems = true;
 		return storage::Add(entity, entity);
 	}
+
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
+	const void* ComponentStorageImpl<T>::CreateLoadData(const YAML::Node& node) const
+	{
+		if constexpr (requires(const YAML::Node& n) {
+			{ T::CreateLoadData(n) } -> std::convertible_to<const void*>;
+		})
+		{
+			return T::CreateLoadData(node);
+		}
+		return nullptr;
+	}
 }

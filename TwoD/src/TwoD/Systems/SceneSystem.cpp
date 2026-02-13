@@ -116,7 +116,10 @@ namespace TwoD
 		for (auto& componentInfo : entityInfo.components)
 		{
 			auto& component = entity.AddComponent(componentInfo.type);
-			component.Load(componentInfo.data);
+			if (componentInfo.loadData)
+			{
+				component.Load(componentInfo.loadData);
+			}
 		}
 
 		for (auto& childInfo : entityInfo.children)
@@ -153,12 +156,13 @@ namespace TwoD
 			info.components.reserve(components.size());
 			for (const auto& component : components)
 			{
-				auto type = component["type"];
-				if (!type)
+				if (!component["type"])
 				{
 					return std::unexpected("missing entity.component.type field");
 				}
-				info.components.emplace_back(type.as<std::string>(), component);
+				auto type = component["type"].as<std::string>();
+				auto* loadData = ECS::CreateLoadData(type, component);
+				info.components.emplace_back(type, loadData);
 			}
 		}
 

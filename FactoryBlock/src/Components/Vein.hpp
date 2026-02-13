@@ -10,8 +10,8 @@ public:
 	void Start() override;
 
 public:
-	TD_COMPONENT_FIELDS(
-		TD_FIELD(size_t, size)
+	TD_COMPONENT(
+		TD_COMPONENT_FIELD(size_t, size)
 	)
 };
 

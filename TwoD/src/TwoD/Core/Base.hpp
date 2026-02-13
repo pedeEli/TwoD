@@ -30,23 +30,5 @@
 #define TD_CHOOSE_MACRO_3(macro_1, macro_2, ...) TD_CHOOSE_MACRO(TD_INTERNAL_GET_MACRO_3, macro_1, macro_2, __VA_ARGS__)
 #define TD_CHOOSE_MACRO_4(macro_1, macro_2, ...) TD_CHOOSE_MACRO(TD_INTERNAL_GET_MACRO_4, macro_1, macro_2, __VA_ARGS__)
 
-
-#define TD_INTERNAL_FIELDS_DEF(values) TD_CHOOSE_MACRO_3(TD_INTERNAL_FIELDS_DEF_NO_DEFAULT, TD_INTERNAL_FIELDS_DEF_WITH_DEFAULT, values)
-#define TD_INTERNAL_FIELDS_DEF_WITH_DEFAULT(type, name, value) type name = value;
-#define TD_INTERNAL_FIELDS_DEF_NO_DEFAULT(type, name) type name;
-
-#define TD_INTERNAL_FIELDS_LOAD(values) TD_INTERNAL_FIELDS_LOAD_UNWRAP values
-#define TD_INTERNAL_FIELDS_LOAD_UNWRAP(type, name, ...) \
-	if (node[#name]) { name = node[#name].as<type>(); }
-
-#define TD_INTERNAL_FIELDS(params, ...) TD_APPLY_EACH(TD_INTERNAL_FIELDS_DEF, __VA_ARGS__) \
-	void Load params override { \
-		TD_APPLY_EACH(TD_INTERNAL_FIELDS_LOAD, __VA_ARGS__) \
-	}
-#define TD_FIELD(...) (__VA_ARGS__)
-
-#define TD_COMPONENT_FIELDS(...) TD_INTERNAL_FIELDS((const YAML::Node& node), __VA_ARGS__)
-#define TD_ASSET_FIELDS(...) TD_INTERNAL_FIELDS((const YAML::Node& node), __VA_ARGS__)
-
 #include "TwoD/Core/Asserts.hpp"
 #include "TwoD/Core/Log.hpp"

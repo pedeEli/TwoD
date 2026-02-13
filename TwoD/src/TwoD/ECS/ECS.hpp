@@ -52,6 +52,11 @@ namespace TwoD
 			return m_entities.Get(handle);
 		}
 
+		static const void* CreateLoadData(const std::string& name, const YAML::Node& node)
+		{
+			return GetStorage(name)->CreateLoadData(node);
+		}
+
 	private:
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)

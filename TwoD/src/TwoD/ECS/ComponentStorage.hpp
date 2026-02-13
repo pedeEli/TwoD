@@ -23,6 +23,8 @@ namespace TwoD
 		virtual void Update(float delta) = 0;
 		virtual void Destroy(EntityHandle entity) = 0;
 		virtual void DestroyAll() = 0;
+
+		virtual const void* CreateLoadData(const YAML::Node& node) const = 0;
 	};
 
 	template<typename T>
@@ -46,6 +48,8 @@ namespace TwoD
 		void Update(float delta) override;
 		void Destroy(EntityHandle entity) override;
 		void DestroyAll() override;
+
+		const void* CreateLoadData(const YAML::Node& node) const override;
 		
 		T& Add(EntityHandle entity);
 

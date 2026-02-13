@@ -33,7 +33,7 @@ namespace TwoD
 		Component& operator=(const Component&) = delete;
 		Component& operator=(Component&&) = default;
 
-		virtual void Load(const YAML::Node& node) {}
+		virtual void Load(const void* data) {}
 		virtual void StartBefore() {}
 		virtual void Start() {}
 		virtual void Destroy() {}

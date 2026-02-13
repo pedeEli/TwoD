@@ -11,8 +11,8 @@ public:
 	void Update(float delta) override;
 
 public:
-	TD_COMPONENT_FIELDS(
-		TD_FIELD(float, speed, 1.5)
+	TD_COMPONENT(
+		TD_COMPONENT_FIELD(float, speed, 1.5)
 	)
 
 	Camera* camera;

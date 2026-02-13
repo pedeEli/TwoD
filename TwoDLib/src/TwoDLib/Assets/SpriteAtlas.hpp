@@ -45,12 +45,12 @@ namespace TwoD
 		const glm::fvec2 GetSize() const { return { 1024.0f, 1024.0f }; }
 
 	public:
-		TD_ASSET_FIELDS(
-			TD_FIELD(std::string, name),
-			TD_FIELD(SDL::Filter, filter),
-			TD_FIELD(SDL::PixelFormat, pixelFormat),
-			TD_FIELD(SDL::TextureFormat, textureFormat),
-			TD_FIELD(uint32_t, gap, 0)
+		TD_ASSET(
+			TD_ASSET_FIELD(std::string, name),
+			TD_ASSET_FIELD(SDL::Filter, filter),
+			TD_ASSET_FIELD(SDL::PixelFormat, pixelFormat),
+			TD_ASSET_FIELD(SDL::TextureFormat, textureFormat),
+			TD_ASSET_FIELD(uint32_t, gap, 0)
 		)
 
 		SDL::TextureSamplerBinding binding;

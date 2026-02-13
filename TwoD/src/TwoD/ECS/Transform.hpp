@@ -9,7 +9,14 @@ namespace TwoD
 	{
 		using Component::Component;
 	public:
-		void Load(const YAML::Node& node) override;
+		struct internal_load_data
+		{
+			glm::fvec2 position = { 0.0f, 0.0f };
+			float rotation = 0;
+			glm::fvec2 scale = { 1.0f, 1.0f };
+		};
+		static const void* CreateLoadData(const YAML::Node& node);
+		void Load(const void* data) override;
 
 		void SetParent(EntityHandle parent);
 		EntityHandle GetParent() const;
