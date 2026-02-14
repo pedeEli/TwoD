@@ -13,7 +13,7 @@ namespace TwoD
 
 		for (const auto& path : paths)
 		{
-			for (const auto& entry : std::filesystem::recursive_directory_iterator(path / "resources"))
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(path))
 			{
 				if (entry.is_regular_file() && entry.path().extension().string() == ".yaml")
 				{

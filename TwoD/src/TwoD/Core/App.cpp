@@ -44,14 +44,14 @@ namespace TwoD
 
 		m_basePaths = info.basePaths;
 		RegisterComponent<Transform>();
+		RegisterResource<Scene>();
 		AssetManager::Load();
 
 		m_renderSystem.Init();
 
 		Inputs::Init();
 
-		m_sceneSystem.Load();
-		m_sceneSystem.SetActive(info.startScene);
+		AssetManager::Get<Scene>(info.startScene).SetActive();
 
 		EventHandler::On<QuitEvent>([this](auto& e)
 			{
@@ -91,8 +91,6 @@ namespace TwoD
 			ECS::Update(delta);
 			m_renderSystem.Render();
 		}
-
-		m_sceneSystem.Clear();
 	}
 
 

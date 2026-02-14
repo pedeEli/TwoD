@@ -8,11 +8,10 @@
 
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoD/Assets/AssetManager.hpp"
+#include "TwoD/Assets/Scene.hpp"
 #include "TwoD/Renderer/RenderSystem.hpp"
 #include "TwoD/Inputs/Inputs.hpp"
 #include "TwoD/Events/EventHandler.hpp"
-
-#include "TwoD/Systems/SceneSystem.hpp"
 
 namespace TwoD
 {
@@ -37,10 +36,6 @@ namespace TwoD
 			if constexpr (std::is_same_v<T, Window>)
 			{
 				return Get().m_window;
-			}
-			else if constexpr (std::is_same_v<T, SceneSystem>)
-			{
-				return Get().m_sceneSystem;
 			}
 			else if constexpr (std::is_same_v<T, RenderSystem>)
 			{
@@ -80,7 +75,6 @@ namespace TwoD
 
 		SDLQuiter m_sdlQuiter;
 		Window m_window;
-		SceneSystem m_sceneSystem;
 		RenderSystem m_renderSystem;
 
 		bool m_running = false;
