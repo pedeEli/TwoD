@@ -58,6 +58,8 @@ namespace TwoD
 			TD_CORE_CRITICAL("Failed to get window size: {}", SDL_GetError());
 		}
 
+		m_windowID = SDL_GetWindowID(window);
+
 		m_raw = std::make_unique<Raw>(window, device);
 
 		m_depthTextureInfo.type = SDL::TextureType::TWO_D;
@@ -72,11 +74,14 @@ namespace TwoD
 
 		EventHandler::On<WindowResizedEvent>([this](auto& event)
 			{
-				m_width = event.x;
-				m_height = event.y;
-				m_depthTextureInfo.width = event.x;
-				m_depthTextureInfo.height = event.y;
-				m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
+				if (event.windowID == m_windowID)
+				{
+					m_width = event.x;
+					m_height = event.y;
+					m_depthTextureInfo.width = event.x;
+					m_depthTextureInfo.height = event.y;
+					m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
+				}
 				return false;
 			});
 
@@ -87,6 +92,10 @@ namespace TwoD
 	{
 		width = m_width;
 		height = m_height;
+	}
+	uint32_t Window::GetWindowID() const
+	{
+		return m_windowID;
 	}
 	SDL::ShaderFormat Window::GetShaderFormats()
 	{

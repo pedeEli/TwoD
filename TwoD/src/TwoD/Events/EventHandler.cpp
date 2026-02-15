@@ -2,6 +2,8 @@
 #include "EventHandler.hpp"
 #include <SDL3/SDL_events.h>
 
+#include <backends/imgui_impl_sdl3.h>
+
 
 namespace TwoD
 {
@@ -124,6 +126,13 @@ namespace TwoD
 			emitter(windowResizedEvent);
 			break;
 		}
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+		{
+			WindowCloseRequestedEvent windowCloseRequestedEvent;
+			windowCloseRequestedEvent.windowID = event.window.windowID;
+			emitter(windowCloseRequestedEvent);
+			break;
+		}
 		}
 	}
 
@@ -147,6 +156,7 @@ namespace TwoD
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))
 		{
+			ImGui_ImplSDL3_ProcessEvent(&sdlEvent);
 			ConvertAndEmitEvent(sdlEvent, EventHandler::EmitEvent);
 		}
 	}

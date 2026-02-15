@@ -15,6 +15,10 @@
 	#define TD_DEBUGBREAL()
 #endif
 
+#ifndef TD_DIST
+	#define TD_IMGUI
+#endif
+
 #define TD_EXPAND_MACRO(x) x
 #define TD_STRINGIFY_MACRO(x) #x
 

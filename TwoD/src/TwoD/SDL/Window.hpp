@@ -1,4 +1,7 @@
 #pragma once
+#include "TwoD/Debug/DebugDefines.hpp"
+
+#include "Defines.hpp"
 #include "Buffer.hpp"
 #include "TransferBuffer.hpp"
 #include "CommandBuffer.hpp"
@@ -11,52 +14,6 @@
 
 namespace TwoD
 {
-	enum class WindowFlags : uint64_t
-	{
-		FULLSCREEN          = 0x0000000000000001ULL,
-		OPENGL              = 0x0000000000000002ULL,
-		OCCLUDED            = 0x0000000000000004ULL,
-		HIDDEN              = 0x0000000000000008ULL,
-		BORDERLESS          = 0x0000000000000010ULL,
-		RESIZABLE           = 0x0000000000000020ULL,
-		MINIMIZED           = 0x0000000000000040ULL,
-		MAXIMIZED           = 0x0000000000000080ULL,
-		MOUSE_GRABBED       = 0x0000000000000100ULL,
-		INPUT_FOCUS         = 0x0000000000000200ULL,
-		MOUSE_FOCUS         = 0x0000000000000400ULL,
-		EXTERNAL            = 0x0000000000000800ULL,
-		MODAL               = 0x0000000000001000ULL,
-		HIGH_PIXEL_DENSITY  = 0x0000000000002000ULL,
-		MOUSE_CAPTURE       = 0x0000000000004000ULL,
-		MOUSE_RELATIVE_MODE = 0x0000000000008000ULL,
-		ALWAYS_ON_TOP       = 0x0000000000010000ULL,
-		UTILITY             = 0x0000000000020000ULL,
-		TOOLTIP             = 0x0000000000040000ULL,
-		POPUP_MENU          = 0x0000000000080000ULL,
-		KEYBOARD_GRABBED    = 0x0000000000100000ULL,
-		VULKAN              = 0x0000000010000000ULL,
-		METAL               = 0x0000000020000000ULL,
-		//TRANSPARENT         = 0x0000000040000000ULL,
-		NOT_FOCUSABLE       = 0x0000000080000000ULL
-	};
-
-	constexpr WindowFlags operator|(WindowFlags a, WindowFlags b) noexcept
-	{
-		return static_cast<WindowFlags>(static_cast<uint64_t>(a) | static_cast<uint64_t>(b));
-	}
-	constexpr WindowFlags operator^(WindowFlags a, WindowFlags b) noexcept
-	{
-		return static_cast<WindowFlags>(static_cast<uint64_t>(a) ^ static_cast<uint64_t>(b));
-	}
-
-	struct WindowInfo
-	{
-		int width;
-		int height;
-		std::string_view title;
-		WindowFlags windowFlags;
-	};
-
 	class Window
 	{
 	public:
@@ -70,6 +27,7 @@ namespace TwoD
 		bool Init(const WindowInfo& info);
 		
 		void GetSize(int& width, int& height) const;
+		uint32_t GetWindowID() const;
 		SDL::ShaderFormat GetShaderFormats();
 		SDL::TextureFormat GetSwapchainTextureFormat();
 
@@ -115,6 +73,7 @@ namespace TwoD
 
 		SDL::TextureInfo m_depthTextureInfo;
 		SDL::Texture m_depthTexture;
+		uint32_t m_windowID = 0;
 
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
@@ -127,6 +86,8 @@ namespace TwoD
 		friend class SDL::Texture;
 		friend class SDL::Sampler;
 		friend class SDL::RenderPass;
+
+		friend class Debug;
 	};
 }
 

@@ -1,4 +1,6 @@
 #pragma once
+#include "TwoD/Debug/DebugDefines.hpp"
+
 #include "Defines.hpp"
 
 namespace TwoD::SDL
@@ -24,6 +26,8 @@ namespace TwoD::SDL
 
 		friend class RenderPass;
 		friend class CopyPass;
+
+		friend class ::TwoD::Debug;
 	};
 }
 

@@ -6,6 +6,7 @@ IncludeDir["msdf_atlas_gen"] = "%{wks.location}/TwoDLib/vendor/msdf-atlas-gen"
 IncludeDir["msdfgen"] = "%{wks.location}/TwoDLib/vendor/msdf-atlas-gen/msdfgen"
 IncludeDir["yaml_cpp"] = "%{wks.location}/TwoD/vendor/yaml-cpp/include"
 IncludeDir["glm"] = "%{wks.location}/TwoD/vendor/glm"
+IncludeDir["imgui"] = "%{wks.location}/TwoD/vendor/imgui"
 
 Library = {}
 Library["SDL3"] = "%{wks.location}/TwoD/vendor/SDL3/lib/SDL3.lib"

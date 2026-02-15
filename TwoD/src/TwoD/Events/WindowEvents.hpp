@@ -18,4 +18,10 @@ namespace TwoD
 	public:
 		TD_EVENT_GETTERS(EventType, EventType::WINDOW_RESIZED)
 	};
+
+	class WindowCloseRequestedEvent : public WindowEvent
+	{
+	public:
+		TD_EVENT_GETTERS(EventType, EventType::WINDOW_CLOSE_REQUESTED)
+	};
 }

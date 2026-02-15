@@ -1,5 +1,12 @@
 #pragma once
+#include "TwoD/Debug/DebugDefines.hpp"
+
 #include "Defines.hpp"
+
+namespace TwoD
+{
+	class Renderer;
+}
 
 namespace TwoD::SDL
 {
@@ -24,6 +31,10 @@ namespace TwoD::SDL
 	private:
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
+
+		friend class ::TwoD::Renderer;
+
+		friend class ::TwoD::Debug;
 	};
 }
 

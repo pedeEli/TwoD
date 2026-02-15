@@ -13,6 +13,9 @@ Intermediates/
 **.vcxproj.user
 **.csproj
 
+#imgui
+imgui.ini
+
 !vendor/
 !vendor/premake/
 !vendor/premake/bin/

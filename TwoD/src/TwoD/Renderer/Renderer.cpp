@@ -2,6 +2,9 @@
 #include "Renderer.hpp"
 
 #include "TwoD/Core/App.hpp"
+#include "TwoD/Debug/Debug.hpp"
+
+
 
 namespace TwoD
 {
@@ -87,6 +90,8 @@ namespace TwoD
 		}
 		NextBatch();
 		m_renderCommands.clear();
+
+		Debug::RenderImGui(commandBuffer, renderPass);
 	}
 
 	void Renderer::RenderQuad(

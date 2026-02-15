@@ -16,3 +16,6 @@
 [submodule "TwoDLib/vendor/msdf-atlas-gen"]
 	path = TwoDLib/vendor/msdf-atlas-gen
 	url = https://github.com/Chlumsky/msdf-atlas-gen.git
+[submodule "TwoD/vendor/imgui"]
+	path = TwoD/vendor/imgui
+	url = https://github.com/ocornut/imgui.git

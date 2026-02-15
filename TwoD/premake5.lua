@@ -27,11 +27,13 @@ project "TwoD"
 		"%{IncludeDir.SDL3_image}",
 		"%{IncludeDir.SDL3_shadercross}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.imgui}"
 	}
 
 	links {
 		"yaml-cpp",
+		"imgui",
 		"%{Library.SDL3}",
 		"%{Library.SDL3_image}",
 		"%{Library.SDL3_shadercross}"
