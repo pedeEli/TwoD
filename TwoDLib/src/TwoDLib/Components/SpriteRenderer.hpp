@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TwoD/ECS/ECS.hpp"
+#include "TwoD/Core/App.hpp"
 #include "TwoDLib/Assets/Sprite.hpp"
 
 namespace TwoD
@@ -14,7 +15,7 @@ namespace TwoD
 
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD(int32_t, layer, 0),
+			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(layer);),
 			TD_COMPONENT_FIELD(Sprite*, sprite),
 			TD_COMPONENT_FIELD(std::optional<uint32_t>, slice, {})
 		)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TwoD/ECS/ECS.hpp"
+#include "TwoD/Core/App.hpp"
 #include "TwoDLib/Defines.hpp"
 
 namespace TwoD
@@ -14,7 +15,7 @@ namespace TwoD
 
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD(int32_t, layer, 0),
+			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, App::Get<RenderSystem>().UpdateLayerFor<ColorRenderer>(layer);),
 			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld),
 			TD_COMPONENT_FIELD(uint8_t, r),
 			TD_COMPONENT_FIELD(uint8_t, g),

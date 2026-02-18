@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TwoD/ECS/ECS.hpp"
+#include "TwoD/Core/App.hpp"
 #include "TwoDLib/Assets/Font.hpp"
 #include "TwoDLib/Defines.hpp"
 
@@ -27,9 +28,9 @@ namespace TwoD
 
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD(int32_t, layer, 0),
+			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer)),
 			TD_COMPONENT_FIELD(Font*, font),
-			TD_COMPONENT_FIELD(std::string, text),
+			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs()),
 			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
 		)
 

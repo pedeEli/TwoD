@@ -4,6 +4,8 @@
 
 namespace TwoD
 {
+	EntityHandle EntityHandle::None;
+
 	bool EntityHandle::operator==(const EntityHandle other) const noexcept
 	{
 		return other.id == id;
@@ -39,6 +41,14 @@ namespace TwoD
 	Entity::operator EntityHandle() const noexcept
 	{
 		return m_storageHandle;
+	}
+
+	std::pair<std::type_index, Component*> Entity::GetComponentFromTypeIndex(std::type_index type) const
+	{
+		return {
+			type,
+			&ECS::m_storages[type]->GetComponent(m_storageHandle)
+		};
 	}
 }
 

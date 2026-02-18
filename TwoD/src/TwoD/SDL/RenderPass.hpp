@@ -13,7 +13,7 @@ namespace TwoD::SDL
 	class RenderPass
 	{
 	public:
-		RenderPass(const Window* window, CommandBuffer* commandBuffer);
+		RenderPass(const Window* window, CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr);
 		~RenderPass();
 
 		void BindGraphicsPipeline(const GraphicsPipeline* pipeline) const;
@@ -26,7 +26,7 @@ namespace TwoD::SDL
 		void DrawIndexedPrimitives(uint32_t numIndices, uint32_t numInstances, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const;
 		void DrawPrimitives(uint32_t numVertices, uint32_t numInstances, uint32_t firstVertex, uint32_t firstInstance) const;
 
-		bool Valid();
+		bool Valid() const;
 
 	private:
 		struct Raw;

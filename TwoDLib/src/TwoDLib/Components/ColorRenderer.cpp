@@ -1,7 +1,6 @@
 #include "tdpch.hpp"
 #include "ColorRenderer.hpp"
 
-#include "TwoD/Core/App.hpp"
 
 namespace TwoD
 {

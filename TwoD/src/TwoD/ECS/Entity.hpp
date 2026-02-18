@@ -1,6 +1,8 @@
 #pragma once
 #include <concepts>
 #include <string>
+#include <typeindex>
+#include <ranges>
 
 #include "ECSDefines.hpp"
 #include "TwoD/Core/Storage.hpp"
@@ -22,6 +24,9 @@ namespace TwoD
 		operator bool() const noexcept;
 		Entity& operator*() const noexcept;
 		Entity* operator->() const noexcept;
+
+	public:
+		static EntityHandle None;
 
 	private:
 		EntityHandle(uint32_t id) : id(id) {}
@@ -58,20 +63,31 @@ namespace TwoD
 
 		void Destroy() const;
 
+		const auto GetAllComponents() const
+		{
+			return m_components | std::views::transform([this](std::type_index type)
+				{
+					return GetComponentFromTypeIndex(type);
+				});
+		}
+
 		operator EntityHandle() const noexcept;
-		
-		template<class T>
-		requires(std::is_base_of_v<Component, T>)
-		operator ComponentHandle<T>() const;
 
 	public:
 		std::string name;
 
 	private:
+		std::pair<std::type_index, Component*> GetComponentFromTypeIndex(std::type_index type) const;
+
+	private:
 		EntityHandle m_storageHandle;
+		std::vector<std::type_index> m_components;
 
 		friend class ECS;
 		friend struct StorageProbe;
+		template<class T>
+		requires(std::is_base_of_v<Component, T>)
+		friend class ComponentStorageImpl;
 	};
 }
 

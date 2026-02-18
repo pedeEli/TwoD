@@ -28,8 +28,8 @@ namespace TwoD
 		
 		void GetSize(int& width, int& height) const;
 		uint32_t GetWindowID() const;
-		SDL::ShaderFormat GetShaderFormats();
-		SDL::TextureFormat GetSwapchainTextureFormat();
+		SDL::ShaderFormat GetShaderFormats() const;
+		SDL::TextureFormat GetSwapchainTextureFormat() const;
 
 		SDL::Buffer CreateBuffer(const SDL::BufferInfo& info) const
 		{
@@ -44,9 +44,9 @@ namespace TwoD
 		{
 			return SDL::CommandBuffer(this);
 		}
-		SDL::RenderPass BeginRenderPass(SDL::CommandBuffer* commandBuffer) const
+		SDL::RenderPass BeginRenderPass(SDL::CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr) const
 		{
-			return SDL::RenderPass(this, commandBuffer);
+			return SDL::RenderPass(this, commandBuffer, targetTexture);
 		}
 
 		SDL::Shader CreateShader(const SDL::ShaderInfo& info) const

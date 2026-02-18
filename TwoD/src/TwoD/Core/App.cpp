@@ -6,14 +6,9 @@
 #include "TwoD/Events/EventHandler.hpp"
 
 #include "TwoD/Debug/Debug.hpp"
-#include <imgui.h>
-
 
 namespace TwoD
 {
-	static bool s_check = false;
-	static float s_float = 0.0f;
-
 	static App* s_application = nullptr;
 
 	App& App::Get()
@@ -54,7 +49,7 @@ namespace TwoD
 		RegisterResource<Scene>();
 		AssetManager::Load();
 
-		m_renderSystem.Init();
+		m_renderSystem.Init(m_window);
 
 		Inputs::Init();
 
@@ -71,7 +66,7 @@ namespace TwoD
 
 		m_initialized = true;
 
-		TwoD::Debug::SetupImGui(m_window);
+		TwoD::Debug::Setup(m_window);
 	}
 	App::~App()
 	{
@@ -97,22 +92,20 @@ namespace TwoD
 			EventHandler::PollEvents();
 			Inputs::Update();
 
-			Debug::StartImGuiFrame();
-
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
 			lastTick = currentTick;
-			ECS::Update(delta);
+			
+			if (Debug::GameIsRunning())
+			{
+				ECS::Update(delta);
+			}
 
-			ImGui::Begin("hello world", nullptr);
-			ImGui::Text("This is some text");
-			ImGui::Checkbox("checkbox:", &s_check);
-			ImGui::SliderFloat("floats: ", &s_float, 0.0f, 10.0f);
-			ImGui::End();
+			Debug::Draw();
 
-			m_renderSystem.Render();
+			m_renderSystem.Render(m_window);
 
-			Debug::PlatformWindows();
+			Debug::HandleMultipleWindows();
 		}
 	}
 

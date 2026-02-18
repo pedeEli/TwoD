@@ -17,6 +17,7 @@ namespace TwoD::SDL
 			PushVertexUniformData(slotIndex, &data, sizeof(T));
 		}
 		void PushVertexUniformData(uint32_t slotIndex, const void* data, uint32_t length) const;
+		void BlitTexture(const SDL::BlitInfo& blitInfo) const;
 
 		CopyPass BeginCopyPass() const;
 

@@ -20,6 +20,7 @@ namespace TwoD::SDL
 
         friend class RenderPass;
         friend class CopyPass;
+		friend class CommandBuffer;
 	};
 }
 

@@ -16,7 +16,7 @@ namespace TwoD
 		virtual void Init() = 0;
 		virtual void Update(size_t handlerIndex) = 0;
 		virtual void Render(Renderer& renderer, size_t index) = 0;
-		virtual void Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const = 0;
+		virtual void Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const = 0;
 
 		virtual const std::vector<std::type_index>& GetRendererTypes() const = 0;
 

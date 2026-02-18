@@ -22,11 +22,4 @@ namespace TwoD
 	{
 		ECS::DestroyComponent<T>(m_storageHandle);
 	}
-
-	template<class T>
-	requires(std::is_base_of_v<Component, T>)
-	Entity::operator ComponentHandle<T>() const
-	{
-		return {m_storageHandle};
-	}
 }

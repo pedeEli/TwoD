@@ -2,6 +2,7 @@
 #include <expected>
 #include <optional>
 #include "TwoD/Assets/AssetManager.hpp"
+#include "TwoD/ECS/ECS.hpp"
 
 
 namespace TwoD
@@ -25,15 +26,18 @@ namespace TwoD
 	class Scene : public Asset
 	{
 	public:
-		void SetActive();
+		static Scene& GetActive();
 
-		std::vector<EntityInfo> entities; void Load(const YAML::Node& node) override {
-			{
-				if (!(node["entities"])) {
-					::TwoD::Log::GetCoreLogger()->error("Assertion '{}' failed at {}:{}", "node[\"entities\"]", std::filesystem::path("D:\\c++\\repos\\Game\\TwoD\\src\\TwoD\\Assets\\Scene.hpp").filename().string(), 32); __debugbreak();
-				}
-			}; entities = node["entities"].as<std::vector<EntityInfo>>();
-		}
+	public:
+		void SetActive();
+		const std::vector<EntityHandle>& GetRootEntities() const;
+
+		TD_ASSET(
+			TD_ASSET_FIELD(std::vector<EntityInfo>, entities)
+		)
+
+	private:
+		std::vector<EntityHandle> m_rootEntities;
 	};
 }
 

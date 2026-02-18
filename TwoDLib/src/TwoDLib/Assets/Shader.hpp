@@ -29,7 +29,7 @@ namespace TwoD
 		)
 
 	public:
-		void Bind(SDL::RenderPass* renderPass) const;
+		void Bind(const SDL::RenderPass* renderPass) const;
 
 	private:
 		SDL::GraphicsPipeline m_pipeline;

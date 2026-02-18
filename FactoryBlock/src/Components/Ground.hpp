@@ -3,12 +3,6 @@
 
 using namespace TwoD;
 
-template<typename T>
-struct Field
-{
-	const char* name;
-	T* ptr;
-};
 
 class Ground : public Component
 {

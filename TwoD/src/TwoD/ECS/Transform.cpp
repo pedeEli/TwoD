@@ -119,6 +119,15 @@ namespace TwoD
 		}
 	}
 
+	void Transform::Destroy()
+	{
+		for (auto child : m_children)
+		{
+			child->Destroy();
+		}
+		SetParent(EntityHandle::None);
+	}
+
 	void Transform::SetParent(EntityHandle parent)
 	{
 		if (parent == m_parent)
@@ -147,4 +156,18 @@ namespace TwoD
 	{
 		return m_children;
 	}
+
+#ifdef TD_IMGUI
+	void Transform::Debug()
+	{
+		bool changed = false;
+		changed |= ImGuiType<glm::fvec2>::Draw(m_position, "position");
+		changed |= ImGuiType<float>::Draw(m_rotation, "rotation");
+		changed |= ImGuiType<glm::fvec2>::Draw(m_scale, "scale");
+		if (changed)
+		{
+			CalculateMatrices();
+		}
+	}
+#endif
 }

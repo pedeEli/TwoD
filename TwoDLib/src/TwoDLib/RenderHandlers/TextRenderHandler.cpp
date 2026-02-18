@@ -12,7 +12,7 @@ namespace TwoD
 		m_shader = &AssetManager::Get<Shader>("TwoDLib::TextRenderer");
 	}
 
-	void TextRenderHandler::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const
+	void TwoD::TextRenderHandler::Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
 	{
 		m_shader->Bind(renderPass);
 	}
@@ -41,22 +41,19 @@ namespace TwoD
 		auto& renderers = GetComponents<TextRenderer>();
 		auto size = renderers.size();
 
-		if (m_rendererInfos.size() != size)
+		auto* camera = Camera::Get();
+		m_rendererInfos.clear();
+		m_rendererInfos.reserve(size);
+		for (size_t i = 0; i < size; i++)
 		{
-			auto* camera = Camera::Get();
-			m_rendererInfos.clear();
-			m_rendererInfos.reserve(size);
-			for (size_t i = 0; i < size; i++)
-			{
-				m_rendererInfos.emplace_back(
-					handlerIndex,
-					i,
-					renderers[i].layer,
-					renderers[i].renderLocation == RenderLocation::InWorld
-						? &camera->GetProjectionViewMatrix()
-						: &camera->GetProjectionMatrixFixedZoom()
-				);
-			}
+			m_rendererInfos.emplace_back(
+				handlerIndex,
+				i,
+				renderers[i].layer,
+				renderers[i].renderLocation == RenderLocation::InWorld
+					? &camera->GetProjectionViewMatrix()
+					: &camera->GetProjectionMatrixFixedZoom()
+			);
 		}
 
 		std::sort(m_rendererInfos.begin(), m_rendererInfos.end());

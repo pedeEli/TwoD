@@ -12,10 +12,14 @@
 
 namespace TwoD::SDL
 {
-	RenderPass::RenderPass(const Window* window, CommandBuffer* commandBuffer)
+	RenderPass::RenderPass(const Window* window, CommandBuffer* commandBuffer, const SDL::Texture* targetTexture)
 	{
 		SDL_GPUTexture* swapchainTexture = nullptr;
-		if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer->m_raw->buffer, window->m_raw->window, &swapchainTexture, nullptr, nullptr))
+		if (targetTexture)
+		{
+			swapchainTexture = targetTexture->m_raw->texture;
+		}
+		else if (!SDL_WaitAndAcquireGPUSwapchainTexture(commandBuffer->m_raw->buffer, window->m_raw->window, &swapchainTexture, nullptr, nullptr))
 		{
 			TD_CORE_WARN("Failed to acquaire gpu swapchain texture: {}", SDL_GetError());
 			return;
@@ -39,7 +43,7 @@ namespace TwoD::SDL
 			.store_op = SDL_GPU_STOREOP_DONT_CARE
 		};
 
-		auto* renderPass = SDL_BeginGPURenderPass(commandBuffer->m_raw->buffer, &colorTargetInfo, 1, &depthTargetInfo);
+		auto* renderPass = SDL_BeginGPURenderPass(commandBuffer->m_raw->buffer, &colorTargetInfo, 1, nullptr);
 		m_raw = std::make_unique<Raw>(renderPass);
 	}
 	RenderPass::~RenderPass()
@@ -102,7 +106,7 @@ namespace TwoD::SDL
 		SDL_DrawGPUPrimitives(m_raw->renderPass, numVertices, numInstances, firstVertex, firstInstance);
 	}
 
-	bool RenderPass::Valid()
+	bool RenderPass::Valid() const
 	{
 		return static_cast<bool>(m_raw);
 	}

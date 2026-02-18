@@ -50,7 +50,9 @@ project "imgui"
 		"imgui/backends/imgui_impl_sdl3.cpp",
 		"imgui/backends/imgui_impl_sdlgpu3.h",
 		"imgui/backends/imgui_impl_sdlgpu3.cpp",
-		"imgui/backends/imgui_impl_sdlgpu3_shaders.h"
+		"imgui/backends/imgui_impl_sdlgpu3_shaders.h",
+		"imgui/misc/cpp/imgui_stdlib.cpp",
+		"imgui/misc/cpp/imgui_stdlib.h"
 	}
 
 	includedirs {

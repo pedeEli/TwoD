@@ -56,8 +56,13 @@ namespace TwoD
 		);
 
 	private:
-		void Init();
-		void Render(const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers);
+		void Init(const Window& window);
+		void Render(
+			const SDL::CommandBuffer& commandBuffer,
+			const SDL::RenderPass& renderPass,
+			const std::vector<RendererHandlerInfo>& infos,
+			const std::vector<std::unique_ptr<RenderHandler>>* handlers
+		);
 		void NextBatch();
 		void RenderQuad(
 			const glm::fmat3x3& transform,
@@ -92,8 +97,8 @@ namespace TwoD
 		uint32_t* m_indexBufferPtr = nullptr;
 		size_t m_quadIndex = 0;
 
-		SDL::CommandBuffer* m_commandBuffer = nullptr;
-		SDL::RenderPass* m_renderPass = nullptr;
+		const SDL::CommandBuffer* m_commandBuffer = nullptr;
+		const SDL::RenderPass* m_renderPass = nullptr;
 		RenderCommand m_currentRenderCommand{};
 		std::vector<RenderCommand> m_renderCommands;
 

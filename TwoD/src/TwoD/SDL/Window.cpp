@@ -97,11 +97,11 @@ namespace TwoD
 	{
 		return m_windowID;
 	}
-	SDL::ShaderFormat Window::GetShaderFormats()
+	SDL::ShaderFormat Window::GetShaderFormats() const
 	{
 		return static_cast<SDL::ShaderFormat>(SDL_GetGPUShaderFormats(m_raw->device));
 	}
-	SDL::TextureFormat Window::GetSwapchainTextureFormat()
+	SDL::TextureFormat Window::GetSwapchainTextureFormat() const
 	{
 		return static_cast<SDL::TextureFormat>(SDL_GetGPUSwapchainTextureFormat(m_raw->device, m_raw->window));
 	}

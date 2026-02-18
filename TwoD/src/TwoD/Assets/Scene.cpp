@@ -6,6 +6,8 @@
 
 namespace TwoD
 {
+	static Scene* s_activeScene = nullptr;
+
 	static EntityHandle LoadEntity(EntityInfo& entityInfo)
 	{
 		auto& entity = ECS::CreateEntity(entityInfo.name);
@@ -34,14 +36,28 @@ namespace TwoD
 		return handle;
 	}
 
+	Scene& Scene::GetActive()
+	{
+		TD_CORE_ASSERT(s_activeScene);
+		return *s_activeScene;
+	}
+
 	void Scene::SetActive()
 	{
 		ECS::Destroy();
 
+		m_rootEntities.clear();
 		for (auto& entityInfo : entities)
 		{
-			LoadEntity(entityInfo);
+			auto handle = LoadEntity(entityInfo);
+			m_rootEntities.push_back(handle);
 		}
+		s_activeScene = this;
+	}
+
+	const std::vector<EntityHandle>& Scene::GetRootEntities() const
+	{
+		return m_rootEntities;
 	}
 }
 

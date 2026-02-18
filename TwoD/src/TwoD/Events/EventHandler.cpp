@@ -4,6 +4,7 @@
 
 #include <backends/imgui_impl_sdl3.h>
 
+#include "TwoD/Debug/Debug.hpp"
 
 namespace TwoD
 {
@@ -157,7 +158,10 @@ namespace TwoD
 		while (SDL_PollEvent(&sdlEvent))
 		{
 			ImGui_ImplSDL3_ProcessEvent(&sdlEvent);
-			ConvertAndEmitEvent(sdlEvent, EventHandler::EmitEvent);
+			if (Debug::GameIsRunning())
+			{
+				ConvertAndEmitEvent(sdlEvent, EventHandler::EmitEvent);
+			}
 		}
 	}
 }

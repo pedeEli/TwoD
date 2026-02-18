@@ -7,7 +7,7 @@ namespace TwoD::SDL
 	{
 	public:
 		static std::optional<SDL::Shader> Load(
-			Window& window,
+			const Window& window,
 			const char* hlsl,
 			SDL::ShaderStage stage,
 			uint32_t samplerCount,
@@ -17,6 +17,7 @@ namespace TwoD::SDL
 		);
 
 	public:
+		Shader();
 		Shader(const Window* window, const ShaderInfo& info);
 		~Shader();
 		Shader(Shader&& other) noexcept;

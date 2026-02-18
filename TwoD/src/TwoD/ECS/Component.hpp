@@ -40,6 +40,10 @@ namespace TwoD
 		virtual void UpdateBefore(float delta) {}
 		virtual void Update(float delta) {}
 
+#ifdef TD_IMGUI
+		virtual void Debug() {};
+#endif
+
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
 		T& AddComponent() const;

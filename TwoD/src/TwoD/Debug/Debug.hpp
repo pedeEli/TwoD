@@ -9,9 +9,16 @@ namespace TwoD
 	class Debug
 	{
 	public:
-		static void SetupImGui(const Window& window);
-		static void StartImGuiFrame();
-		static void RenderImGui(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass);
-		static void PlatformWindows();
+		static void Setup(const Window& window);
+		static void Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass);
+		static void HandleMultipleWindows();
+
+#ifdef TD_IMGUI
+		static bool GameIsRunning();
+#else
+		static constexpr bool GameIsRunning();
+#endif
+
+		static void Draw();
 	};
 }

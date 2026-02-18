@@ -15,7 +15,7 @@ void Vein::Start()
 		int x = distr(gen);
 		int y = distr(gen);
 		auto& entity = CreateEntity("iron ore");
-		ComponentHandle<Transform> transform = entity;
+		ComponentHandle<Transform> transform = entity.GetComponent<Transform>();
 		transform->SetPosition((float)x, (float)y);
 		transform->SetParent(GetEntity());
 

@@ -14,9 +14,9 @@ namespace TwoD
 		m_spriteAtlas->Pack();
 	}
 
-	void SpriteRenderHandler::Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const
+	void TwoD::SpriteRenderHandler::Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
 	{
-		m_shader->Bind(renderPass);
+        m_shader->Bind(renderPass);
 	}
 
 	void SpriteRenderHandler::Render(Renderer& renderer, size_t index)
@@ -39,20 +39,17 @@ namespace TwoD
 		auto& renderers = GetComponents<SpriteRenderer>();
 		auto size = renderers.size();
 
-		if (m_rendererInfos.size() != size)
+		auto* camera = Camera::Get();
+		m_rendererInfos.clear();
+		m_rendererInfos.reserve(size);
+		for (size_t i = 0; i < size; i++)
 		{
-			auto* camera = Camera::Get();
-			m_rendererInfos.clear();
-			m_rendererInfos.reserve(size);
-			for (size_t i = 0; i < size; i++)
-			{
-				m_rendererInfos.emplace_back(
-					handlerIndex,
-					i,
-					renderers[i].layer,
-					&camera->GetProjectionViewMatrix()
-				);
-			}
+			m_rendererInfos.emplace_back(
+				handlerIndex,
+				i,
+				renderers[i].layer,
+				&camera->GetProjectionViewMatrix()
+			);
 		}
 
 		std::sort(m_rendererInfos.begin(), m_rendererInfos.end());

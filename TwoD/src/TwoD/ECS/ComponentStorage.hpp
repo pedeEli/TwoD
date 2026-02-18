@@ -16,6 +16,7 @@ namespace TwoD
 		virtual ~ComponentStorage() = default;
 		
 		virtual Component& AddComponent(EntityHandle entity) = 0;
+		virtual Component& GetComponent(EntityHandle entity) = 0;
 
 		virtual void StartBefore() = 0;
 		virtual void Start() = 0;
@@ -41,6 +42,7 @@ namespace TwoD
 		ComponentStorageImpl& operator=(ComponentStorageImpl<T>&&) = delete;
 
 		Component& AddComponent(EntityHandle entity) override;
+		Component& GetComponent(EntityHandle entity) override;
 		
 		void StartBefore() override;
 		void Start() override;

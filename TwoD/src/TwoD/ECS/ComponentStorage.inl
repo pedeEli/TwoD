@@ -49,6 +49,14 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
+	Component& ComponentStorageImpl<T>::GetComponent(EntityHandle entity)
+	{
+		auto& ref = storage::Get(entity);
+		return static_cast<Component&>(ref);
+	}
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
 	void ComponentStorageImpl<T>::Destroy(EntityHandle entity)
 	{
 		if (storage::m_indices.contains(entity))
@@ -90,6 +98,7 @@ namespace TwoD
 	T& ComponentStorageImpl<T>::Add(EntityHandle entity)
 	{
 		m_unstartedItems = true;
+		entity->m_components.push_back(typeid(T));
 		return storage::Add(entity, entity);
 	}
 

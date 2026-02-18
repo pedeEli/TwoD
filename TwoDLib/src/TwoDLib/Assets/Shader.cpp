@@ -57,7 +57,7 @@ namespace TwoD
 		m_pipeline = window.CreateGraphicsPipeline(pipelineInfo);
 	}
 
-	void Shader::Bind(SDL::RenderPass* renderPass) const
+	void Shader::Bind(const SDL::RenderPass* renderPass) const
 	{
 		renderPass->BindGraphicsPipeline(&m_pipeline);
 	}

@@ -96,6 +96,7 @@ namespace TwoD
 		requires(std::is_base_of_v<Component, T>)
 		static void DestroyComponent(EntityHandle entity)
 		{
+			entity->m_components.erase(std::find(entity->m_components.begin(), entity->m_components.end(), entity));
 			GetStorage<T>()->Destroy(entity);
 		}
 

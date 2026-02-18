@@ -26,7 +26,8 @@ project "TwoDLib"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.msdf_atlas_gen}",
 		"%{IncludeDir.msdfgen}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.imgui}"
 	}
 
 	links {

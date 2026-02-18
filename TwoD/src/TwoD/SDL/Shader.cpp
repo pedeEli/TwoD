@@ -10,7 +10,7 @@
 namespace TwoD::SDL
 {
 	std::optional<SDL::Shader> Shader::Load(
-		Window& window,
+		const Window& window,
 		const char* hlsl,
 		SDL::ShaderStage stage,
 		uint32_t samplerCount,
@@ -97,6 +97,7 @@ namespace TwoD::SDL
 		return shader;
 	}
 
+	Shader::Shader() = default;
 	Shader::Shader(const Window* window, const ShaderInfo& info)
 	{
 		auto* device = window->m_raw->device;

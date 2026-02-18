@@ -2,16 +2,13 @@
 #include "Renderer.hpp"
 
 #include "TwoD/Core/App.hpp"
-#include "TwoD/Debug/Debug.hpp"
 
 
 
 namespace TwoD
 {
-	void Renderer::Init()
+	void Renderer::Init(const Window& window)
 	{
-		auto& window = App::Get<Window>();
-
 		SDL::BufferInfo vertexBufferInfo{
 			.usage = SDL::BufferUsage::VERTEX,
 			.size = s_maxNumberOfVertices * sizeof(Vertex)
@@ -51,21 +48,16 @@ namespace TwoD
 		m_dummyBinding = { &m_dummyTexture, &m_dummySampler };
 	}
 
-	void Renderer::Render(const std::vector<RendererHandlerInfo>& infos, const std::vector<std::unique_ptr<RenderHandler>>* handlers)
+	void Renderer::Render(
+		const SDL::CommandBuffer& commandBuffer,
+		const SDL::RenderPass& renderPass,
+		const std::vector<RendererHandlerInfo>& infos,
+		const std::vector<std::unique_ptr<RenderHandler>>* handlers
+	)
 	{
 		m_handlers = handlers;
-		auto& window = App::Get<Window>();
-
-		auto commandBuffer = window.AcquireCommandBuffer();
-		auto renderPass = window.BeginRenderPass(&commandBuffer);
 		m_commandBuffer = &commandBuffer;
 		m_renderPass = &renderPass;
-
-		if (!renderPass.Valid())
-		{
-			TD_CORE_ERROR("Invalid render pass.");
-			return;
-		}
 
 		for (auto& textureBinding : m_textureBindings)
 		{
@@ -90,8 +82,6 @@ namespace TwoD
 		}
 		NextBatch();
 		m_renderCommands.clear();
-
-		Debug::RenderImGui(commandBuffer, renderPass);
 	}
 
 	void Renderer::RenderQuad(

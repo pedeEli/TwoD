@@ -10,7 +10,7 @@ namespace TwoD
 	public:
 		void Init() override;
 
-		void Bind(SDL::CommandBuffer* commandBuffer, SDL::RenderPass* renderPass) const override;
+		void Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const override;
 		void Render(Renderer& renderer, size_t index) override;
 		void Update(size_t handlerIndex) override;
 
