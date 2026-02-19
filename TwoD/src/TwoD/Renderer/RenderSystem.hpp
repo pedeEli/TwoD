@@ -27,10 +27,10 @@ namespace TwoD
 	public:
 		RenderSystem() = default;
 		~RenderSystem() = default;
-		RenderSystem(const RenderSystem&) = delete;
-		RenderSystem(RenderSystem&&) = delete;
-		RenderSystem& operator=(const RenderSystem&) = delete;
-		RenderSystem& operator=(RenderSystem&&) = delete;
+		RenderSystem(const RenderSystem& other) = delete;
+		RenderSystem(RenderSystem&& other) = delete;
+		RenderSystem& operator=(const RenderSystem& other) = delete;
+		RenderSystem& operator=(RenderSystem&& other) = delete;
 
 		void Init(const Window& window);
 		void Render(const Window& window);

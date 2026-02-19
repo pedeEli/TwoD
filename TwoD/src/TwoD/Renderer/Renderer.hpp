@@ -39,6 +39,12 @@ namespace TwoD
 		};
 
 	public:
+		~Renderer() = default;
+		Renderer(const Renderer& other) = delete;
+		Renderer(Renderer&& other) = delete;
+		Renderer& operator=(const Renderer& other) = delete;
+		Renderer& operator=(Renderer&& other) = delete;
+
 		void RenderQuad(
 			const glm::fmat3x3& transform,
 			const glm::fvec2& pos,
@@ -56,6 +62,8 @@ namespace TwoD
 		);
 
 	private:
+		Renderer() = default;
+
 		void Init(const Window& window);
 		void Render(
 			const SDL::CommandBuffer& commandBuffer,

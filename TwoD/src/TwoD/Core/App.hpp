@@ -51,6 +51,11 @@ namespace TwoD
 	public:
 		App() = default;
 		~App();
+		App(const App& other) = delete;
+		App(App&& other) = delete;
+		App& operator=(const App& other) = delete;
+		App& operator=(App&& other) = delete;
+
 		void Init(const InitInfo& info);
 		void Run();
 

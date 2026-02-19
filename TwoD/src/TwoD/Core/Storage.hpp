@@ -27,7 +27,12 @@ namespace TwoD
 	class Storage
 	{
 	public:
+		Storage() = default;
 		virtual ~Storage() = default;
+		Storage(const Storage& other) = delete;
+		Storage(Storage&& other) = delete;
+		Storage& operator=(const Storage& other) = delete;
+		Storage& operator=(Storage&& other) = delete;
 
 		template<typename... Args>
 		T& Add(Handle handle, Args&&... args)

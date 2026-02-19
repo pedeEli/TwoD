@@ -20,7 +20,9 @@ namespace TwoD::SDL
 		Shader();
 		Shader(const Window* window, const ShaderInfo& info);
 		~Shader();
+		Shader(const Shader& other) = delete;
 		Shader(Shader&& other) noexcept;
+		Shader& operator=(const Shader& other) = delete;
 		Shader& operator=(Shader&& other) noexcept;
 
 	private:

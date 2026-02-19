@@ -9,6 +9,13 @@ namespace TwoD
 	class Debug
 	{
 	public:
+		Debug() = delete;
+		~Debug() = delete;
+		Debug(const Debug& other) = delete;
+		Debug(Debug&& other) = delete;
+		Debug& operator=(const Debug& other) = delete;
+		Debug& operator=(Debug&& other) = delete;
+
 		static void Setup(const Window& window);
 		static void Shutdown();
 		static void Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass);

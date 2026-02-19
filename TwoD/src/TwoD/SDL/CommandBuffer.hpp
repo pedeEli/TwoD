@@ -10,6 +10,10 @@ namespace TwoD::SDL
 	public:
 		CommandBuffer(const Window* window);
 		~CommandBuffer();
+		CommandBuffer(const CommandBuffer& other) = delete;
+		CommandBuffer(CommandBuffer&& other) = delete;
+		CommandBuffer& operator=(const CommandBuffer& other) = delete;
+		CommandBuffer& operator=(CommandBuffer&& other) = delete;
 
 		Fence Submit();
 

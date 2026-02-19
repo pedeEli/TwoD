@@ -8,6 +8,13 @@ namespace TwoD
 	class AssetStorage
 	{
 	public:
+		AssetStorage() = default;
+		virtual ~AssetStorage() = default;
+		AssetStorage(const AssetStorage& other) = delete;
+		AssetStorage(AssetStorage&& other) = delete;
+		AssetStorage& operator=(const AssetStorage& other) = delete;
+		AssetStorage& operator=(AssetStorage&& other) = delete;
+
 		virtual Asset& Add(std::string& name) = 0;
 		virtual Asset& Get(const std::string& name) = 0;
 		virtual void Remove(const std::string& name) = 0;

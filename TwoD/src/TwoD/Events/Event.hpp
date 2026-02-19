@@ -10,7 +10,12 @@ namespace TwoD
 	class Event
 	{
 	public:
+		Event() = default;
 		virtual ~Event() = default;
+		Event(const Event& event) = delete;
+		Event(Event&& event) = delete;
+		Event& operator=(const Event& event) = delete;
+		Event& operator=(Event&& event) = delete;
 
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetEventName() const = 0;

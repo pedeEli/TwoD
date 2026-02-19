@@ -11,7 +11,12 @@ namespace TwoD
 	class RenderHandler
 	{
 	public:
+		RenderHandler() = default;
 		virtual ~RenderHandler() = default;
+		RenderHandler(const RenderHandler& other) = delete;
+		RenderHandler(RenderHandler&& other) = delete;
+		RenderHandler& operator=(const RenderHandler& other) = delete;
+		RenderHandler& operator=(RenderHandler&& other) = delete;
 
 		virtual void Init() = 0;
 		virtual void Update(size_t handlerIndex) = 0;

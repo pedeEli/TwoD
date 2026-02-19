@@ -9,7 +9,9 @@ namespace TwoD::SDL
         Sampler();
         Sampler(const Window* window, const SamplerInfo& info);
         ~Sampler();
+        Sampler(const Sampler& other) = delete;
         Sampler(Sampler&& other) noexcept;
+        Sampler& operator=(const Sampler& other) = delete;
         Sampler& operator=(Sampler&& other) noexcept;
 
     private:

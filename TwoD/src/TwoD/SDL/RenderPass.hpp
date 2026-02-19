@@ -15,6 +15,10 @@ namespace TwoD::SDL
 	public:
 		RenderPass(const Window* window, CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr);
 		~RenderPass();
+		RenderPass(const RenderPass& other) = delete;
+		RenderPass(RenderPass&& other) = delete;
+		RenderPass& operator=(const RenderPass& other) = delete;
+		RenderPass& operator=(RenderPass&& other) = delete;
 
 		void End();
 

@@ -9,7 +9,9 @@ namespace TwoD::SDL
 		TransferBuffer();
 		TransferBuffer(const Window* window, const TransferBufferInfo& info);
 		~TransferBuffer();
+		TransferBuffer(const TransferBuffer& other) = delete;
 		TransferBuffer(TransferBuffer&& other) noexcept;
+		TransferBuffer& operator=(const TransferBuffer& other) = delete;
 		TransferBuffer& operator=(TransferBuffer&& other) noexcept;
 
 		template<typename T>

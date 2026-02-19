@@ -9,7 +9,9 @@ namespace TwoD::SDL
 		Buffer();
 		Buffer(const Window* window, const BufferInfo& info);
 		~Buffer();
+		Buffer(const Buffer& other) = delete;
 		Buffer(Buffer&& other) noexcept;
+		Buffer& operator=(const Buffer& other) = delete;
 		Buffer& operator=(Buffer&& other) noexcept;
 
 	private:

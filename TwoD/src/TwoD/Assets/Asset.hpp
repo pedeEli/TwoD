@@ -7,7 +7,12 @@ namespace TwoD
 	class Asset
 	{
 	public:
+		Asset() = default;
 		virtual ~Asset() = default;
+		Asset(const Asset& other) = delete;
+		Asset(Asset&& other) = delete;
+		Asset& operator=(const Asset& other) = delete;
+		Asset& operator=(Asset&& other) = delete;
 
 		virtual void Load(const YAML::Node& node) = 0;
 		virtual void Init(const std::filesystem::path& path) {}

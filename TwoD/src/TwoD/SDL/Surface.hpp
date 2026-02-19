@@ -11,7 +11,9 @@ namespace TwoD::SDL
 	public:
 		Surface(uint32_t width, uint32_t height, PixelFormat format);
 		~Surface();
+		Surface(const Surface& other) = delete;
 		Surface(Surface&& other) noexcept;
+		Surface& operator=(const Surface& other) = delete;
 		Surface& operator=(Surface&& other) noexcept;
 
 		uint32_t GetWidth() const;

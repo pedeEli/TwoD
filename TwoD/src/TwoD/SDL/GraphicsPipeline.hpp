@@ -9,7 +9,9 @@ namespace TwoD::SDL
 		GraphicsPipeline();
 		GraphicsPipeline(const Window* window, const GraphicsPipelineInfo& info);
 		~GraphicsPipeline();
+		GraphicsPipeline(const GraphicsPipeline& other) = delete;
 		GraphicsPipeline(GraphicsPipeline&& other) noexcept;
+		GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;
 		GraphicsPipeline& operator=(GraphicsPipeline&& other) noexcept;
 
 	private:

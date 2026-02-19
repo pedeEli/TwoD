@@ -9,7 +9,9 @@ namespace TwoD::SDL
         Texture();
         Texture(const Window* window, const TextureInfo& info);
         ~Texture();
+        Texture(const Texture& other) = delete;
         Texture(Texture&& other) noexcept;
+        Texture& operator=(const Texture& other) = delete;
         Texture& operator=(Texture&& other) noexcept;
 
         void SetName(const std::string& name);

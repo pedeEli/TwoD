@@ -13,8 +13,13 @@ namespace TwoD
 	class ComponentStorage
 	{
 	public:
+		ComponentStorage() = default;
 		virtual ~ComponentStorage() = default;
-		
+		ComponentStorage(const ComponentStorage& other) = delete;
+		ComponentStorage(ComponentStorage&& other) = delete;
+		ComponentStorage& operator=(const ComponentStorage& other) = delete;
+		ComponentStorage& operator=(ComponentStorage&& other) = delete;
+
 		virtual Component& AddComponent(EntityHandle entity) = 0;
 		virtual Component& GetComponent(EntityHandle entity) = 0;
 
@@ -36,10 +41,10 @@ namespace TwoD
 	public:
 		ComponentStorageImpl() = default;
 		~ComponentStorageImpl() = default;
-		ComponentStorageImpl(const ComponentStorageImpl<T>&) = delete;
-		ComponentStorageImpl(ComponentStorageImpl<T>&&) = delete;
-		ComponentStorageImpl& operator=(const ComponentStorageImpl<T>&) = delete;
-		ComponentStorageImpl& operator=(ComponentStorageImpl<T>&&) = delete;
+		ComponentStorageImpl(const ComponentStorageImpl<T>& other) = delete;
+		ComponentStorageImpl(ComponentStorageImpl<T>&& other) = delete;
+		ComponentStorageImpl& operator=(const ComponentStorageImpl<T>& other) = delete;
+		ComponentStorageImpl& operator=(ComponentStorageImpl<T>&& other) = delete;
 
 		Component& AddComponent(EntityHandle entity) override;
 		Component& GetComponent(EntityHandle entity) override;

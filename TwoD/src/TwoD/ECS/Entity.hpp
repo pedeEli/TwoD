@@ -14,10 +14,10 @@ namespace TwoD
 	public:
 		EntityHandle() : id(0) {}
 		~EntityHandle() = default;
-		EntityHandle(const EntityHandle&) = default;
-		EntityHandle(EntityHandle&&) = default;
-		EntityHandle& operator=(const EntityHandle&) = default;
-		EntityHandle& operator=(EntityHandle&&) = default;
+		EntityHandle(const EntityHandle& other) = default;
+		EntityHandle(EntityHandle&& other) = default;
+		EntityHandle& operator=(const EntityHandle& other) = default;
+		EntityHandle& operator=(EntityHandle&& other) = default;
 
 		bool operator==(const EntityHandle other) const noexcept;
 		bool operator!=(const EntityHandle other) const noexcept;

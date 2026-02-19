@@ -19,9 +19,9 @@ namespace TwoD
 	public:
 		Window();
 		~Window();
-		Window(Window& other) = delete;
+		Window(const Window& other) = delete;
 		Window(Window&& other) = delete;
-		Window& operator=(Window& other) = delete;
+		Window& operator=(const Window& other) = delete;
 		Window& operator=(Window&& other) = delete;
 
 		bool Init(const WindowInfo& info);
