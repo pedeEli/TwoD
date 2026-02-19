@@ -9,6 +9,7 @@ namespace TwoD
 	Window::Window() = default;
 	Window::~Window()
 	{
+		WaitForGPUIdle();
 		SDL_Window* window = m_raw->window;
 		SDL_GPUDevice* device = m_raw->device;
 		if (window && device)

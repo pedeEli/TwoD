@@ -73,7 +73,6 @@ namespace TwoD
 		Debug::Shutdown();
 		ECS::Destroy();
 		AssetManager::Unload();
-		m_window.WaitForGPUIdle();
 
 		m_initialized = false;
 		s_application = nullptr;
