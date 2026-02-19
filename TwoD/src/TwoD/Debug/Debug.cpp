@@ -15,7 +15,7 @@ namespace TwoD
 {
 	struct DebugState
 	{
-		bool open = true;
+		bool open = false;
 		bool demoWindow = false;
 		EntityHandle selectedEntity;
 	};
@@ -65,11 +65,11 @@ namespace TwoD
 #ifdef TD_IMGUI
 		EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
 			{
-				if (event.repeat || (event.mod & Keymod::CTRL) == Keymod::NONE || (event.mod & Keymod::SHIFT) == Keymod::NONE)
+				if (event.repeat || (event.mod & Keymod::CTRL) == Keymod::NONE)
 				{
 					return false;
 				}
-				if (event.key == Key::D)
+				if (event.key == Key::F5)
 				{
 					s_debugState.open = !s_debugState.open;
 				}
