@@ -148,10 +148,10 @@ namespace TwoD
 		}
 #endif
 	}
-	static void DrawEntity(EntityHandle handle)
+	static void DrawEntity(EntityHandle handle, uint32_t& id)
 	{
 		auto& children = handle->GetComponent<Transform>().GetChildren();
-		auto* name = handle->name.c_str();
+		auto name = std::format("{}##{}", handle->name, id++);
 		int flags = ImGuiTreeNodeFlags_None;
 
 		if (handle == s_debugState.selectedEntity)
@@ -161,14 +161,14 @@ namespace TwoD
 
 		if (children.size() == 0)
 		{
-			ImGui::TreeNodeEx(name, flags | ImGuiTreeNodeFlags_Leaf);
+			ImGui::TreeNodeEx(name.c_str(), flags | ImGuiTreeNodeFlags_Leaf);
 			if (ImGui::IsItemClicked())
 			{
 				s_debugState.selectedEntity = handle;
 			}
 			ImGui::TreePop();
 		}
-		else if (ImGui::TreeNodeEx(name, flags))
+		else if (ImGui::TreeNodeEx(name.c_str(), flags))
 		{
 			if (ImGui::IsItemClicked())
 			{
@@ -176,7 +176,7 @@ namespace TwoD
 			}
 			for (auto child : children)
 			{
-				DrawEntity(child);
+				DrawEntity(child, id);
 			}
 			ImGui::TreePop();
 		}
@@ -185,9 +185,10 @@ namespace TwoD
 	{
 #ifdef TD_IMGUI
 		auto& entities = Scene::GetActive().GetRootEntities();
+		uint32_t id = 0;
 		for (auto entity : entities)
 		{
-			DrawEntity(entity);
+			DrawEntity(entity, id);
 		}
 #endif
 	}

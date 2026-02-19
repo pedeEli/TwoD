@@ -1,12 +1,12 @@
 type: class TwoD::Scene
 name: test
 entities:
-# - name: ground
-#   components:
-#   - type: class Ground
-#     width: 50
-#     height: 30
-#     foliage: 1000
+- name: ground
+  components:
+  - type: class Ground
+    width: 50
+    height: 30
+    foliage: 1000
 
 - name: player
   components:
@@ -27,35 +27,35 @@ entities:
     - type: class TwoD::Camera
       zoom: 25
 
-# - name: iron ore vein
-#   components:
-#   - type: class Vein
-#     size: 40
+- name: iron ore vein
+  components:
+  - type: class Vein
+    size: 40
 
-# - name: canvas
-#   components:
-#   - type: class TwoD::Canvas
-#   children:
-#   - name: button
-#     children:
-#     - name: background
-#       transform:
-#         scale: { x: 15.0, y: 3.0 }
-#       components:
-#       - type: class TwoD::ColorRenderer
-#         layer: 12
-#         renderLocation: OnScreen
-#         r: 255
-#         g: 100
-#         b: 100
-#         a: 255
-#     - name: text
-#       components:
-#       - type: class TwoD::TextRenderer
-#         layer: 13
-#         font: Roboto
-#         renderLocation: OnScreen
-#         text: Hello World!
+- name: canvas
+  components:
+  - type: class TwoD::Canvas
+  children:
+  - name: button
+    children:
+    - name: background
+      transform:
+        scale: { x: 15.0, y: 3.0 }
+      components:
+      - type: class TwoD::ColorRenderer
+        layer: 12
+        renderLocation: OnScreen
+        r: 255
+        g: 100
+        b: 100
+        a: 255
+    - name: text
+      components:
+      - type: class TwoD::TextRenderer
+        layer: 13
+        font: Roboto
+        renderLocation: OnScreen
+        text: Hello World!
 
 - name: test
   transform:
