@@ -103,6 +103,14 @@ namespace TwoD
 		SetupPausing(window);
 #endif
 	}
+	void Debug::Shutdown()
+	{
+#ifdef TD_IMGUI
+		ImGui_ImplSDL3_Shutdown();
+		ImGui_ImplSDLGPU3_Shutdown();
+		ImGui::DestroyContext();
+#endif
+	}
 
 	void Debug::Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass)
 	{

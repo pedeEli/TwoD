@@ -70,6 +70,7 @@ namespace TwoD
 	}
 	App::~App()
 	{
+		Debug::Shutdown();
 		ECS::Destroy();
 		AssetManager::Unload();
 

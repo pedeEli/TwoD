@@ -105,4 +105,8 @@ namespace TwoD
 	{
 		return static_cast<SDL::TextureFormat>(SDL_GetGPUSwapchainTextureFormat(m_raw->device, m_raw->window));
 	}
+	void Window::WaitForGPUIdle() const
+	{
+		SDL_WaitForGPUIdle(m_raw->device);
+	}
 }

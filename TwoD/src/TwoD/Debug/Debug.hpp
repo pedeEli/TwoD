@@ -10,6 +10,7 @@ namespace TwoD
 	{
 	public:
 		static void Setup(const Window& window);
+		static void Shutdown();
 		static void Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass);
 		static void HandleMultipleWindows();
 

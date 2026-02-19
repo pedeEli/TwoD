@@ -30,6 +30,7 @@ namespace TwoD
 		uint32_t GetWindowID() const;
 		SDL::ShaderFormat GetShaderFormats() const;
 		SDL::TextureFormat GetSwapchainTextureFormat() const;
+		void WaitForGPUIdle() const;
 
 		SDL::Buffer CreateBuffer(const SDL::BufferInfo& info) const
 		{
