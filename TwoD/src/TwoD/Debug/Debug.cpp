@@ -248,7 +248,7 @@ namespace TwoD
 		ImGui_ImplSDLGPU3_NewFrame();
 		ImGui_ImplSDL3_NewFrame();
 		ImGui::NewFrame();
-
+		
 		if (s_debugState.demoWindow)
 		{
 			ImGui::ShowDemoWindow(&s_debugState.demoWindow);

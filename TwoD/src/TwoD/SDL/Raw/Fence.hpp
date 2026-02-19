@@ -1,12 +1,12 @@
 #pragma once
 #include <SDL3/SDL.h>
-#include "../CommandBuffer.hpp"
+#include "../Fence.hpp"
 
 namespace TwoD::SDL
 {
-	struct CommandBuffer::Raw
+	struct Fence::Raw
 	{
-		SDL_GPUCommandBuffer* buffer;
+		SDL_GPUFence* fence;
 		SDL_GPUDevice* device;
 	};
 }

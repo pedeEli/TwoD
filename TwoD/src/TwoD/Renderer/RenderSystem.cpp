@@ -120,25 +120,27 @@ namespace TwoD
 				m_dirty = false;
 			}
 
+			m_fence.Wait();
 			auto renderPass = window.BeginRenderPass(&commandBuffer, &m_targetTexture);
 			m_renderer.Render(commandBuffer, renderPass, m_rendererHandlerInfos, &m_renderHandlers);
+			renderPass.End();
 		}
 
+		auto renderPass = window.BeginRenderPass(&commandBuffer, nullptr);
+		if (!renderPass.Valid())
 		{
-			auto renderPass = window.BeginRenderPass(&commandBuffer, nullptr);
-			if (!renderPass.Valid())
-			{
-				TD_CORE_ERROR("Invalid render pass.");
-				return;
-			}
-
-			renderPass.BindGraphicsPipeline(&m_quadPipeline);
-			renderPass.BindFragmentSamplers(0, { { &m_targetTexture, &m_targetSampler } });
-			renderPass.DrawPrimitives(3, 1, 0, 0);
-
-			Debug::Render(commandBuffer, renderPass);
+			TD_CORE_ERROR("Invalid render pass.");
+			return;
 		}
 
+		renderPass.BindGraphicsPipeline(&m_quadPipeline);
+		renderPass.BindFragmentSamplers(0, { { &m_targetTexture, &m_targetSampler } });
+		renderPass.DrawPrimitives(3, 1, 0, 0);
+
+		Debug::Render(commandBuffer, renderPass);
+		renderPass.End();
+
+		m_fence = commandBuffer.Submit();
 	}
 
 	void RenderSystem::Update()

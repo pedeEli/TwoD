@@ -48,8 +48,14 @@ namespace TwoD::SDL
 	}
 	RenderPass::~RenderPass()
 	{
+		TD_CORE_ASSERT(!Valid() || (Valid() && m_ended), "render pass was not ended proberly!");
+	}
+
+	void RenderPass::End()
+	{
 		if (Valid())
 		{
+			m_ended = true;
 			SDL_EndGPURenderPass(m_raw->renderPass);
 		}
 	}

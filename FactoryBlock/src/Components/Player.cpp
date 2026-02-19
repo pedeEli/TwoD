@@ -10,6 +10,17 @@ void Player::Start()
 			camera->zoom = glm::clamp(camera->zoom - e.y, 5.0f, 50.0f);
 			return false;
 		});
+	TwoD::EventHandler::On<TwoD::KeyDownEvent>([this](auto& e)
+		{
+			if (e.key != TwoD::Key::SPACE)
+			{
+				return false;
+			}
+			auto& renderer = GetComponent<SpriteRenderer>();
+			renderer.layer = renderer.layer == 20 ? 10 : 20;
+			App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(renderer.layer);
+			return false;
+		});
 }
 
 void Player::Update(float delta)

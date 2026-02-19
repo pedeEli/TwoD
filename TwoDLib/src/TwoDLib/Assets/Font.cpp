@@ -103,25 +103,28 @@ namespace TwoD
 		surface.SaveBMP("font-atlas.bmp");
 
 		auto commandBuffer = window.AcquireCommandBuffer();
-		auto copyPass = commandBuffer.BeginCopyPass();
+		{
+			auto copyPass = commandBuffer.BeginCopyPass();
 
-		SDL::TextureTransferInfo source{
-			.transferBuffer = &transferBuffer,
-			.offset = 0
-		};
-		SDL::TextureRegion destination{
-			.texture = &m_texture,
-			.w = static_cast<uint32_t>(atlas.width),
-			.h = static_cast<uint32_t>(atlas.height),
-			.d = 1
-		};
-		copyPass.UploadToTexture(source, destination, false);
+			SDL::TextureTransferInfo source{
+				.transferBuffer = &transferBuffer,
+				.offset = 0
+			};
+			SDL::TextureRegion destination{
+				.texture = &m_texture,
+				.w = static_cast<uint32_t>(atlas.width),
+				.h = static_cast<uint32_t>(atlas.height),
+				.d = 1
+			};
+			copyPass.UploadToTexture(source, destination, false);
+		}
 
 		msdfgen::destroyFont(font);
 		msdfgen::deinitializeFreetype(ft);
 
 		binding.texture = &m_texture;
 		binding.sampler = &m_sampler;
+		commandBuffer.Submit();
 	}
 
 	void Font::Bind(SDL::RenderPass* renderPass)

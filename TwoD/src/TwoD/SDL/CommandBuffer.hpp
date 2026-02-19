@@ -11,6 +11,8 @@ namespace TwoD::SDL
 		CommandBuffer(const Window* window);
 		~CommandBuffer();
 
+		Fence Submit();
+
 		template<typename T>
 		void PushVertexUniformData(uint32_t slotIndex, const T& data) const
 		{
@@ -22,11 +24,13 @@ namespace TwoD::SDL
 		CopyPass BeginCopyPass() const;
 
 	private:
+		bool m_submitted = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
 
 		friend class RenderPass;
 		friend class CopyPass;
+		friend class Fence;
 
 		friend class ::TwoD::Debug;
 	};

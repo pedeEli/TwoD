@@ -9,6 +9,7 @@
 #include "TwoD/SDL/Sampler.hpp"
 #include "TwoD/SDL/Shader.hpp"
 #include "TwoD/SDL/GraphicsPipeline.hpp"
+#include "TwoD/SDL/Fence.hpp"
 #include "Renderer.hpp"
 #include "RenderHandler.hpp"
 
@@ -77,6 +78,7 @@ namespace TwoD
 		std::unordered_map<std::type_index, std::vector<size_t>> m_renderersToHandlers;
 		std::vector<RendererHandlerInfo> m_rendererHandlerInfos;
 		bool m_dirty = true;
+		SDL::Fence m_fence;
 
 		SDL::Texture m_targetTexture;
 		SDL::Sampler m_targetSampler;

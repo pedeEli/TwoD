@@ -57,6 +57,7 @@ namespace TwoD::SDL
     class RenderPass;
     class Shader;
     class TransferBuffer;
+	class Fence;
 }
 	
 // *****************************************************

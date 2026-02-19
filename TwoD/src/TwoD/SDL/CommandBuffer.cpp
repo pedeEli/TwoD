@@ -3,6 +3,7 @@
 
 #include "Window.hpp"
 #include "CopyPass.hpp"
+#include "Fence.hpp"
 #include "Raw/Window.hpp"
 #include "Raw/Texture.hpp"
 #include "Raw/CommandBuffer.hpp"
@@ -13,11 +14,20 @@ namespace TwoD::SDL
 	{
 		auto* device = window->m_raw->device;
 		auto* buffer = SDL_AcquireGPUCommandBuffer(device);
-		m_raw = std::make_unique<Raw>(buffer);
+		m_raw = std::make_unique<Raw>(buffer, device);
 	}
 	CommandBuffer::~CommandBuffer()
 	{
-		SDL_SubmitGPUCommandBuffer(m_raw->buffer);
+		if (!m_submitted)
+		{
+			SDL_CancelGPUCommandBuffer(m_raw->buffer);
+		}
+	}
+
+	Fence CommandBuffer::Submit()
+	{
+		m_submitted = true;
+		return Fence(this);
 	}
 
 	void CommandBuffer::PushVertexUniformData(uint32_t slotIndex, const void* data, uint32_t length) const

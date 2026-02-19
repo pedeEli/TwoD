@@ -74,14 +74,13 @@ namespace TwoD
 					m_renderCommands.push_back(m_currentRenderCommand);
 				}
 				m_currentRenderCommand.handlerIndex = info.handlerIndex;
-				m_currentRenderCommand.startIndex += m_currentRenderCommand.size;
+				m_currentRenderCommand.startIndex = m_quadIndex;
 				m_currentRenderCommand.size = 0;
 				m_currentRenderCommand.projection = info.projection;
 			}
 			(*handlers)[info.handlerIndex]->Render(*this, info.rendererIndex);
 		}
 		NextBatch();
-		m_renderCommands.clear();
 	}
 
 	void Renderer::RenderQuad(
@@ -168,6 +167,7 @@ namespace TwoD
 		}
 		m_currentRenderCommand.size = 0;
 		m_currentRenderCommand.startIndex = 0;
+		m_quadIndex = 0;
 
 		{
 			m_commandBuffer->BeginCopyPass().UploadToBuffer(
@@ -223,6 +223,6 @@ namespace TwoD
 			);
 		}
 
-		m_quadIndex = 0;
+		m_renderCommands.clear();
 	}
 }

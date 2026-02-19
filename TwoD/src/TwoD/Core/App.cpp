@@ -92,16 +92,15 @@ namespace TwoD
 			EventHandler::PollEvents();
 			Inputs::Update();
 
+			Debug::Draw();
+
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
 			lastTick = currentTick;
-			
 			if (Debug::GameIsRunning())
 			{
 				ECS::Update(delta);
 			}
-
-			Debug::Draw();
 
 			m_renderSystem.Render(m_window);
 

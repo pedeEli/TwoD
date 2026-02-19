@@ -84,22 +84,25 @@ namespace TwoD
 		SDL_memcpy(transferData, surface.GetPixels(), transferInfo.size);
 
 		auto commandBuffer = window.AcquireCommandBuffer();
-		auto copyPass = commandBuffer.BeginCopyPass();
+		{
+			auto copyPass = commandBuffer.BeginCopyPass();
 
-		SDL::TextureTransferInfo source{
-			.transferBuffer = &transferBuffer,
-			.offset = 0
-		};
-		SDL::TextureRegion destination{
-			.texture = &m_texture,
-			.w = atlasWidth,
-			.h = atlasHeight,
-			.d = 1
-		};
-		copyPass.UploadToTexture(source, destination, false);
+			SDL::TextureTransferInfo source{
+				.transferBuffer = &transferBuffer,
+				.offset = 0
+			};
+			SDL::TextureRegion destination{
+				.texture = &m_texture,
+				.w = atlasWidth,
+				.h = atlasHeight,
+				.d = 1
+			};
+			copyPass.UploadToTexture(source, destination, false);
+		}
 
 		binding.texture = &m_texture;
 		binding.sampler = &m_sampler;
+		commandBuffer.Submit();
 	}
 
 	void SpriteAtlas::Bind(SDL::RenderPass* renderPass)

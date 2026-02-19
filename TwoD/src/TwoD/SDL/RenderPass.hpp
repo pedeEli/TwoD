@@ -16,6 +16,8 @@ namespace TwoD::SDL
 		RenderPass(const Window* window, CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr);
 		~RenderPass();
 
+		void End();
+
 		void BindGraphicsPipeline(const GraphicsPipeline* pipeline) const;
 
 		void BindFragmentSamplers(uint32_t firstSlot, const std::vector<TextureSamplerBinding>& bindings) const;
@@ -29,6 +31,7 @@ namespace TwoD::SDL
 		bool Valid() const;
 
 	private:
+		bool m_ended = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
 
