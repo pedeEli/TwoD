@@ -8,10 +8,8 @@
 
 namespace TwoD
 {
-	void Shader::Init(const std::filesystem::path& path)
+	void Shader::Init(const std::filesystem::path& path, const Window& window)
 	{
-		auto& window = App::Get<Window>();
-
 		auto vertexPath = path.parent_path() / vertex.file;
 		TD_CORE_ASSERT(std::filesystem::exists(vertexPath));
 		std::ifstream vertexFile(vertexPath.string());

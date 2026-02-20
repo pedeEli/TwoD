@@ -6,6 +6,7 @@
 #include "Asset.hpp"
 
 #include "TwoD/Core/Storage.hpp"
+#include "TwoD/SDL/Window.hpp"
 
 namespace TwoD
 {
@@ -19,8 +20,8 @@ namespace TwoD
 		AssetManager& operator=(AssetManager& other) = delete;
 		AssetManager& operator=(AssetManager&& other) = delete;
 
-		static void Load();
-		static void Unload();
+		static void Init(const Window& window);
+		static void Shutdown();
 		
 		template<typename T>
 		requires(std::is_base_of_v<Asset, T>)
@@ -43,7 +44,7 @@ namespace TwoD
 		struct Callbacks
 		{
 			std::function<void()> Load;
-			std::function<void()> Init;
+			std::function<void(const Window&)> Init;
 		};
 
 	private:

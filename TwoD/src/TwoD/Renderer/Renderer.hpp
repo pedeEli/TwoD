@@ -71,6 +71,7 @@ namespace TwoD
 			const std::vector<RendererHandlerInfo>& infos,
 			const std::vector<std::unique_ptr<RenderHandler>>* handlers
 		);
+		void Shutdown();
 		void NextBatch();
 		void RenderQuad(
 			const glm::fmat3x3& transform,

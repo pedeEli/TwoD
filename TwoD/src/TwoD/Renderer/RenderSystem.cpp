@@ -93,6 +93,11 @@ namespace TwoD
 		m_quadPipeline = CreateQuadPipeline(window, &m_quadVertexShader, &m_quadFragmentShader);
 	}
 
+	void RenderSystem::Shutdown()
+	{
+		m_renderer.Shutdown();
+	}
+
 	void RenderSystem::CreateTargetTexture(uint32_t width, uint32_t height)
 	{
 		auto& window = App::Get<Window>();
@@ -108,7 +113,7 @@ namespace TwoD
 			});
 	}
 
-	void RenderSystem::Render(const Window& window)
+	void RenderSystem::Update(const Window& window)
 	{
 		auto commandBuffer = window.AcquireCommandBuffer();
 		
@@ -116,7 +121,7 @@ namespace TwoD
 		{
 			if (m_dirty)
 			{
-				Update();
+				SortLayers();
 				m_dirty = false;
 			}
 
@@ -143,7 +148,7 @@ namespace TwoD
 		m_fence = commandBuffer.Submit();
 	}
 
-	void RenderSystem::Update()
+	void RenderSystem::SortLayers()
 	{
 		size_t totalSize = 0;
 		for (size_t i = 0; i < m_renderHandlers.size(); i++)

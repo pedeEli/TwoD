@@ -30,7 +30,7 @@ namespace TwoD
 		}
 
 	private:
-		static void PollEvents();
+		static void Update();
 		static void EmitEvent(const Event<EventType>& event);
 
 	private:

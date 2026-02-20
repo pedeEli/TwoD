@@ -1,6 +1,7 @@
 #pragma once
 #include "AssetDefines.hpp"
 #include "TwoD/Core/YAML.hpp"
+#include "TwoD/SDL/Window.hpp"
 
 namespace TwoD
 {
@@ -15,7 +16,7 @@ namespace TwoD
 		Asset& operator=(Asset&& other) = delete;
 
 		virtual void Load(const YAML::Node& node) = 0;
-		virtual void Init(const std::filesystem::path& path) {}
+		virtual void Init(const std::filesystem::path& path, const Window& window) {}
 	};
 }
 

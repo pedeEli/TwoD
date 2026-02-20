@@ -44,7 +44,10 @@ namespace TwoD
 
 	void Scene::SetActive()
 	{
-		ECS::Destroy();
+		for (auto entity : m_rootEntities)
+		{
+			entity->Destroy();
+		}
 
 		m_rootEntities.clear();
 		for (auto& entityInfo : entities)

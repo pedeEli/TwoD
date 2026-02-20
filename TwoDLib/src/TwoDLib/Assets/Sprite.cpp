@@ -6,7 +6,7 @@
 
 namespace TwoD
 {
-	void Sprite::Init(const std::filesystem::path& path)
+	void Sprite::Init(const std::filesystem::path& path, const Window& window)
 	{
 		auto filePath = path.parent_path() / file;
 		auto surface = SDL::Surface::LoadFile(filePath);

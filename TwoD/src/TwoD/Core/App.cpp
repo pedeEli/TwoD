@@ -47,11 +47,11 @@ namespace TwoD
 		m_basePaths = info.basePaths;
 		RegisterComponent<Transform>();
 		RegisterResource<Scene>();
-		AssetManager::Load();
-
+		
+		Inputs::Init(m_window);
+		AssetManager::Init(m_window);
 		m_renderSystem.Init(m_window);
-
-		Inputs::Init();
+		Debug::Init(m_window);
 
 		AssetManager::Get<Scene>(info.startScene).SetActive();
 
@@ -66,13 +66,12 @@ namespace TwoD
 
 		m_initialized = true;
 
-		TwoD::Debug::Setup(m_window);
 	}
 	App::~App()
 	{
 		Debug::Shutdown();
-		ECS::Destroy();
-		AssetManager::Unload();
+		ECS::Shutdown();
+		AssetManager::Shutdown();
 
 		m_initialized = false;
 		s_application = nullptr;
@@ -90,10 +89,10 @@ namespace TwoD
 		m_running = true;
 		while (m_running)
 		{
-			EventHandler::PollEvents();
+			EventHandler::Update();
 			Inputs::Update();
 
-			Debug::Draw();
+			Debug::Update();
 
 			uint64_t currentTick = SDL_GetTicks();
 			float delta = (currentTick - lastTick) / 1000.0f;
@@ -103,7 +102,7 @@ namespace TwoD
 				ECS::Update(delta);
 			}
 
-			m_renderSystem.Render(m_window);
+			m_renderSystem.Update(m_window);
 
 			Debug::HandleMultipleWindows();
 		}

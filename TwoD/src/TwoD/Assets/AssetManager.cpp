@@ -5,7 +5,7 @@
 
 namespace TwoD
 {
-	void AssetManager::Load()
+	void AssetManager::Init(const Window& window)
 	{
 		auto& paths = App::GetBasePaths();
 
@@ -30,11 +30,11 @@ namespace TwoD
 
 		for (auto& callback : callbacks)
 		{
-			callback.Init();
+			callback.Init(window);
 		}
 	}
 
-	void AssetManager::Unload()
+	void AssetManager::Shutdown()
 	{
 		for (auto& storage : m_storages)
 		{
@@ -56,7 +56,7 @@ namespace TwoD
 
 		return Callbacks{
 			.Load = [&asset, node]() { asset.Load(node); },
-			.Init = [&asset, path]() { asset.Init(path); }
+			.Init = [&asset, path](const Window& window) { asset.Init(path, window); }
 		};
 	}
 

@@ -4,7 +4,7 @@
 
 namespace TwoD
 {
-	void ECS::Destroy()
+	void ECS::Shutdown()
 	{
 		for (auto& storage : m_storages)
 		{

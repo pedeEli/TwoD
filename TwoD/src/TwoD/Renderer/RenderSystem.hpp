@@ -33,7 +33,8 @@ namespace TwoD
 		RenderSystem& operator=(RenderSystem&& other) = delete;
 
 		void Init(const Window& window);
-		void Render(const Window& window);
+		void Update(const Window& window);
+		void Shutdown();
 
 		template<class Renderer>
 		requires(std::is_base_of_v<Component, Renderer>)
@@ -69,7 +70,7 @@ namespace TwoD
 		}
 
 	private:
-		void Update();
+		void SortLayers();
 		void CreateTargetTexture(uint32_t width, uint32_t height);
 
 	private:

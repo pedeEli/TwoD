@@ -24,7 +24,7 @@ namespace TwoD
 		ECS& operator=(const ECS&) = delete;
 		ECS& operator=(ECS&&) = delete;
 
-		static void Destroy();
+		static void Shutdown();
 		static void Update(float delta);
 
 		static Entity& CreateEntity(const std::string& name);

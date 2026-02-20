@@ -30,7 +30,7 @@ namespace TwoD
 	static PauseState s_pauseState;
 #endif
 
-	static void SetupImGui(SDL_Window* window, SDL_GPUDevice* device)
+	static void InitImGui(SDL_Window* window, SDL_GPUDevice* device)
 	{
 #ifdef TD_IMGUI
 		IMGUI_CHECKVERSION();
@@ -60,7 +60,7 @@ namespace TwoD
 		ImGui_ImplSDLGPU3_Init(&initInfo);
 #endif
 	}
-	static void SetupEventHandlers()
+	static void InitEventHandlers()
 	{
 #ifdef TD_IMGUI
 		EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
@@ -77,7 +77,7 @@ namespace TwoD
 			});
 #endif
 	}
-	static void SetupPausing(const Window& window)
+	static void InitPausing(const Window& window)
 	{
 #ifdef TD_IMGUI
 		int width, height;
@@ -95,12 +95,12 @@ namespace TwoD
 #endif
 	}
 
-	void Debug::Setup(const Window& window)
+	void Debug::Init(const Window& window)
 	{
 #ifdef TD_IMGUI
-		SetupImGui(window.m_raw->window, window.m_raw->device);
-		SetupEventHandlers();
-		SetupPausing(window);
+		InitImGui(window.m_raw->window, window.m_raw->device);
+		InitEventHandlers();
+		InitPausing(window);
 #endif
 	}
 	void Debug::Shutdown()
@@ -251,7 +251,7 @@ namespace TwoD
 #endif
 	}
 	
-	void Debug::Draw()
+	void Debug::Update()
 	{
 #ifdef TD_IMGUI
 		ImGui_ImplSDLGPU3_NewFrame();

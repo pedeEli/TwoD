@@ -47,6 +47,10 @@ namespace TwoD
 		m_dummySampler = window.CreateSampler({});
 		m_dummyBinding = { &m_dummyTexture, &m_dummySampler };
 	}
+	void Renderer::Shutdown()
+	{
+
+	}
 
 	void Renderer::Render(
 		const SDL::CommandBuffer& commandBuffer,

@@ -152,7 +152,7 @@ namespace TwoD
 		}
 	}
 
-	void EventHandler::PollEvents()
+	void EventHandler::Update()
 	{
 		SDL_Event sdlEvent;
 		while (SDL_PollEvent(&sdlEvent))

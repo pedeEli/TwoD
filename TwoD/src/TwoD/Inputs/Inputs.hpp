@@ -2,13 +2,14 @@
 #include <glm/glm.hpp>
 #include <unordered_set>
 #include "InputDefines.hpp"
+#include "TwoD/SDL/Window.hpp"
 
 namespace TwoD
 {
 	class Inputs
 	{
 	public:
-		static void Init();
+		static void Init(const Window& window);
 		static void Update();
 
 		static bool GetButtonDown(Scancode code);

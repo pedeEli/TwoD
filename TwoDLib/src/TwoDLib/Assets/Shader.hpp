@@ -18,7 +18,7 @@ namespace TwoD
 	class Shader : public Asset
 	{
 	public:
-		void Init(const std::filesystem::path& path) override;
+		void Init(const std::filesystem::path& path, const Window& window) override;
 
 	public:
 		TD_ASSET(

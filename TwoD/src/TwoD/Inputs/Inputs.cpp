@@ -6,7 +6,7 @@
 
 namespace TwoD
 {
-	void Inputs::Init()
+	void Inputs::Init(const Window& window)
 	{
 		m_keyboardState = SDL_GetKeyboardState(nullptr);
 	}

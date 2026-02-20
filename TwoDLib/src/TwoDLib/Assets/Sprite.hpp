@@ -18,7 +18,7 @@ namespace TwoD
 	public:
 		~Sprite() = default;
 
-		void Init(const std::filesystem::path& path) override;
+		void Init(const std::filesystem::path& path, const Window& window) override;
 		
 		const SpriteRect& GetRect() const
 		{

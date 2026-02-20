@@ -13,7 +13,7 @@ namespace TwoD
 	Font::Font() = default;
 	Font::~Font() = default;
 
-	void Font::Init(const std::filesystem::path& path)
+	void Font::Init(const std::filesystem::path& path, const Window& window)
 	{
 		auto filePath = path.parent_path() / file;
 
@@ -54,7 +54,6 @@ namespace TwoD
 
 		auto atlas = static_cast<msdfgen::BitmapConstRef<uint8_t, 3>>(generator.atlasStorage());
 
-		auto& window = App::Get<Window>();
 		SDL::SamplerInfo samplerInfo{
 			.minFilter = SDL::Filter::LINEAR,
 			.magFilter = SDL::Filter::LINEAR,
