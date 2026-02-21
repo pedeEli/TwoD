@@ -26,17 +26,41 @@ namespace TwoD::SDL
     }
     Texture::~Texture()
     {
-        if (m_raw)
-        {
-            SDL_ReleaseGPUTexture(m_raw->device, m_raw->texture);
-        }
+		TD_CORE_ASSERT(!m_raw || m_released);
     }
+
+	void Texture::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
+		if (m_raw)
+		{
+			SDL_ReleaseGPUTexture(m_raw->device, m_raw->texture);
+		}
+	}
+
+	void Texture::swap(Texture&& other)
+	{
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
+	}
+
+	Texture::Texture(Texture&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+	Texture& Texture::operator=(Texture&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
 
     void Texture::SetName(const std::string& name)
     {
+		TD_CORE_ASSERT(m_raw && !m_released);
         SDL_SetGPUTextureName(m_raw->device, m_raw->texture, name.c_str());
     }
-
-    Texture::Texture(Texture&& other) noexcept = default;
-    Texture& Texture::operator=(Texture&& other) noexcept = default;
 }

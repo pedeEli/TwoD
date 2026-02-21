@@ -45,6 +45,7 @@ namespace TwoD
 			auto& sprite = m_sprites[i];
 			sprite.callback({ pos.x / atlasWidthF, pos.y / atlasHeightF, pos.w / atlasWidthF, pos.h / atlasHeightF }, halfPixelW, halfPixelH);
 			sprite.surface.BlitTo(sprite.src, surface, pos);
+			sprite.surface.Destroy();
 		}
 		m_sprites.clear();
 
@@ -82,27 +83,34 @@ namespace TwoD
 
 		auto* transferData = transferBuffer.Map<uint8_t>(false);
 		SDL_memcpy(transferData, surface.GetPixels(), transferInfo.size);
+		surface.Destroy();
 
 		auto commandBuffer = window.AcquireCommandBuffer();
-		{
-			auto copyPass = commandBuffer.BeginCopyPass();
+		auto copyPass = commandBuffer.BeginCopyPass();
 
-			SDL::TextureTransferInfo source{
-				.transferBuffer = &transferBuffer,
-				.offset = 0
-			};
-			SDL::TextureRegion destination{
-				.texture = &m_texture,
-				.w = atlasWidth,
-				.h = atlasHeight,
-				.d = 1
-			};
-			copyPass.UploadToTexture(source, destination, false);
-		}
+		SDL::TextureTransferInfo source{
+			.transferBuffer = &transferBuffer,
+			.offset = 0
+		};
+		SDL::TextureRegion destination{
+			.texture = &m_texture,
+			.w = atlasWidth,
+			.h = atlasHeight,
+			.d = 1
+		};
+		copyPass.UploadToTexture(source, destination, false);
+		copyPass.End();
+		transferBuffer.Release();
 
 		binding.texture = &m_texture;
 		binding.sampler = &m_sampler;
-		commandBuffer.Submit();
+		commandBuffer.Submit().Release();
+	}
+
+	void SpriteAtlas::Destroy()
+	{
+		m_sampler.Release();
+		m_texture.Release();
 	}
 
 	void SpriteAtlas::Bind(SDL::RenderPass* renderPass)

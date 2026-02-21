@@ -25,50 +25,29 @@ namespace TwoD
 		Window& operator=(Window&& other) = delete;
 
 		bool Init(const WindowInfo& info);
-		
+		void ReleaseAndDestroy();
+
 		void GetSize(int& width, int& height) const;
 		uint32_t GetWindowID() const;
 		SDL::ShaderFormat GetShaderFormats() const;
 		SDL::TextureFormat GetSwapchainTextureFormat() const;
 		void WaitForGPUIdle() const;
 
-		SDL::Buffer CreateBuffer(const SDL::BufferInfo& info) const
-		{
-			return SDL::Buffer(this, info);
-		}
-		SDL::TransferBuffer CreateTransferBuffer(const SDL::TransferBufferInfo& info) const
-		{
-			return SDL::TransferBuffer(this, info);
-		}
+		SDL::Buffer CreateBuffer(const SDL::BufferInfo& info) const;
+		SDL::TransferBuffer CreateTransferBuffer(const SDL::TransferBufferInfo& info) const;
 
-		SDL::CommandBuffer AcquireCommandBuffer() const
-		{
-			return SDL::CommandBuffer(this);
-		}
-		SDL::RenderPass BeginRenderPass(SDL::CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr) const
-		{
-			return SDL::RenderPass(this, commandBuffer, targetTexture);
-		}
+		SDL::CommandBuffer AcquireCommandBuffer() const;
+		SDL::RenderPass BeginRenderPass(SDL::CommandBuffer* commandBuffer, const SDL::Texture* targetTexture = nullptr) const;
 
-		SDL::Shader CreateShader(const SDL::ShaderInfo& info) const
-		{
-			return SDL::Shader(this, info);
-		}
-		SDL::GraphicsPipeline CreateGraphicsPipeline(const SDL::GraphicsPipelineInfo& info) const
-		{
-			return SDL::GraphicsPipeline(this, info);
-		}
+		SDL::Shader CreateShader(const SDL::ShaderInfo& info) const;
+		SDL::GraphicsPipeline CreateGraphicsPipeline(const SDL::GraphicsPipelineInfo& info) const;
 
-		SDL::Texture CreateTexture(const SDL::TextureInfo& info) const
-		{
-			return SDL::Texture(this, info);
-		}
-		SDL::Sampler CreateSampler(const SDL::SamplerInfo& info) const
-		{
-			return SDL::Sampler(this, info);
-		}
+		SDL::Texture CreateTexture(const SDL::TextureInfo& info) const;
+		SDL::Sampler CreateSampler(const SDL::SamplerInfo& info) const;
 
 	private:
+		bool m_releasedAndDestroyed = false;
+
 		int m_width = 0;
 		int m_height = 0;
 

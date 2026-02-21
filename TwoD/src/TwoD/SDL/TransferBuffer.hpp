@@ -14,6 +14,9 @@ namespace TwoD::SDL
 		TransferBuffer& operator=(const TransferBuffer& other) = delete;
 		TransferBuffer& operator=(TransferBuffer&& other) noexcept;
 
+		void Release();
+		void swap(TransferBuffer&& other);
+
 		template<typename T>
 		T* Map(bool cycle) const
 		{
@@ -24,6 +27,7 @@ namespace TwoD::SDL
 		void* Map(bool cycle) const;
 
 	private:
+		bool m_released = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
 

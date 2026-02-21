@@ -17,8 +17,8 @@ namespace TwoD
 
 		virtual Asset& Add(std::string& name) = 0;
 		virtual Asset& Get(const std::string& name) = 0;
-		virtual void Remove(const std::string& name) = 0;
-		virtual void RemoveAll() = 0;
+		virtual void Destroy(const std::string& name) = 0;
+		virtual void DestroyAll() = 0;
 	};
 
 	template<typename T>
@@ -28,8 +28,8 @@ namespace TwoD
 	public:
 		T& Add(std::string& name) override;
 		T& Get(const std::string& name) override;
-		void Remove(const std::string& name) override;
-		void RemoveAll() override;
+		void Destroy(const std::string& name) override;
+		void DestroyAll() override;
 
 	private:
 		std::unordered_map<std::string, T> m_assets;

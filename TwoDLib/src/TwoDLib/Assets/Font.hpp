@@ -23,6 +23,7 @@ namespace TwoD
 		~Font();
 
 		void Init(const std::filesystem::path& path, const Window& window) override;
+		void Destroy() override;
 
 		const MSDFData* GetMSDFData() const
 		{

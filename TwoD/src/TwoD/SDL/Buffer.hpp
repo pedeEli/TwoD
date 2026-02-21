@@ -14,7 +14,11 @@ namespace TwoD::SDL
 		Buffer& operator=(const Buffer& other) = delete;
 		Buffer& operator=(Buffer&& other) noexcept;
 
+		void Release();
+		void swap(Buffer&& other);
+
 	private:
+		bool m_released = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
 

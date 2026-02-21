@@ -18,6 +18,7 @@ namespace TwoD::SDL
 	}
 	CommandBuffer::~CommandBuffer()
 	{
+		TD_CORE_ASSERT(m_raw);
 		if (!m_submitted)
 		{
 			SDL_CancelGPUCommandBuffer(m_raw->buffer);
@@ -26,22 +27,28 @@ namespace TwoD::SDL
 
 	Fence CommandBuffer::Submit()
 	{
+		TD_CORE_ASSERT(m_raw && !m_submitted);
 		m_submitted = true;
 		return Fence(this);
 	}
 
 	void CommandBuffer::PushVertexUniformData(uint32_t slotIndex, const void* data, uint32_t length) const
 	{
+		TD_CORE_ASSERT(!m_submitted);
 		SDL_PushGPUVertexUniformData(m_raw->buffer, slotIndex, data, length);
 	}
 	
 	CopyPass CommandBuffer::BeginCopyPass() const
 	{
+		TD_CORE_ASSERT(!m_submitted);
 		return CopyPass(this);
 	}
 
 	void CommandBuffer::BlitTexture(const SDL::BlitInfo& blitInfo) const
 	{
+		TD_CORE_ASSERT(!m_submitted);
+		TD_CORE_ASSERT(blitInfo.source.texture->m_raw && !blitInfo.source.texture->m_released);
+		TD_CORE_ASSERT(blitInfo.destination.texture->m_raw && !blitInfo.destination.texture->m_released);
 		SDL_GPUBlitInfo info{
 			.source = {
 				.texture = blitInfo.source.texture->m_raw->texture,

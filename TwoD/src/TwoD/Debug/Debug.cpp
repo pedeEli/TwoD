@@ -23,7 +23,6 @@ namespace TwoD
 	{
 		bool paused = false;
 		bool nextFrame = false;
-		SDL::Texture texture;
 	};
 #ifdef TD_IMGUI
 	static DebugState s_debugState;
@@ -77,30 +76,13 @@ namespace TwoD
 			});
 #endif
 	}
-	static void InitPausing(const Window& window)
-	{
-#ifdef TD_IMGUI
-		int width, height;
-		window.GetSize(width, height);
-		s_pauseState.texture = window.CreateTexture({
-				.type = SDL::TextureType::TWO_D,
-				.format = window.GetSwapchainTextureFormat(),
-				.usage = SDL::TextureUsageFlags::COLOR_TARGET,
-				.width = static_cast<uint32_t>(width),
-				.height = static_cast<uint32_t>(height),
-				.layerCountOrDepth = 1,
-				.numLevels = 1,
-				.sampleCount = SDL::SampleCount::ONE,
-			});
-#endif
-	}
 
 	void Debug::Init(const Window& window)
 	{
 #ifdef TD_IMGUI
+		TD_CORE_ASSERT(window.m_raw && !window.m_releasedAndDestroyed);
 		InitImGui(window.m_raw->window, window.m_raw->device);
 		InitEventHandlers();
-		InitPausing(window);
 #endif
 	}
 	void Debug::Shutdown()
@@ -115,6 +97,8 @@ namespace TwoD
 	void Debug::Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass)
 	{
 #ifdef TD_IMGUI
+		TD_CORE_ASSERT(commandBuffer.m_raw && !commandBuffer.m_submitted);
+		TD_CORE_ASSERT(renderPass.m_raw && !renderPass.m_ended);
 		ImGui::Render();
 		auto* drawData = ImGui::GetDrawData();
 		ImGui_ImplSDLGPU3_PrepareDrawData(drawData, commandBuffer.m_raw->buffer);

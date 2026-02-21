@@ -32,14 +32,12 @@ namespace TwoD::SDL
 		void DrawIndexedPrimitives(uint32_t numIndices, uint32_t numInstances, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const;
 		void DrawPrimitives(uint32_t numVertices, uint32_t numInstances, uint32_t firstVertex, uint32_t firstInstance) const;
 
-		bool Valid() const;
+		operator bool() const noexcept;
 
 	private:
 		bool m_ended = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
-
-		friend class ::TwoD::Renderer;
 
 		friend class ::TwoD::Debug;
 	};

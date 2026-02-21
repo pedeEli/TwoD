@@ -88,29 +88,36 @@ namespace TwoD
 			});
 		m_targetSampler = CreateTargetSampler(window);
 
-		m_quadVertexShader = *SDL::Shader::Load(window, s_quadVertexCode, TwoD::SDL::ShaderStage::VERTEX, 0, 0, 0, 0);
-		m_quadFragmentShader = *SDL::Shader::Load(window, s_quadFragmentCode, TwoD::SDL::ShaderStage::FRAGMENT, 1, 0, 0, 0);
+		m_quadVertexShader = SDL::Shader::Load(window, s_quadVertexCode, TwoD::SDL::ShaderStage::VERTEX, 0, 0, 0, 0);
+		m_quadFragmentShader = SDL::Shader::Load(window, s_quadFragmentCode, TwoD::SDL::ShaderStage::FRAGMENT, 1, 0, 0, 0);
 		m_quadPipeline = CreateQuadPipeline(window, &m_quadVertexShader, &m_quadFragmentShader);
 	}
 
 	void RenderSystem::Shutdown()
 	{
 		m_renderer.Shutdown();
+		m_targetTexture.Release();
+		m_targetSampler.Release();
+		m_quadVertexShader.Release();
+		m_quadFragmentShader.Release();
+		m_quadPipeline.Release();
+		m_fence.Release();
 	}
 
 	void RenderSystem::CreateTargetTexture(uint32_t width, uint32_t height)
 	{
 		auto& window = App::Get<Window>();
+		m_targetTexture.Release();
 		m_targetTexture = window.CreateTexture({
-				.type = SDL::TextureType::TWO_D,
-				.format = window.GetSwapchainTextureFormat(),
-				.usage = SDL::TextureUsageFlags::COLOR_TARGET | SDL::TextureUsageFlags::SAMPLER,
-				.width = width,
-				.height = height,
-				.layerCountOrDepth = 1,
-				.numLevels = 1,
-				.sampleCount = SDL::SampleCount::ONE
-			});
+			.type = SDL::TextureType::TWO_D,
+			.format = window.GetSwapchainTextureFormat(),
+			.usage = SDL::TextureUsageFlags::COLOR_TARGET | SDL::TextureUsageFlags::SAMPLER,
+			.width = width,
+			.height = height,
+			.layerCountOrDepth = 1,
+			.numLevels = 1,
+			.sampleCount = SDL::SampleCount::ONE
+		});
 	}
 
 	void RenderSystem::Update(const Window& window)
@@ -132,19 +139,21 @@ namespace TwoD
 		}
 
 		auto renderPass = window.BeginRenderPass(&commandBuffer, nullptr);
-		if (!renderPass.Valid())
+		if (!renderPass)
 		{
-			TD_CORE_ERROR("Invalid render pass.");
-			return;
+			TD_CORE_ERROR("Invalid render pass");
 		}
+		else
+		{
+			renderPass.BindGraphicsPipeline(&m_quadPipeline);
+			renderPass.BindFragmentSamplers(0, { { &m_targetTexture, &m_targetSampler } });
+			renderPass.DrawPrimitives(3, 1, 0, 0);
 
-		renderPass.BindGraphicsPipeline(&m_quadPipeline);
-		renderPass.BindFragmentSamplers(0, { { &m_targetTexture, &m_targetSampler } });
-		renderPass.DrawPrimitives(3, 1, 0, 0);
-
-		Debug::Render(commandBuffer, renderPass);
+			Debug::Render(commandBuffer, renderPass);
+		}
 		renderPass.End();
 
+		m_fence.Release();
 		m_fence = commandBuffer.Submit();
 	}
 

@@ -38,7 +38,7 @@ namespace TwoD
 	{
 		for (auto& storage : m_storages)
 		{
-			storage.second->RemoveAll();
+			storage.second->DestroyAll();
 		}
 	}
 

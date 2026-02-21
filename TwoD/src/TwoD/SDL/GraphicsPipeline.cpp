@@ -12,6 +12,8 @@ namespace TwoD::SDL
 	GraphicsPipeline::GraphicsPipeline() = default;
 	GraphicsPipeline::GraphicsPipeline(const Window* window, const GraphicsPipelineInfo& info)
 	{
+		TD_CORE_ASSERT(info.vertexShader->m_raw && !info.vertexShader->m_released);
+		TD_CORE_ASSERT(info.fragmentShader->m_raw && !info.fragmentShader->m_released);
 		auto* device = window->m_raw->device;
 		
 		std::vector<SDL_GPUVertexBufferDescription> vertexBufferDescriptions(
@@ -112,12 +114,36 @@ namespace TwoD::SDL
 	}
 	GraphicsPipeline::~GraphicsPipeline()
 	{
+		TD_CORE_ASSERT(!m_raw || m_released);
+	}
+
+	void GraphicsPipeline::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
 		if (m_raw)
 		{
 			SDL_ReleaseGPUGraphicsPipeline(m_raw->device, m_raw->pipeline);
 		}
 	}
 
-	GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) noexcept = default;
-	GraphicsPipeline& GraphicsPipeline::operator=(GraphicsPipeline&& other) noexcept = default;
+	void GraphicsPipeline::swap(GraphicsPipeline&& other)
+	{
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
+	}
+
+	GraphicsPipeline::GraphicsPipeline(GraphicsPipeline&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+
+	GraphicsPipeline& GraphicsPipeline::operator=(GraphicsPipeline&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
 }

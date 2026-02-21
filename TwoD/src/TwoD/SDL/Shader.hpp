@@ -6,7 +6,7 @@ namespace TwoD::SDL
 	class Shader
 	{
 	public:
-		static std::optional<SDL::Shader> Load(
+		static SDL::Shader Load(
 			const Window& window,
 			const char* hlsl,
 			SDL::ShaderStage stage,
@@ -25,7 +25,11 @@ namespace TwoD::SDL
 		Shader& operator=(const Shader& other) = delete;
 		Shader& operator=(Shader&& other) noexcept;
 
+		void Release();
+		void swap(Shader&& other);
+
 	private:
+		bool m_released = false;
 		struct Raw;
 		std::unique_ptr<Raw> m_raw;
 

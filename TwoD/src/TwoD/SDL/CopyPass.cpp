@@ -16,11 +16,21 @@ namespace TwoD::SDL
     }
     CopyPass::~CopyPass()
     {
-        SDL_EndGPUCopyPass(m_raw->copyPass);
+		TD_CORE_ASSERT(m_raw && m_ended);
     }
+
+	void CopyPass::End()
+	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		m_ended = true;
+		SDL_EndGPUCopyPass(m_raw->copyPass);
+	}
 
     void CopyPass::UploadToTexture(const TextureTransferInfo& source, const TextureRegion& destination, bool cycle) const
     {
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		TD_CORE_ASSERT(source.transferBuffer->m_raw && !source.transferBuffer->m_released);
+		TD_CORE_ASSERT(destination.texture->m_raw && !destination.texture->m_released);
         SDL_GPUTextureTransferInfo sdlSource{
             .transfer_buffer = source.transferBuffer->m_raw->buffer,
             .offset = source.offset,
@@ -42,6 +52,9 @@ namespace TwoD::SDL
     }
     void CopyPass::UploadToBuffer(const TransferBufferLocation& source, const BufferRegion& destination, bool cycle) const
     {
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		TD_CORE_ASSERT(source.transferBuffer->m_raw && !source.transferBuffer->m_released);
+		TD_CORE_ASSERT(destination.buffer->m_raw && !destination.buffer->m_released);
         SDL_GPUTransferBufferLocation sdlSource{
             .transfer_buffer = source.transferBuffer->m_raw->buffer,
             .offset = source.offset

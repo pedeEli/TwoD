@@ -24,7 +24,6 @@ namespace TwoD
 			vertex.samplerCount, vertex.storageTextureCount,
 			vertex.storageBufferCount, vertex.uniformBufferCount
 		);
-		TD_CORE_ASSERT(vertexShader, SDL_GetError());
 
 		auto fragmentPath = path.parent_path() / fragment.file;
 		TD_CORE_ASSERT(std::filesystem::exists(fragmentPath));
@@ -40,7 +39,6 @@ namespace TwoD
 			fragment.samplerCount, fragment.storageTextureCount,
 			fragment.storageBufferCount, fragment.uniformBufferCount
 		);
-		TD_CORE_ASSERT(fragmentShader, SDL_GetError());
 
 		for (auto& desc : pipelineInfo.targetInfo.colorTargetDescriptions)
 		{
@@ -49,10 +47,18 @@ namespace TwoD
 				desc.format = window.GetSwapchainTextureFormat();
 			}
 		}
-		pipelineInfo.vertexShader = &vertexShader.value();
-		pipelineInfo.fragmentShader = &fragmentShader.value();
+		pipelineInfo.vertexShader = &vertexShader;
+		pipelineInfo.fragmentShader = &fragmentShader;
 
 		m_pipeline = window.CreateGraphicsPipeline(pipelineInfo);
+
+		vertexShader.Release();
+		fragmentShader.Release();
+	}
+
+	void Shader::Destroy()
+	{
+		m_pipeline.Release();
 	}
 
 	void Shader::Bind(const SDL::RenderPass* renderPass) const

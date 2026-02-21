@@ -19,6 +19,7 @@ namespace TwoD
 	{
 	public:
 		void Init(const std::filesystem::path& path, const Window& window) override;
+		void Destroy() override;
 
 	public:
 		TD_ASSET(

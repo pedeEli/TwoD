@@ -20,17 +20,42 @@ namespace TwoD::SDL
 	}
 	TransferBuffer::~TransferBuffer()
 	{
+		TD_CORE_ASSERT(!m_raw || m_released);
+	}
+
+	void TransferBuffer::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
 		if (m_raw)
 		{
 			SDL_ReleaseGPUTransferBuffer(m_raw->device, m_raw->buffer);
 		}
 	}
 
-	void* TransferBuffer::Map(bool cycle) const
+	void TransferBuffer::swap(TransferBuffer&& other)
 	{
-		return SDL_MapGPUTransferBuffer(m_raw->device, m_raw->buffer, cycle);
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
 	}
 
-	TransferBuffer::TransferBuffer(TransferBuffer&& other) noexcept = default;
-	TransferBuffer& TransferBuffer::operator=(TransferBuffer&& other) noexcept = default;
+	TransferBuffer::TransferBuffer(TransferBuffer&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+	
+	TransferBuffer& TransferBuffer::operator=(TransferBuffer&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
+
+	void* TransferBuffer::Map(bool cycle) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_released);
+		return SDL_MapGPUTransferBuffer(m_raw->device, m_raw->buffer, cycle);
+	}
 }

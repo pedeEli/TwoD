@@ -43,13 +43,18 @@ namespace TwoD
 			.layerCountOrDepth = 1,
 			.numLevels = 1,
 			.sampleCount = SDL::SampleCount::ONE
-			});
+		});
 		m_dummySampler = window.CreateSampler({});
 		m_dummyBinding = { &m_dummyTexture, &m_dummySampler };
 	}
 	void Renderer::Shutdown()
 	{
-
+		m_vertexBuffer.Release();
+		m_vertexTransferBuffer.Release();
+		m_indexBuffer.Release();
+		m_indexTransferBuffer.Release();
+		m_dummyTexture.Release();
+		m_dummySampler.Release();
 	}
 
 	void Renderer::Render(
@@ -173,32 +178,34 @@ namespace TwoD
 		m_currentRenderCommand.startIndex = 0;
 		m_quadIndex = 0;
 
-		{
-			m_commandBuffer->BeginCopyPass().UploadToBuffer(
-				{
-					.transferBuffer = &m_vertexTransferBuffer,
-					.offset = 0
-				},
-				{
-					.buffer = &m_vertexBuffer,
-					.offset = 0,
-					.size = s_maxNumberOfVertices * sizeof(Vertex)
-				},
-				false
-			);
-			m_commandBuffer->BeginCopyPass().UploadToBuffer(
-				{
-					.transferBuffer = &m_indexTransferBuffer,
-					.offset = 0
-				},
-				{
-					.buffer = &m_indexBuffer,
-					.offset = 0,
-					.size = s_maxNumberOfIndices * sizeof(uint32_t)
-				},
-				false
-			);
-		}
+		auto vertexCopyPass = m_commandBuffer->BeginCopyPass();
+		vertexCopyPass.UploadToBuffer(
+			{
+				.transferBuffer = &m_vertexTransferBuffer,
+				.offset = 0
+			},
+			{
+				.buffer = &m_vertexBuffer,
+				.offset = 0,
+				.size = s_maxNumberOfVertices * sizeof(Vertex)
+			},
+			false
+		);
+		vertexCopyPass.End();
+		auto indexCopyPass = m_commandBuffer->BeginCopyPass();
+		indexCopyPass.UploadToBuffer(
+			{
+				.transferBuffer = &m_indexTransferBuffer,
+				.offset = 0
+			},
+			{
+				.buffer = &m_indexBuffer,
+				.offset = 0,
+				.size = s_maxNumberOfIndices * sizeof(uint32_t)
+			},
+			false
+		);
+		indexCopyPass.End();
 
 		for (size_t i = 0; i < m_textureBindings.size(); i++)
 		{

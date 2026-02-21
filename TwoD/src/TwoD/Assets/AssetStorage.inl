@@ -20,19 +20,21 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Asset, T>)
-	void AssetStorageImpl<T>::Remove(const std::string& name)
+	void AssetStorageImpl<T>::Destroy(const std::string& name)
 	{
-		auto it = m_assets.find(name);
-		if (it != m_assets.end())
-		{
-			m_assets.erase(it);
-		}
+		TD_CORE_ASSERT(m_assets.contains(name));
+		m_assets[name].Destroy();
+		m_assets.erase(name);
 	}
 
 	template<class T>
 	requires(std::is_base_of_v<Asset, T>)
-	void AssetStorageImpl<T>::RemoveAll()
+	void AssetStorageImpl<T>::DestroyAll()
 	{
+		for (auto& asset : m_assets)
+		{
+			asset.second.Destroy();
+		}
 		m_assets.clear();
 	}
 }

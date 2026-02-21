@@ -27,6 +27,8 @@ namespace TwoD
 	public:
 		~SpriteAtlas() = default;
 
+		void Destroy() override;
+
 		void Add(SDL::Surface& surface, SDL::Rect& src, decltype(SpriteInfo::callback) callback)
 		{
 			m_sprites.emplace_back(std::move(surface), src, callback);

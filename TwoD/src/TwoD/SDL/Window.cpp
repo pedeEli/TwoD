@@ -9,22 +9,32 @@ namespace TwoD
 	Window::Window() = default;
 	Window::~Window()
 	{
-		WaitForGPUIdle();
-		SDL_Window* window = m_raw->window;
-		SDL_GPUDevice* device = m_raw->device;
-		if (window && device)
+		TD_CORE_ASSERT(!m_raw || m_releasedAndDestroyed);
+	}
+
+	void Window::ReleaseAndDestroy()
+	{
+		TD_CORE_ASSERT(!m_releasedAndDestroyed);
+		m_releasedAndDestroyed = true;
+		if (m_raw)
 		{
-			SDL_ReleaseWindowFromGPUDevice(device, window);
-		}
-		if (window)
-		{
-			SDL_DestroyWindow(window);
-			m_raw->window = nullptr;
-		}
-		if (device)
-		{
-			SDL_DestroyGPUDevice(device);
-			m_raw->device = nullptr;
+			SDL_Window* window = m_raw->window;
+			SDL_GPUDevice* device = m_raw->device;
+			if (window && device)
+			{
+				SDL_ReleaseWindowFromGPUDevice(device, window);
+			}
+			if (window)
+			{
+				SDL_DestroyWindow(window);
+				m_raw->window = nullptr;
+			}
+			if (device)
+			{
+				SDL_DestroyGPUDevice(device);
+				m_raw->device = nullptr;
+			}
+			m_depthTexture.Release();
 		}
 	}
 
@@ -81,6 +91,7 @@ namespace TwoD
 					m_height = event.y;
 					m_depthTextureInfo.width = event.x;
 					m_depthTextureInfo.height = event.y;
+					m_depthTexture.Release();
 					m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
 				}
 				return false;
@@ -91,23 +102,73 @@ namespace TwoD
 	
 	void Window::GetSize(int& width, int& height) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
 		width = m_width;
 		height = m_height;
 	}
 	uint32_t Window::GetWindowID() const
 	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
 		return m_windowID;
 	}
 	SDL::ShaderFormat Window::GetShaderFormats() const
 	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
 		return static_cast<SDL::ShaderFormat>(SDL_GetGPUShaderFormats(m_raw->device));
 	}
 	SDL::TextureFormat Window::GetSwapchainTextureFormat() const
 	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
 		return static_cast<SDL::TextureFormat>(SDL_GetGPUSwapchainTextureFormat(m_raw->device, m_raw->window));
 	}
 	void Window::WaitForGPUIdle() const
 	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
 		SDL_WaitForGPUIdle(m_raw->device);
+	}
+
+
+	SDL::Buffer Window::CreateBuffer(const SDL::BufferInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::Buffer(this, info);
+	}
+	SDL::TransferBuffer Window::CreateTransferBuffer(const SDL::TransferBufferInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::TransferBuffer(this, info);
+	}
+
+	SDL::CommandBuffer Window::AcquireCommandBuffer() const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::CommandBuffer(this);
+	}
+	SDL::RenderPass Window::BeginRenderPass(SDL::CommandBuffer* commandBuffer, const SDL::Texture* targetTexture) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::RenderPass(this, commandBuffer, targetTexture);
+	}
+
+	SDL::Shader Window::CreateShader(const SDL::ShaderInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::Shader(this, info);
+	}
+	SDL::GraphicsPipeline Window::CreateGraphicsPipeline(const SDL::GraphicsPipelineInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::GraphicsPipeline(this, info);
+	}
+
+	SDL::Texture Window::CreateTexture(const SDL::TextureInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::Texture(this, info);
+	}
+	SDL::Sampler Window::CreateSampler(const SDL::SamplerInfo& info) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
+		return SDL::Sampler(this, info);
 	}
 }

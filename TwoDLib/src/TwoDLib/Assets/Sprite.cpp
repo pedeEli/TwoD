@@ -18,6 +18,7 @@ namespace TwoD
 		atlas.Add(surface, [this, width, height](SpriteRect rect, float halfPixelW, float halfPixelH) {
 			Apply(width, height, rect, halfPixelW, halfPixelH);
 		});
+		surface.Destroy();
 	}
 
 	void Sprite::Apply(uint32_t width, uint32_t height, SpriteRect rect, float halfPixelW, float halfPixelH)

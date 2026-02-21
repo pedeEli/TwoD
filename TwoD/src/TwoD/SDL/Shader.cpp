@@ -9,7 +9,7 @@
 
 namespace TwoD::SDL
 {
-	std::optional<SDL::Shader> Shader::Load(
+	SDL::Shader Shader::Load(
 		const Window& window,
 		const char* hlsl,
 		SDL::ShaderStage stage,
@@ -40,8 +40,7 @@ namespace TwoD::SDL
 		}
 		else
 		{
-			TD_CORE_ERROR("Not supported shader format");
-			return {};
+			TD_CORE_ASSERT(false, "Not supported shader format");
 		}
 
 		SDL_ShaderCross_ShaderStage shaderCrossStage = SDL_SHADERCROSS_SHADERSTAGE_VERTEX;
@@ -118,12 +117,36 @@ namespace TwoD::SDL
 	}
 	Shader::~Shader()
 	{
+		TD_CORE_ASSERT(!m_raw || m_released);
+	}
+
+	void Shader::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
 		if (m_raw)
 		{
 			SDL_ReleaseGPUShader(m_raw->device, m_raw->shader);
 		}
 	}
 
-	Shader::Shader(Shader&& other) noexcept = default;
-	Shader& Shader::operator=(Shader&& other) noexcept = default;
+	void Shader::swap(Shader&& other)
+	{
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
+	}
+
+	Shader::Shader(Shader&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+
+	Shader& Shader::operator=(Shader&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
 }

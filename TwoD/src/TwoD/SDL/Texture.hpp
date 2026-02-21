@@ -14,9 +14,12 @@ namespace TwoD::SDL
         Texture& operator=(const Texture& other) = delete;
         Texture& operator=(Texture&& other) noexcept;
 
+		void Release();
+		void swap(Texture&& other);
         void SetName(const std::string& name);
 
     private:
+		bool m_released = false;
         struct Raw;
         std::unique_ptr<Raw> m_raw;
 

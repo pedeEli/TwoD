@@ -48,28 +48,34 @@ namespace TwoD::SDL
 	}
 	RenderPass::~RenderPass()
 	{
-		TD_CORE_ASSERT(!Valid() || (Valid() && m_ended), "render pass was not ended proberly!");
+		TD_CORE_ASSERT(!m_raw || m_ended);
 	}
 
 	void RenderPass::End()
 	{
-		if (Valid())
+		TD_CORE_ASSERT(!m_ended);
+		m_ended = true;
+		if (m_raw)
 		{
-			m_ended = true;
 			SDL_EndGPURenderPass(m_raw->renderPass);
 		}
 	}
 
 	void RenderPass::BindGraphicsPipeline(const GraphicsPipeline* pipeline) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		TD_CORE_ASSERT(pipeline->m_raw && !pipeline->m_released);
 		SDL_BindGPUGraphicsPipeline(m_raw->renderPass, pipeline->m_raw->pipeline);
 	}
 
 	void RenderPass::BindFragmentSamplers(uint32_t firstSlot, const std::vector<TextureSamplerBinding>& bindings) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
 		std::vector<SDL_GPUTextureSamplerBinding> sdlBindings(bindings.size());
 		for (size_t i = 0; i < bindings.size(); i++)
 		{
+			TD_CORE_ASSERT(bindings[i].sampler->m_raw && !bindings[i].sampler->m_released);
+			TD_CORE_ASSERT(bindings[i].texture->m_raw && !bindings[i].texture->m_released);
 			sdlBindings[i].texture = bindings[i].texture->m_raw->texture;
 			sdlBindings[i].sampler = bindings[i].sampler->m_raw->sampler;
 		}
@@ -77,9 +83,11 @@ namespace TwoD::SDL
 	}
 	void RenderPass::BindVertexStorageBuffers(uint32_t firstSlot, const std::vector<const Buffer*>& buffers) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
 		std::vector<SDL_GPUBuffer*> sdlBuffers(buffers.size());
 		for (size_t i = 0; i < buffers.size(); i++)
 		{
+			TD_CORE_ASSERT(buffers[i]->m_raw && !buffers[i]->m_released);
 			sdlBuffers[i] = buffers[i]->m_raw->buffer;
 		}
 		SDL_BindGPUVertexStorageBuffers(m_raw->renderPass, firstSlot, sdlBuffers.data(), static_cast<uint32_t>(sdlBuffers.size()));
@@ -87,9 +95,11 @@ namespace TwoD::SDL
 
 	void RenderPass::BindVertexBuffers(uint32_t firstSlot, const std::vector<BufferBinding> bindings) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
 		std::vector<SDL_GPUBufferBinding> sdlBindings(bindings.size());
 		for (size_t i = 0; i < bindings.size(); i++)
 		{
+			TD_CORE_ASSERT(bindings[i].buffer->m_raw && !bindings[i].buffer->m_released);
 			sdlBindings[i].buffer = bindings[i].buffer->m_raw->buffer;
 			sdlBindings[i].offset = bindings[i].offset;
 		}
@@ -97,6 +107,8 @@ namespace TwoD::SDL
 	}
 	void RenderPass::BindIndexBuffer(const BufferBinding& binding, IndexElementSize indexElementSize) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		TD_CORE_ASSERT(binding.buffer->m_raw && !binding.buffer->m_released);
 		SDL_GPUBufferBinding indexBindings{
 			.buffer = binding.buffer->m_raw->buffer,
 			.offset = binding.offset
@@ -105,14 +117,16 @@ namespace TwoD::SDL
 	}
 	void RenderPass::DrawIndexedPrimitives(uint32_t numIndices, uint32_t numInstances, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
 		SDL_DrawGPUIndexedPrimitives(m_raw->renderPass, numIndices, numInstances, firstIndex, vertexOffset, firstInstance);
 	}
 	void RenderPass::DrawPrimitives(uint32_t numVertices, uint32_t numInstances, uint32_t firstVertex, uint32_t firstInstance) const
 	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
 		SDL_DrawGPUPrimitives(m_raw->renderPass, numVertices, numInstances, firstVertex, firstInstance);
 	}
 
-	bool RenderPass::Valid() const
+	RenderPass::operator bool() const noexcept
 	{
 		return static_cast<bool>(m_raw);
 	}

@@ -31,12 +31,36 @@ namespace TwoD::SDL
 	}
     Sampler::~Sampler()
     {
-        if (m_raw)
-        {
-            SDL_ReleaseGPUSampler(m_raw->device, m_raw->sampler);
-        }
+		TD_CORE_ASSERT(!m_raw || m_released);
     }
 
-    Sampler::Sampler(Sampler&& other) noexcept = default;
-    Sampler& Sampler::operator=(Sampler&& other) noexcept = default;
+	void Sampler::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
+		if (m_raw)
+		{
+			SDL_ReleaseGPUSampler(m_raw->device, m_raw->sampler);
+		}
+	}
+
+	void Sampler::swap(Sampler&& other)
+	{
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
+	}
+
+	Sampler::Sampler(Sampler&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+
+	Sampler& Sampler::operator=(Sampler&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
 }

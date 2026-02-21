@@ -25,12 +25,35 @@ namespace TwoD::SDL
 
 	Buffer::~Buffer()
 	{
+		TD_CORE_ASSERT(!m_raw || m_released);
+	}
+
+	void Buffer::Release()
+	{
+		TD_CORE_ASSERT(!m_released);
+		m_released = true;
 		if (m_raw)
 		{
 			SDL_ReleaseGPUBuffer(m_raw->device, m_raw->buffer);
 		}
 	}
 
-	Buffer::Buffer(Buffer&& other) noexcept = default;
-	Buffer& Buffer::operator=(Buffer&& other) noexcept = default;
+	void Buffer::swap(Buffer&& other)
+	{
+		std::swap(m_raw, other.m_raw);
+		std::swap(m_released, other.m_released);
+	}
+
+	Buffer::Buffer(Buffer&& other) noexcept
+	{
+		swap(std::move(other));
+	}
+	Buffer& Buffer::operator=(Buffer&& other) noexcept
+	{
+		if (this != &other)
+		{
+			swap(std::move(other));
+		}
+		return *this;
+	}
 }

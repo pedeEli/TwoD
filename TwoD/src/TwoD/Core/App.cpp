@@ -72,6 +72,10 @@ namespace TwoD
 		Debug::Shutdown();
 		ECS::Shutdown();
 		AssetManager::Shutdown();
+		m_renderSystem.Shutdown();
+		m_window.WaitForGPUIdle();
+		m_window.ReleaseAndDestroy();
+		SDL_Quit();
 
 		m_initialized = false;
 		s_application = nullptr;
@@ -106,11 +110,5 @@ namespace TwoD
 
 			Debug::HandleMultipleWindows();
 		}
-	}
-
-
-	App::SDLQuiter::~SDLQuiter()
-	{
-		SDL_Quit();
 	}
 }

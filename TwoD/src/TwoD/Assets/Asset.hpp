@@ -17,6 +17,7 @@ namespace TwoD
 
 		virtual void Load(const YAML::Node& node) = 0;
 		virtual void Init(const std::filesystem::path& path, const Window& window) {}
+		virtual void Destroy() {}
 	};
 }
 

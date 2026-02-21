@@ -72,13 +72,6 @@ namespace TwoD
 		void RegisterRenderHandler() { m_renderSystem.RegisterHandler<T>(); }
 
 	private:
-		class SDLQuiter
-		{
-		public:
-			~SDLQuiter();
-		};
-
-		SDLQuiter m_sdlQuiter;
 		Window m_window;
 		RenderSystem m_renderSystem;
 

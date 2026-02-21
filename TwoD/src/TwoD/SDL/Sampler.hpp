@@ -14,7 +14,11 @@ namespace TwoD::SDL
         Sampler& operator=(const Sampler& other) = delete;
         Sampler& operator=(Sampler&& other) noexcept;
 
+		void Release();
+		void swap(Sampler&& other);
+
     private:
+		bool m_released = false;
         struct Raw;
         std::unique_ptr<Raw> m_raw;
 
