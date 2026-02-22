@@ -6,4 +6,7 @@
 #include "TwoD/Core/Log.hpp"
 #include "TwoD/Core/YAML.hpp"
 
+#include "TwoD/ECS/Transform.hpp"
+#include "TwoD/Assets/Scene.hpp"
+
 #include "TwoD/SDL/Defines.hpp"

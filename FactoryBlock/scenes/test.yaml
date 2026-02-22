@@ -1,12 +1,9 @@
 type: class TwoD::Scene
 name: test
 entities:
-- name: ground
+- name: tile
   components:
-  - type: class Ground
-    width: 50
-    height: 30
-    foliage: 1000
+  - type: class Tile
 
 - name: player
   components:
@@ -26,11 +23,6 @@ entities:
     components:
     - type: class TwoD::Camera
       zoom: 25
-
-- name: iron ore vein
-  components:
-  - type: class Vein
-    size: 40
 
 - name: canvas
   components:
@@ -56,14 +48,3 @@ entities:
         font: Roboto
         renderLocation: OnScreen
         text: Hello World!
-
-- name: test
-  transform:
-    scale: { x: 3.0, y: 3.0 }
-  components:
-  - type: class TwoD::ColorRenderer
-    layer: 11
-    r: 100
-    g: 200
-    b: 200
-    a: 100

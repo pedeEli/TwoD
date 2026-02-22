@@ -5,6 +5,7 @@
 #include "Components/Ground.hpp"
 #include "Components/Vein.hpp"
 #include "Components/Ore.hpp"
+#include "Components/Tile.hpp"
 
 constexpr static void Initialize(Init init)
 {
@@ -29,6 +30,7 @@ constexpr static void RegisterComponents(Components components)
 	components.Register<Vein>();
 	components.Register<Ore>();
 	components.Register<Ground>();
+	components.Register<Tile>();
 }
 
 constexpr static void RegisterRenderHandlers(RenderHandlers renderHandlers)

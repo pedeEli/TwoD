@@ -153,6 +153,13 @@ namespace TwoD
 	{
 		return m_parent;
 	}
+	void Transform::AddChild(EntityHandle child)
+	{
+		TD_CORE_ASSERT(std::all_of(m_children.begin(), m_children.end(), [child](auto a) {
+				return child != a;
+			}));
+		child->GetComponent<Transform>().SetParent(GetEntity());
+	}
 	const std::vector<EntityHandle>& Transform::GetChildren() const
 	{
 		return m_children;

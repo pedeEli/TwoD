@@ -24,6 +24,7 @@ namespace TwoD
 
 		void SetParent(EntityHandle parent);
 		EntityHandle GetParent() const;
+		void AddChild(EntityHandle child);
 		const std::vector<EntityHandle>& GetChildren() const;
 
 		void SetPosition(float x, float y);

@@ -22,7 +22,7 @@ namespace TwoD
 			TD_COMPONENT_FIELD(uint8_t, r),
 			TD_COMPONENT_FIELD(uint8_t, g),
 			TD_COMPONENT_FIELD(uint8_t, b),
-			TD_COMPONENT_FIELD(uint8_t, a)
+			TD_COMPONENT_FIELD(uint8_t, a, 255)
 		)
 	};
 }
