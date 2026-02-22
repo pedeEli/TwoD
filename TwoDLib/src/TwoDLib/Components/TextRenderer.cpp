@@ -15,6 +15,12 @@ namespace TwoD
 		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
 	}
 
+	void TextRenderer::SetLayer(uint32_t layer)
+	{
+		this->layer = layer;
+		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
+	}
+
 	void TextRenderer::SetText(const std::string& text)
 	{
 		this->text = text;

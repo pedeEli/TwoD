@@ -13,4 +13,10 @@ namespace TwoD
 	{
 		App::Get<RenderSystem>().UpdateLayerFor<ColorRenderer>(layer);
 	}
+
+	void ColorRenderer::SetLayer(uint32_t layer)
+	{
+		this->layer = layer;
+		App::Get<RenderSystem>().UpdateLayerFor<ColorRenderer>(layer);
+	}
 }

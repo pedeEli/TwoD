@@ -46,7 +46,7 @@ namespace TwoD
 #define TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP(updater, type, f_name, ...) if(::TwoD::ImGuiType<type>::Draw( \
 		f_name, \
 		std::format("{}##{}", #f_name, typeid(std::remove_pointer_t<decltype(this)>).name()).c_str()) \
-	) { updater; }
+	) { updater }
 
 #define TD_INTERNAL_COMPONENT_DEBUG(...) void Debug() override { \
 		TD_APPLY_EACH(TD_INTERNAL_COMPONENT_DEBUG_FIELD, __VA_ARGS__) \

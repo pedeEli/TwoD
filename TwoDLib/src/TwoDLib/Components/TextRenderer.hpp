@@ -23,14 +23,16 @@ namespace TwoD
 		void StartBefore() override;
 		void Destroy() override;
 
+		void SetLayer(uint32_t layer);
+
 		void SetText(const std::string& text);
 		const std::vector<Glyph>& GetGlyphs() const;
 
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer)),
+			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
 			TD_COMPONENT_FIELD(Font*, font),
-			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs()),
+			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();),
 			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
 		)
 

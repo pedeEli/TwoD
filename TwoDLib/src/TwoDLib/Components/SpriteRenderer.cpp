@@ -14,4 +14,10 @@ namespace TwoD
 	{
 		App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(layer);
 	}
+
+	void SpriteRenderer::SetLayer(uint32_t layer)
+	{
+		this->layer = layer;
+		App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(layer);
+	}
 }

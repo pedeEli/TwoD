@@ -13,9 +13,11 @@ namespace TwoD
 		void StartBefore() override;
 		void Destroy() override;
 
+		void SetLayer(uint32_t layer);
+
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, App::Get<RenderSystem>().UpdateLayerFor<ColorRenderer>(layer);),
+			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
 			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld),
 			TD_COMPONENT_FIELD(uint8_t, r),
 			TD_COMPONENT_FIELD(uint8_t, g),
