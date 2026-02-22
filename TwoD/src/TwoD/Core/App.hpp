@@ -12,6 +12,7 @@
 #include "TwoD/Renderer/RenderSystem.hpp"
 #include "TwoD/Inputs/Inputs.hpp"
 #include "TwoD/Events/EventHandler.hpp"
+#include "TwoD/Audio/AudioDevices.hpp"
 
 namespace TwoD
 {

@@ -5,6 +5,7 @@
 #include "TwoDLib/Assets/Sprite.hpp"
 #include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
+#include "TwoDLib/Assets/Audio.hpp"
 
 #include "TwoDLib/Components/Camera.hpp"
 #include "TwoDLib/Components/Hitbox.hpp"
@@ -30,6 +31,7 @@ namespace TwoDLib
 		resources.Register<TwoD::Font>();
 		resources.Register<TwoD::Shader>();
 		resources.Register<TwoD::SpriteAtlas>();
+		resources.Register<TwoD::Audio>();
 	}
 
 	constexpr static void RegisterComponents(Components& components)

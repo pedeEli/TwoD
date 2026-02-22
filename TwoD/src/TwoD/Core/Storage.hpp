@@ -75,10 +75,12 @@ namespace TwoD
 			m_items.pop_back();
 			return item;
 		}
-		void DestroyAll()
+		std::vector<T> DestroyAll()
 		{
-			m_items.clear();
+			std::vector<T> newItems;
+			std::swap(m_items, newItems);
 			m_indices.clear();
+			return newItems;
 		}
 
 	protected:

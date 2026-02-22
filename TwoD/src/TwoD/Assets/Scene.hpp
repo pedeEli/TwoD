@@ -29,6 +29,8 @@ namespace TwoD
 		static Scene& GetActive();
 
 	public:
+		void Destroy() override;
+
 		void SetActive();
 		const std::vector<EntityHandle>& GetRootEntities() const;
 

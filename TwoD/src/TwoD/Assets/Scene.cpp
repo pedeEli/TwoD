@@ -42,6 +42,14 @@ namespace TwoD
 		return *s_activeScene;
 	}
 
+	void Scene::Destroy()
+	{
+		for (auto entity : m_rootEntities)
+		{
+			entity->Destroy();
+		}
+	}
+
 	void Scene::SetActive()
 	{
 		for (auto entity : m_rootEntities)

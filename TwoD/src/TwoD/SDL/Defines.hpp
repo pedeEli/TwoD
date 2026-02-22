@@ -58,6 +58,9 @@ namespace TwoD::SDL
     class Shader;
     class TransferBuffer;
 	class Fence;
+
+	class AudioSource;
+	class AudioStream;
 }
 	
 // *****************************************************

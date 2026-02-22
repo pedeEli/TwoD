@@ -61,8 +61,8 @@ namespace TwoD
 	{
 		if (storage::m_indices.contains(entity))
 		{
-			auto item = storage::Destroy(entity);
-			item.Destroy();
+			auto component = storage::Destroy(entity);
+			component.Destroy();
 		}
 	}
 
@@ -70,7 +70,11 @@ namespace TwoD
 	requires(std::is_base_of_v<Component, T>)
 	void ComponentStorageImpl<T>::DestroyAll()
 	{
-		storage::DestroyAll();
+		auto destroyed = storage::DestroyAll();
+		for (auto& component : destroyed)
+		{
+			component.Destroy();
+		}
 	}
 
 	template<typename T>

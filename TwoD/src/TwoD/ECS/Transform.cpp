@@ -121,11 +121,12 @@ namespace TwoD
 
 	void Transform::Destroy()
 	{
+		SetParent(EntityHandle::None);
 		for (auto child : m_children)
 		{
+			child->GetComponent<Transform>().m_parent = EntityHandle::None;
 			child->Destroy();
 		}
-		SetParent(EntityHandle::None);
 	}
 
 	void Transform::SetParent(EntityHandle parent)

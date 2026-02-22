@@ -19,6 +19,8 @@ void Player::Start()
 			auto& renderer = GetComponent<SpriteRenderer>();
 			renderer.layer = renderer.layer == 20 ? 10 : 20;
 			App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(renderer.layer);
+
+			AssetManager::Get<Audio>("vibraphone").Play();
 			return false;
 		});
 }

@@ -25,7 +25,7 @@ namespace TwoD
 	void App::Init(const InitInfo& info)
 	{
 		Log::Init();
-		if (!SDL_Init(SDL_INIT_VIDEO))
+		if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
 		{
 			TD_CORE_CRITICAL("Failed to initialize sdl: {}", SDL_GetError());
 			return;
@@ -48,6 +48,7 @@ namespace TwoD
 		RegisterComponent<Transform>();
 		RegisterResource<Scene>();
 		
+		AudioDevices::Init();
 		Inputs::Init(m_window);
 		AssetManager::Init(m_window);
 		m_renderSystem.Init(m_window);
@@ -69,10 +70,11 @@ namespace TwoD
 	}
 	App::~App()
 	{
-		Debug::Shutdown();
-		ECS::Shutdown();
 		AssetManager::Shutdown();
 		m_renderSystem.Shutdown();
+		AudioDevices::Shutdown();
+		ECS::Shutdown();
+		Debug::Shutdown();
 		m_window.WaitForGPUIdle();
 		m_window.ReleaseAndDestroy();
 		SDL_Quit();
