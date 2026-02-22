@@ -49,6 +49,15 @@ namespace TwoD
 			auto it = m_indices.find(handle);
 			return m_items[it->second];
 		}
+		T* TryGet(Handle handle)
+		{
+			auto it = m_indices.find(handle);
+			if (it == m_indices.end())
+			{
+				return nullptr;
+			}
+			return &m_items[it->second];
+		}
 		std::vector<T>& GetAll()
 		{
 			return m_items;

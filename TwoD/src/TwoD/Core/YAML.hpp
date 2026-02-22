@@ -121,14 +121,14 @@ constexpr enum_name& operator op##=(enum_name& a, enum_name b) noexcept { \
 }
 
 #define TD_INTERNAL_YAML_ENUM_IMGUI_FIELD(values) TD_INTERNAL_YAML_ENUM_IMGUI_FIELD_UNWRAP values
-#define TD_INTERNAL_YAML_ENUM_IMGUI_FIELD_UNWRAP(name, ...) { \
-		bool selected = static_cast<std::underlying_type_t<internal_enum>>(value & internal_enum::name) != 0; \
-		changed |= ImGui::Selectable(#name, &selected); \
-		if (selected) { \
-			value |= internal_enum::name; \
-		} else { \
-			value &= ~internal_enum::name; \
-		} \
+#define TD_INTERNAL_YAML_ENUM_IMGUI_FIELD_UNWRAP(name, ...) //{ \
+		//bool selected = static_cast<std::underlying_type_t<internal_enum>>(value & internal_enum::name) != 0; \
+		//changed |= ImGui::Selectable(#name, &selected); \
+		//if (selected) { \
+		//	value |= internal_enum::name; \
+		//} else { \
+		//	value &= ~internal_enum::name; \
+		//} \
 	}
 
 #define TD_INTERNAL_YAML_ENUM_IMGUI(ns_name, enum_name, ...) namespace TwoD { \

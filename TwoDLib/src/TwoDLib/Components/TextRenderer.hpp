@@ -3,7 +3,6 @@
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Assets/Font.hpp"
-#include "TwoDLib/Defines.hpp"
 
 namespace TwoD
 {
@@ -32,8 +31,7 @@ namespace TwoD
 		TD_COMPONENT(
 			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
 			TD_COMPONENT_FIELD(Font*, font),
-			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();),
-			TD_COMPONENT_FIELD(RenderLocation, renderLocation, RenderLocation::InWorld)
+			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();)
 		)
 
 	private:

@@ -4,6 +4,7 @@
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Components/Camera.hpp"
+#include "TwoDLib/Components/UI/RectTransform.hpp"
 
 namespace TwoD
 {
@@ -21,10 +22,20 @@ namespace TwoD
 	{
 		auto& colorRenderer = GetComponents<ColorRenderer>()[index];
 		auto& transform = colorRenderer.GetComponent<Transform>();
+		glm::fvec2 pos = { -0.5f, -0.5f };
+		glm::fvec2 size = { 1.0f, 1.0f };
+
+		auto* rect = colorRenderer.TryGetComponent<RectTransform>();
+		if (rect)
+		{
+			pos = -rect->size * 0.5f;
+			size = rect->size;
+		}
+
 		renderer.RenderQuad(
 			transform.GetWorldMatrix(),
-			{ -0.5f, -0.5f },
-			{ 1.0f, 1.0f },
+			pos,
+			size,
 			{
 				static_cast<float>(colorRenderer.r) / 255.0f,
 				static_cast<float>(colorRenderer.g) / 255.0f,
@@ -44,11 +55,12 @@ namespace TwoD
 		m_rendererInfos.reserve(size);
 		for (size_t i = 0; i < size; i++)
 		{
+			auto* rect = renderers[i].TryGetComponent<RectTransform>();
 			m_rendererInfos.emplace_back(
 				handlerIndex,
 				i,
 				renderers[i].layer,
-				renderers[i].renderLocation == RenderLocation::InWorld
+				rect == nullptr
 					? &camera->GetProjectionViewMatrix()
 					: &camera->GetProjectionMatrixFixedZoom()
 			);

@@ -9,10 +9,12 @@
 
 #include "TwoDLib/Components/Camera.hpp"
 #include "TwoDLib/Components/Hitbox.hpp"
-#include "TwoDLib/Components/Canvas.hpp"
 #include "TwoDLib/Components/SpriteRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
+
+#include "TwoDLib/Components/UI/RectTransform.hpp"
+#include "TwoDLib/Components/UI/Canvas.hpp"
 
 #include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/ColorRenderHandler.hpp"
@@ -38,10 +40,12 @@ namespace TwoDLib
 	{
 		components.Register<TwoD::Camera>();
 		components.Register<TwoD::Hitbox>();
-		components.Register<TwoD::Canvas>();
 		components.Register<TwoD::SpriteRenderer>();
 		components.Register<TwoD::TextRenderer>();
 		components.Register<TwoD::ColorRenderer>();
+
+		components.Register<TwoD::RectTransform>();
+		components.Register<TwoD::Canvas>();
 	}
 
 	constexpr static void RegisterRenderHandlers(RenderHandlers& renderHandlers)

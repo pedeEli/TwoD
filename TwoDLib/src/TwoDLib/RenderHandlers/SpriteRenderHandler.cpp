@@ -4,6 +4,7 @@
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Components/Camera.hpp"
+#include "TwoDLib/Components/UI/RectTransform.hpp"
 
 namespace TwoD
 {
@@ -23,13 +24,24 @@ namespace TwoD
 	{
 		auto& spriteRenderer = GetComponents<SpriteRenderer>()[index];
 		auto& transform = spriteRenderer.GetComponent<Transform>();
-		auto& rect = spriteRenderer.slice ? spriteRenderer.sprite->GetRect(*spriteRenderer.slice) : spriteRenderer.sprite->GetRect();
+		auto& sprite = spriteRenderer.slice ? spriteRenderer.sprite->GetRect(*spriteRenderer.slice) : spriteRenderer.sprite->GetRect();
+		
+		glm::fvec2 pos = { -0.5f, -0.5f };
+		glm::fvec2 size = { 1.0f, 1.0f };
+
+		auto* rect = spriteRenderer.TryGetComponent<RectTransform>();
+		if (rect)
+		{
+			pos = -rect->size * 0.5f;
+			size = rect->size;
+		}
+
 		renderer.RenderQuad(
 			transform.GetWorldMatrix(),
-			{ -0.5f, -0.5f },
-			{ 1.0f, 1.0f },
-			{ rect.u, rect.v },
-			{ rect.u + rect.w, rect.v + rect.h },
+			pos,
+			size,
+			{ sprite.u, sprite.v },
+			{ sprite.u + sprite.w, sprite.v + sprite.h },
 			{ &m_spriteAtlas->binding, 0 }
 		);
 	}
@@ -44,11 +56,14 @@ namespace TwoD
 		m_rendererInfos.reserve(size);
 		for (size_t i = 0; i < size; i++)
 		{
+			auto* rect = renderers[i].TryGetComponent<RectTransform>();
 			m_rendererInfos.emplace_back(
 				handlerIndex,
 				i,
 				renderers[i].layer,
-				&camera->GetProjectionViewMatrix()
+				rect == nullptr
+					? &camera->GetProjectionViewMatrix()
+					: &camera->GetProjectionMatrixFixedZoom()
 			);
 		}
 

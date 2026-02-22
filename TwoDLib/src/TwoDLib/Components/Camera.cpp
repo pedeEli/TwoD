@@ -37,7 +37,7 @@ namespace TwoD
 		m_projectionMatrix = glm::ortho(left, right, bottom, top);
 		m_inverseProjectionMatrix = glm::inverse(m_projectionMatrix);
 
-		m_projectionMatrixFixedZoom = glm::ortho(0.0f, 100.0f, 100.0f * ratio, 0.0f);
+		m_projectionMatrixFixedZoom = glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f);
 
 		auto& transform = GetComponent<Transform>().GetWorldMatrix();
 		m_viewMatrix[0][0] = transform[0][0];

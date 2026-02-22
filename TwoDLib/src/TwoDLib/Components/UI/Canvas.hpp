@@ -1,5 +1,5 @@
 #pragma once
-#include "TwoD/Core/App.hpp"
+#include "TwoD.hpp"
 
 namespace TwoD
 {
@@ -7,5 +7,6 @@ namespace TwoD
 	{
 		using Component::Component;
 	public:
+		void Start() override;
 	};
 }

@@ -54,6 +54,10 @@ namespace TwoD
 
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
+		T* TryGetComponent() const;
+
+		template<class T>
+		requires(std::is_base_of_v<Component, T>)
 		void DestroyComponent() const;
 
 		template<class T>
@@ -86,6 +90,7 @@ namespace TwoD
 	class ComponentHandle
 	{
 	public:
+		ComponentHandle() : ComponentHandle(EntityHandle::None) {}
 		ComponentHandle(const T& t) : ComponentHandle(t.m_storageHandle) {}
 		~ComponentHandle() = default;
 		ComponentHandle(const ComponentHandle&) = default;
