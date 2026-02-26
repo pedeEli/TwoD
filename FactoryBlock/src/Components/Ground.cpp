@@ -17,7 +17,6 @@ void Ground::Start()
 			auto& ground = CreateEntity("ground");
 			auto& transform = ground.GetComponent<Transform>();
 			transform.SetPosition(x, y);
-			transform.SetParent(GetEntity());
 
 			auto& renderer = ground.AddComponent<SpriteRenderer>();
 			renderer.sprite = &TwoD::AssetManager::Get<Sprite>("grass");
@@ -38,7 +37,6 @@ void Ground::Start()
 		auto& entity = CreateEntity("foliage");
 		auto& transform = entity.GetComponent<Transform>();
 		transform.SetPosition(x, y);
-		transform.SetParent(GetEntity());
 		
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		renderer.slice = distrS(gen);

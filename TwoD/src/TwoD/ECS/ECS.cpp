@@ -45,6 +45,13 @@ namespace TwoD
 		return entity;
 	}
 
+	Entity& ECS::CreateEntity(const std::string& name, EntityHandle parent)
+	{
+		auto& entity = CreateEntity(name);
+		entity.GetComponent<Transform>().SetParent(parent);
+		return entity;
+	}
+
 	void ECS::DestroyEntity(EntityHandle handle)
 	{
 		for (auto& storage : m_storages)

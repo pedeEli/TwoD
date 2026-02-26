@@ -14,6 +14,6 @@ public:
 	void Start() override;
 
 private:
-	void AddPath(ComponentHandle<Transform> transform, const char* name, Direction dir);
+	void AddPath(const char* name, Direction dir);
 };
 

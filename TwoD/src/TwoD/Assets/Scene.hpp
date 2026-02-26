@@ -1,8 +1,9 @@
 #pragma once
 #include <expected>
 #include <optional>
-#include "TwoD/Assets/AssetManager.hpp"
-#include "TwoD/ECS/ECS.hpp"
+#include "AssetDefines.hpp"
+#include "AssetManager.hpp"
+#include "TwoD/ECS/ECSDefines.hpp"
 
 
 namespace TwoD
@@ -37,6 +38,9 @@ namespace TwoD
 		TD_ASSET(
 			TD_ASSET_FIELD(std::vector<EntityInfo>, entities)
 		)
+
+	private:
+		static EntityHandle LoadEntity(EntityInfo& entityInfo);
 
 	private:
 		std::vector<EntityHandle> m_rootEntities;

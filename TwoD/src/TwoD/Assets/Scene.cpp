@@ -2,13 +2,14 @@
 #include "Scene.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoD/ECS/Transform.hpp"
+#include "TwoD/ECS/ECS.hpp"
 
 
 namespace TwoD
 {
 	static Scene* s_activeScene = nullptr;
 
-	static EntityHandle LoadEntity(EntityInfo& entityInfo)
+	EntityHandle Scene::LoadEntity(EntityInfo& entityInfo)
 	{
 		auto& entity = ECS::CreateEntity(entityInfo.name);
 		EntityHandle handle = entity;

@@ -9,6 +9,7 @@ namespace TwoD
 	template<typename T>
 	requires(std::is_base_of_v<Asset, T>)
 	class AssetStorageImpl;
+	class Scene;
 }
 
 #define TD_INTERNAL_ASSET_FIELD(values) TD_CHOOSE_MACRO_3(TD_INTERNAL_ASSET_FIELD_NO_DEFAULT, TD_INTERNAL_ASSET_FIELD_WITH_DEFAULT, values)

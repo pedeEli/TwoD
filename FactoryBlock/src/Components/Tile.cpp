@@ -3,18 +3,15 @@
 
 void Tile::Start()
 {
-	ComponentHandle<Transform> transform = GetComponent<Transform>();
-
 	auto& ground = CreateEntity("ground");
-	transform->AddChild(ground);
 	auto& groundRenderer = ground.AddComponent<ColorRenderer>();
 	groundRenderer.SetLayer(100);
 	groundRenderer.r = 100;
 	groundRenderer.g = 200;
 	groundRenderer.b = 100;
 
-	AddPath(transform, "right", Direction::RIGHT);
-	AddPath(transform, "top", Direction::TOP);
+	AddPath("right", Direction::RIGHT);
+	AddPath("top", Direction::TOP);
 }
 
 
@@ -31,10 +28,9 @@ constexpr static glm::fvec2 s_pathPositions[4] = {
 	{ -0.225f,  0.0f }
 };
 
-void Tile::AddPath(ComponentHandle<Transform> transform, const char* name, Direction dir)
+void Tile::AddPath(const char* name, Direction dir)
 {
 	auto& path = CreateEntity(std::format("path-{}", name));
-	transform->AddChild(path);
 	auto& pathRenderer = path.AddComponent<ColorRenderer>();
 	pathRenderer.SetLayer(101);
 	pathRenderer.r = 150;

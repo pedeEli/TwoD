@@ -17,7 +17,6 @@ void Vein::Start()
 		auto& entity = CreateEntity("iron ore");
 		ComponentHandle<Transform> transform = entity.GetComponent<Transform>();
 		transform->SetPosition((float)x, (float)y);
-		transform->SetParent(GetEntity());
 
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		ComponentHandle<SpriteRenderer> rendererHandle = renderer;

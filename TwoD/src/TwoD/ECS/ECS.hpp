@@ -11,6 +11,7 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "ComponentStorage.hpp"
+#include "TwoD/Assets/AssetDefines.hpp"
 
 namespace TwoD
 {
@@ -27,8 +28,8 @@ namespace TwoD
 		static void Shutdown();
 		static void Update(float delta);
 
-		static Entity& CreateEntity(const std::string& name);
 		static void DestroyEntity(EntityHandle handle);
+		static Entity& CreateEntity(const std::string& name, EntityHandle parent);
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
@@ -58,6 +59,8 @@ namespace TwoD
 		}
 
 	private:
+		static Entity& CreateEntity(const std::string& name);
+
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
 		static ComponentStorageImpl<T>* GetStorage()
@@ -119,6 +122,7 @@ namespace TwoD
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
 		friend class ComponentHandle;
+		friend class Scene;
 	};
 }
 
