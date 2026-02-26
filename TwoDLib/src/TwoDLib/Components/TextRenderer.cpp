@@ -30,6 +30,10 @@ namespace TwoD
 	{
 		return m_glyphs;
 	}
+	glm::fvec2 TextRenderer::GetSize() const
+	{
+		return m_size;
+	}
 
 	void TextRenderer::SetGlyphs()
 	{
@@ -43,7 +47,9 @@ namespace TwoD
 		auto height = static_cast<double>(atlasSize.y);
 
 		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
-		double x = 0;
+		double x = 0.0;
+		double maxPT = 0.0;
+
 		for (size_t i = 0; i < text.size(); i++)
 		{
 			auto* glyph = data->fontGeometry.getGlyph(text[i]);
@@ -56,9 +62,11 @@ namespace TwoD
 			m_glyphs.emplace_back<glm::fvec2, glm::fvec2, glm::fvec2, glm::fvec2>(
 				{ al / width, at / height },
 				{ ar / width, ab / height },
-				{ x + pl * fsScale, metrics.lineHeight - pt * fsScale },
+				{ x + pl * fsScale, -pt * fsScale },
 				{ (pr - pl) * fsScale, (pt - pb) * fsScale }
 			);
+
+			maxPT = std::max(maxPT, pt * fsScale);
 
 			if (i + 1 < text.size())
 			{
@@ -66,6 +74,17 @@ namespace TwoD
 				data->fontGeometry.getAdvance(advance, text[i], text[i + 1]);
 				x += advance * fsScale;
 			}
+			else
+			{
+				x += (pr - pl) * fsScale;
+			}
+		}
+
+		m_size = { x, maxPT };
+		for (auto& glyph : m_glyphs)
+		{
+			glyph.quadMin.x -= m_size.x * 0.5f;
+			glyph.quadMin.y += m_size.y * 0.5f;
 		}
 
 		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);

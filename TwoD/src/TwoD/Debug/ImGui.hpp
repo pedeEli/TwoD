@@ -48,6 +48,24 @@ namespace TwoD
 	};
 
 	template<>
+	struct ImGuiType<glm::fvec4>
+	{
+		static bool Draw(glm::fvec4& value, const char* name)
+		{
+			return ImGui::DragFloat4(name, (float*)&value);
+		}
+	};
+
+	template<>
+	struct ImGuiType<glm::u8vec4>
+	{
+		static bool Draw(glm::u8vec4& value, const char* name)
+		{
+			return ImGui::DragInt4(name, (int*)&value);
+		}
+	};
+
+	template<>
 	struct ImGuiType<std::string>
 	{
 		static bool Draw(std::string& value, const char* name)

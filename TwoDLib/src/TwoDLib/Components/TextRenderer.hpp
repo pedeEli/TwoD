@@ -27,9 +27,12 @@ namespace TwoD
 		void SetText(const std::string& text);
 		const std::vector<Glyph>& GetGlyphs() const;
 
+		glm::fvec2 GetSize() const;
+
 	public:
 		TD_COMPONENT(
 			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
+			TD_COMPONENT_FIELD(float, size),
 			TD_COMPONENT_FIELD(Font*, font),
 			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();)
 		)
@@ -39,5 +42,6 @@ namespace TwoD
 
 	private:
 		std::vector<Glyph> m_glyphs;
+		glm::fvec2 m_size;
 	};
 }

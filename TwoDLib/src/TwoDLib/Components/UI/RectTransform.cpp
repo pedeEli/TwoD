@@ -3,14 +3,9 @@
 
 namespace TwoD
 {
-	void RectTransform::StartBefore()
-	{
-		transform = GetComponent<Transform>();
-	}
-
 	void RectTransform::UpdateTransform()
 	{
-		auto parent = transform->GetParent();
+		auto parent = GetComponent<Transform>().GetParent();
 		if (parent)
 		{
 			UpdateTransform(parent->GetComponent<RectTransform>().GetSize());
@@ -22,8 +17,6 @@ namespace TwoD
 	}
 	void RectTransform::UpdateTransform(glm::fvec2 parentSize)
 	{
-		auto& t = *transform;
-
 		glm::fvec2 pos = { 0.0f, 0.0f };
 
 		if ((anchor & Anchor::TOP) != Anchor::CENTER)
@@ -44,9 +37,10 @@ namespace TwoD
 			pos.y = (parentSize.x - size.x) * 0.5f;
 		}
 
-		t.SetPosition(pos + offset);
+		auto& transform = GetComponent<Transform>();
+		transform.SetPosition(pos + offset);
 		
-		auto& children = t.GetChildren();
+		auto& children = transform.GetChildren();
 		for (auto child : children)
 		{
 			child->GetComponent<RectTransform>().UpdateTransform(size);

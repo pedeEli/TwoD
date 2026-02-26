@@ -6,7 +6,7 @@ namespace TwoD
 	requires(std::is_base_of_v<Component, T>)
 	T& Component::AddComponent() const
 	{
-		ECS::AddComponent<T>(m_storageHandle);
+		return ECS::AddComponent<T>(m_storageHandle);
 	}
 
 	template<class T>

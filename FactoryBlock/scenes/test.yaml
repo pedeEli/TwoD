@@ -31,22 +31,10 @@ entities:
   children:
   - name: button
     components:
-    - type: class TwoD::RectTransform
+    - type: class TwoD::Button
       anchor: TOP
-      size: { x: 200, y: 200 }
-    - type: class TwoD::ColorRenderer
       layer: 10000
-      r: 200
-      g: 200
-      b: 0
-    children:
-      - name: t
-        components:
-        - type: class TwoD::RectTransform
-          anchor: BOTTOM_LEFT
-          size: { x: 50, y: 20 }
-        - type: class TwoD::ColorRenderer
-          layer: 10001
-          r: 100
-          g: 200
-          b: 200
+      text: Hello, world!
+      size: 50
+      padding: { x: 10.0, y: 10.0 }
+      background: { x: 0, y: 100, z: 200, w: 255 }

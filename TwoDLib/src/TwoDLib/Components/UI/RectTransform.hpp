@@ -19,9 +19,6 @@ namespace TwoD
 	{
 		using Component::Component;
 	public:
-
-		void StartBefore() override;
-
 		void SetSize(glm::fvec2 size);
 		void SetWidth(float width);
 		void SetHeight(float height);
@@ -43,8 +40,5 @@ namespace TwoD
 			TD_COMPONENT_FIELD_WITH_UPDATER(glm::fvec2, offset, {}, SetOffset(size);),
 			TD_COMPONENT_FIELD_WITH_UPDATER(Anchor, anchor, Anchor::CENTER, SetAnchor(anchor);)
 		)
-
-	private:
-		ComponentHandle<Transform> transform;
 	};
 }

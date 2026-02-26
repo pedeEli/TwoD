@@ -184,6 +184,13 @@ namespace YAML
 		static bool decode(const Node& node, glm::fvec2& rhs);
 	};
 
+	template<>
+	struct convert<glm::u8vec4>
+	{
+		static Node encode(const glm::u8vec4& rhs);
+		static bool decode(const Node& node, glm::u8vec4& rhs);
+	};
+
 	template<typename T>
 	struct convert<std::optional<T>>
 	{

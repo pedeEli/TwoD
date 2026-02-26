@@ -15,6 +15,7 @@
 
 #include "TwoDLib/Components/UI/RectTransform.hpp"
 #include "TwoDLib/Components/UI/Canvas.hpp"
+#include "TwoDLib/Components/UI/Button.hpp"
 
 #include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/ColorRenderHandler.hpp"
@@ -46,6 +47,7 @@ namespace TwoDLib
 
 		components.Register<TwoD::RectTransform>();
 		components.Register<TwoD::Canvas>();
+		components.Register<TwoD::Button>();
 	}
 
 	constexpr static void RegisterRenderHandlers(RenderHandlers& renderHandlers)

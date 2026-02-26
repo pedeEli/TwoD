@@ -24,22 +24,12 @@ namespace TwoD
 		auto& transform = textRenderer.GetComponent<Transform>().GetWorldMatrix();
 		auto& glyphs = textRenderer.GetGlyphs();
 
-		glm::fvec2 pos = { 0.0f, 0.0f };
-		glm::fvec2 size = { 1.0f, 1.0f };
-
-		auto* rect = textRenderer.TryGetComponent<RectTransform>();
-		if (rect)
-		{
-			pos = -rect->size * 0.5f;
-			size = rect->size;
-		}
-
 		for (auto& glyph : glyphs)
 		{
 			renderer.RenderQuad(
 				transform,
-				glyph.quadMin + pos,
-				glyph.quadSize * size,
+				glyph.quadMin * textRenderer.size,
+				glyph.quadSize * textRenderer.size,
 				glyph.texMin,
 				glyph.texMax,
 				{ &textRenderer.font->binding, 1 }
