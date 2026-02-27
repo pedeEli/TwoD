@@ -4,7 +4,6 @@
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Components/Camera.hpp"
-#include "TwoDLib/Components/UI/RectTransform.hpp"
 
 namespace TwoD
 {
@@ -21,7 +20,7 @@ namespace TwoD
 	void TextRenderHandler::Render(Renderer& renderer, size_t index)
 	{
 		auto& textRenderer = GetComponents<TextRenderer>()[index];
-		auto& transform = textRenderer.GetComponent<Transform>().GetWorldMatrix();
+		auto& transform = textRenderer.GetTransform()->GetWorldMatrix();
 		auto& glyphs = textRenderer.GetGlyphs();
 
 		for (auto& glyph : glyphs)
@@ -47,7 +46,7 @@ namespace TwoD
 		m_rendererInfos.reserve(size);
 		for (size_t i = 0; i < size; i++)
 		{
-			auto* rect = renderers[i].TryGetComponent<RectTransform>();
+			auto* rect = renderers[i].TryGetComponent<UITransform>();
 			m_rendererInfos.emplace_back(
 				handlerIndex,
 				i,

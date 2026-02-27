@@ -3,7 +3,7 @@
 #include <optional>
 #include "AssetDefines.hpp"
 #include "AssetManager.hpp"
-#include "TwoD/ECS/ECSDefines.hpp"
+#include "TwoD/ECS/ECS.hpp"
 
 
 namespace TwoD
@@ -24,6 +24,12 @@ namespace TwoD
 		std::vector<EntityInfo> children;
 	};
 
+	struct ScreenEntities
+	{
+	public:
+		std::vector<EntityInfo> entities;
+	};
+
 	class Scene : public Asset
 	{
 	public:
@@ -34,16 +40,19 @@ namespace TwoD
 
 		void SetActive();
 		const std::vector<EntityHandle>& GetRootEntities() const;
+		EntityHandle GetScreenRootEntity() const;
 
 		TD_ASSET(
-			TD_ASSET_FIELD(std::vector<EntityInfo>, entities)
+			TD_ASSET_FIELD(std::vector<EntityInfo>, entities),
+			TD_ASSET_FIELD(ScreenEntities, screen, {})
 		)
 
 	private:
-		static EntityHandle LoadEntity(EntityInfo& entityInfo);
+		static void LoadEntity(EntityInfo& entityInfo, EntityHandle handle);
 
 	private:
 		std::vector<EntityHandle> m_rootEntities;
+		EntityHandle m_screenRootEntity = EntityHandle::None;
 	};
 }
 
@@ -59,5 +68,11 @@ namespace YAML
 	struct convert<TwoD::EntityInfo>
 	{
 		static bool decode(const Node& node, TwoD::EntityInfo& rhs);
+	};
+
+	template<>
+	struct convert<TwoD::ScreenEntities>
+	{
+		static bool decode(const Node& node, TwoD::ScreenEntities& rhs);
 	};
 }

@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include "TwoD/ECS/Transform.hpp"
+#include "TwoD/ECS/UITransform.hpp"
 #include "TwoD/Events/EventHandler.hpp"
 
 #include "TwoD/Debug/Debug.hpp"
@@ -46,6 +47,7 @@ namespace TwoD
 
 		m_basePaths = info.basePaths;
 		RegisterComponent<Transform>();
+		RegisterComponent<UITransform>();
 		RegisterResource<Scene>();
 		
 		AudioDevices::Init();

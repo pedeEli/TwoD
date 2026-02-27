@@ -15,7 +15,7 @@ namespace TwoD
 			float rotation = 0;
 			glm::fvec2 scale = { 1.0f, 1.0f };
 		};
-		static const void* CreateLoadData(const YAML::Node& node);
+		static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node);
 		void Load(const void* data) override;
 		void Destroy() override;
 #ifdef TD_IMGUI
@@ -54,11 +54,11 @@ namespace TwoD
 		const glm::fmat3x3& GetLocalMatrix() const { return m_localMatrix; }
 		const glm::fmat3x3& GetInverseWorldMatrix() const { return m_inverseWorldMatrix; }
 
-	private:
+	protected:
 		void CalculateMatrices();
 		void UpdateParentAndChildren();
 
-	private:
+	protected:
 		glm::fvec2 m_position = { 0.0f, 0.0f };
 		float m_rotation = 0;
 		glm::fvec2 m_scale = { 1.0f, 1.0f };

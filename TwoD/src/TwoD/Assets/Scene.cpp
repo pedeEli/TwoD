@@ -2,17 +2,16 @@
 #include "Scene.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoD/ECS/Transform.hpp"
-#include "TwoD/ECS/ECS.hpp"
+#include "TwoD/ECS/UITransform.hpp"
 
 
 namespace TwoD
 {
 	static Scene* s_activeScene = nullptr;
 
-	EntityHandle Scene::LoadEntity(EntityInfo& entityInfo)
+	void Scene::LoadEntity(EntityInfo& entityInfo, EntityHandle handle)
 	{
-		auto& entity = ECS::CreateEntity(entityInfo.name);
-		EntityHandle handle = entity;
+		Entity& entity = *handle;
 
 		if (entityInfo.transformLoadData)
 		{
@@ -30,11 +29,9 @@ namespace TwoD
 
 		for (auto& childInfo : entityInfo.children)
 		{
-			auto child = LoadEntity(childInfo);
-			child->GetComponent<Transform>().SetParent(handle);
+			auto& childEntity = ECS::CreateEntity(childInfo.name, handle);
+			LoadEntity(childInfo, childEntity);
 		}
-
-		return handle;
 	}
 
 	Scene& Scene::GetActive()
@@ -49,27 +46,67 @@ namespace TwoD
 		{
 			entity->Destroy();
 		}
+		if (m_screenRootEntity)
+		{
+			m_screenRootEntity->Destroy();
+		}
 	}
 
 	void Scene::SetActive()
 	{
-		for (auto entity : m_rootEntities)
+		if (s_activeScene)
 		{
-			entity->Destroy();
+			for (auto entity : s_activeScene->m_rootEntities)
+			{
+				entity->Destroy();
+			}
+			s_activeScene->m_rootEntities.clear();
+			if (s_activeScene->m_screenRootEntity)
+			{
+				s_activeScene->m_screenRootEntity->Destroy();
+				s_activeScene->m_screenRootEntity = EntityHandle::None;
+			}
 		}
 
-		m_rootEntities.clear();
 		for (auto& entityInfo : entities)
 		{
-			auto handle = LoadEntity(entityInfo);
+			EntityHandle handle = ECS::CreateEntity(entityInfo.name);
 			m_rootEntities.push_back(handle);
+			LoadEntity(entityInfo, handle);
 		}
+
+		if (screen.entities.size() != 0)
+		{
+			m_screenRootEntity = ECS::CreateUIEntity("screen");
+			for (auto& entityInfo : screen.entities)
+			{
+				auto& entity = ECS::CreateEntity(entityInfo.name, m_screenRootEntity);
+				LoadEntity(entityInfo, entity);
+			}
+
+			ComponentHandle<UITransform> transform = m_screenRootEntity->GetComponent<UITransform>();
+			EventHandler::On<WindowResizedEvent>([transform](auto& event)
+				{
+					glm::fvec2 size = { static_cast<float>(event.x), static_cast<float>(event.x) };
+					transform->SetSize(size);
+					transform->SetPosition(size * 0.5f);
+					return false;
+				});
+			auto size = static_cast<glm::fvec2>(App::Get<Window>().GetSize());
+			transform->SetSize(size);
+			transform->SetPosition(size * 0.5f);
+		}
+
 		s_activeScene = this;
 	}
 
 	const std::vector<EntityHandle>& Scene::GetRootEntities() const
 	{
 		return m_rootEntities;
+	}
+	EntityHandle Scene::GetScreenRootEntity() const
+	{
+		return m_screenRootEntity;
 	}
 }
 
@@ -111,6 +148,12 @@ namespace YAML
 		}
 		rhs.type = node["type"].as<std::string>();
 		rhs.loadData = TwoD::ECS::CreateLoadData(rhs.type, node);
+		return true;
+	}
+
+	bool convert<TwoD::ScreenEntities>::decode(const Node& node, TwoD::ScreenEntities& rhs)
+	{
+		rhs.entities = node.as<std::vector<TwoD::EntityInfo>>();
 		return true;
 	}
 }

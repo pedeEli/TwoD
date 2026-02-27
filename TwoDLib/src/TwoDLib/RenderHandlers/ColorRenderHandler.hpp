@@ -1,4 +1,5 @@
 #pragma once
+#include "TwoD.hpp"
 #include "TwoD/Renderer/RenderHandler.hpp"
 #include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"

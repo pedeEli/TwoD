@@ -24,20 +24,17 @@ namespace TwoD
 
 	void Camera::UpdateBefore(float delta)
 	{
-		int width, height;
-		m_window->GetSize(width, height);
-
-		float ratio = static_cast<float>(height) / static_cast<float>(width);
+		auto size = static_cast<glm::fvec2>(m_window->GetSize());
 
 		float right = zoom * 0.5f;
 		float left = -right;
-		float bottom = zoom * 0.5f * ratio;
+		float bottom = zoom * 0.5f * size.y / size.x;
 		float top = -bottom;
 
 		m_projectionMatrix = glm::ortho(left, right, bottom, top);
 		m_inverseProjectionMatrix = glm::inverse(m_projectionMatrix);
 
-		m_projectionMatrixFixedZoom = glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f);
+		m_projectionMatrixFixedZoom = glm::ortho(0.0f, size.x, size.y, 0.0f);
 
 		auto& transform = GetComponent<Transform>().GetWorldMatrix();
 		m_viewMatrix[0][0] = transform[0][0];
@@ -55,12 +52,11 @@ namespace TwoD
 
 	const glm::fvec2 Camera::ScreenToWorldSpace(const glm::fvec2 pos) const
 	{
-		int width, height;
-		m_window->GetSize(width, height);
+		auto size = static_cast<glm::fvec2>(m_window->GetSize());
 
 		glm::fvec4 clipPos = {
-			(2.0f * pos.x) / (float)width - 1.0f,
-			1.0f - (2.0f * pos.y) / (float)height,
+			(2.0f * pos.x) / size.x - 1.0f,
+			1.0f - (2.0f * pos.y) / size.y,
 			-1.0f,
 			1.0f
 		};

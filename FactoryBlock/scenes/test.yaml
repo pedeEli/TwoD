@@ -24,17 +24,13 @@ entities:
     - type: class TwoD::Camera
       zoom: 25
 
-- name: canvas
+screen:
+- name: button
   components:
-  - type: class TwoD::RectTransform
-  - type: class TwoD::Canvas
-  children:
-  - name: button
-    components:
-    - type: class TwoD::Button
-      anchor: TOP
-      layer: 10000
-      text: Hello, world!
-      size: 50
-      padding: { x: 10.0, y: 10.0 }
-      background: { x: 0, y: 100, z: 200, w: 255 }
+  - type: class TwoD::Button
+    anchor: TOP
+    layer: 10000
+    text: Hello, world!
+    size: 50
+    padding: { x: 10.0, y: 10.0 }
+    background: { x: 0, y: 100, z: 200, w: 255 }

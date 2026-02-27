@@ -78,9 +78,8 @@ namespace TwoD
 
 		m_renderer.Init(window);
 
-		int width, height;
-		window.GetSize(width, height);
-		CreateTargetTexture(width, height);
+		auto size = window.GetSize();
+		CreateTargetTexture(size.x, size.y);
 		EventHandler::On<WindowResizedEvent>([this](auto& e)
 			{
 				CreateTargetTexture(e.x, e.y);

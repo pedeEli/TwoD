@@ -61,6 +61,8 @@ namespace TwoD
 		requires(std::is_base_of_v<Component, T>)
 		T* TryGetComponent() const;
 
+		Transform* GetTransform() const;
+
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
 		void DestroyComponent() const;

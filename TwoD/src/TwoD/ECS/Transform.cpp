@@ -5,9 +5,8 @@
 
 namespace TwoD
 {
-	const void* Transform::CreateLoadData(const YAML::Node& node)
+	void Transform::CreateLoadData(internal_load_data* loadData, const YAML::Node& node)
 	{
-		auto loadData = new internal_load_data();
 		if (node["position"])
 		{
 			loadData->position = node["position"].as<glm::fvec3>();
@@ -20,7 +19,6 @@ namespace TwoD
 		{
 			loadData->scale = node["scale"].as<glm::fvec2>();
 		}
-		return loadData;
 	}
 	void Transform::Load(const void* data)
 	{
@@ -104,7 +102,7 @@ namespace TwoD
 	{
 		if (m_parent)
 		{
-			auto& parentMatrix = m_parent->GetComponent<Transform>().GetWorldMatrix();
+			auto& parentMatrix = m_parent->GetTransform()->GetWorldMatrix();
 			m_worldMatrix = parentMatrix * m_localMatrix;
 		}
 		else
@@ -115,7 +113,7 @@ namespace TwoD
 
 		for (auto child : m_children)
 		{
-			child->GetComponent<Transform>().UpdateParentAndChildren();
+			child->GetTransform()->UpdateParentAndChildren();
 		}
 	}
 
@@ -124,7 +122,7 @@ namespace TwoD
 		SetParent(EntityHandle::None);
 		for (auto child : m_children)
 		{
-			child->GetComponent<Transform>().m_parent = EntityHandle::None;
+			child->GetTransform()->m_parent = EntityHandle::None;
 			child->Destroy();
 		}
 	}
@@ -139,13 +137,13 @@ namespace TwoD
 		auto& entity = GetEntity();
 		if (m_parent)
 		{
-			auto& children = m_parent->GetComponent<Transform>().m_children;
+			auto& children = m_parent->GetTransform()->m_children;
 			children.erase(std::remove(children.begin(), children.end(), entity));
 		}
 		m_parent = parent;
 		if (parent)
 		{
-			parent->GetComponent<Transform>().m_children.push_back(entity);
+			parent->GetTransform()->m_children.push_back(entity);
 		}
 		UpdateParentAndChildren();
 	}
@@ -158,7 +156,7 @@ namespace TwoD
 		TD_CORE_ASSERT(std::all_of(m_children.begin(), m_children.end(), [child](auto a) {
 				return child != a;
 			}));
-		child->GetComponent<Transform>().SetParent(GetEntity());
+		child->GetTransform()->SetParent(GetEntity());
 	}
 	const std::vector<EntityHandle>& Transform::GetChildren() const
 	{

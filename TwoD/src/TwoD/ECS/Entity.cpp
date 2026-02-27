@@ -2,6 +2,9 @@
 #include "Entity.hpp"
 #include "ECS.hpp"
 
+#include "Transform.hpp"
+#include "UITransform.hpp"
+
 namespace TwoD
 {
 	EntityHandle EntityHandle::None;
@@ -31,6 +34,16 @@ namespace TwoD
 	Component& Entity::AddComponent(const std::string& name) const
 	{
 		return ECS::AddComponent(m_storageHandle, name);
+	}
+
+	Transform* Entity::GetTransform() const
+	{
+		auto* transform = ECS::TryGetComponent<UITransform>(m_storageHandle);
+		if (transform)
+		{
+			return transform;
+		}
+		return &ECS::GetComponent<Transform>(m_storageHandle);
 	}
 
 	void Entity::Destroy() const

@@ -142,7 +142,7 @@ namespace TwoD
 	}
 	static void DrawEntity(EntityHandle handle, uint32_t& id)
 	{
-		auto& children = handle->GetComponent<Transform>().GetChildren();
+		auto& children = handle->GetTransform()->GetChildren();
 		auto name = std::format("{}##{}", handle->name, id++);
 		int flags = ImGuiTreeNodeFlags_None;
 
@@ -176,11 +176,18 @@ namespace TwoD
 	static void DrawSceneInfo()
 	{
 #ifdef TD_IMGUI
-		auto& entities = Scene::GetActive().GetRootEntities();
+		auto& scene = Scene::GetActive();
+		auto& entities = scene.GetRootEntities();
 		uint32_t id = 0;
 		for (auto entity : entities)
 		{
 			DrawEntity(entity, id);
+		}
+
+		auto screen = scene.GetScreenRootEntity();
+		if (screen)
+		{
+			DrawEntity(screen, id);
 		}
 #endif
 	}

@@ -13,8 +13,6 @@
 #include "TwoDLib/Components/TextRenderer.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
 
-#include "TwoDLib/Components/UI/RectTransform.hpp"
-#include "TwoDLib/Components/UI/Canvas.hpp"
 #include "TwoDLib/Components/UI/Button.hpp"
 
 #include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
@@ -45,8 +43,6 @@ namespace TwoDLib
 		components.Register<TwoD::TextRenderer>();
 		components.Register<TwoD::ColorRenderer>();
 
-		components.Register<TwoD::RectTransform>();
-		components.Register<TwoD::Canvas>();
 		components.Register<TwoD::Button>();
 	}
 

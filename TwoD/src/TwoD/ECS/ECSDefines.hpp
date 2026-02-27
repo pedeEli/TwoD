@@ -13,6 +13,10 @@ namespace TwoD
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
 	class ComponentHandle;
+	
+	class Transform;
+	class UITransform;
+	class Canvas;
 }
 
 #define TD_INTERNAL_COMPONENT_FIELD(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_COMPONENT_FIELD_NO_DEFAULT, TD_INTERNAL_COMPONENT_FIELD_WITH_DEFAULT, values)
@@ -36,10 +40,8 @@ namespace TwoD
 #define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_NO_DEFAULT(updater, type, name) TD_CORE_ASSERT(node[#name]); \
 	loadData->name = node[#name].as<type>();
 
-#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA(...) static const void* CreateLoadData(const YAML::Node& node) { \
-		auto loadData = new internal_load_data(); \
+#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA(...) static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node) { \
 		TD_APPLY_EACH(TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD, __VA_ARGS__) \
-		return loadData; \
 	}
 
 #define TD_INTERNAL_COMPONENT_DEBUG_FIELD(values) TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP values

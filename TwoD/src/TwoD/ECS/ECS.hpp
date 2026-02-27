@@ -60,6 +60,7 @@ namespace TwoD
 
 	private:
 		static Entity& CreateEntity(const std::string& name);
+		static Entity& CreateUIEntity(const std::string& name);
 
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)

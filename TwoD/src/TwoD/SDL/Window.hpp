@@ -27,7 +27,7 @@ namespace TwoD
 		bool Init(const WindowInfo& info);
 		void ReleaseAndDestroy();
 
-		void GetSize(int& width, int& height) const;
+		glm::u32vec2 GetSize() const;
 		uint32_t GetWindowID() const;
 		SDL::ShaderFormat GetShaderFormats() const;
 		SDL::TextureFormat GetSwapchainTextureFormat() const;
@@ -48,8 +48,7 @@ namespace TwoD
 	private:
 		bool m_releasedAndDestroyed = false;
 
-		int m_width = 0;
-		int m_height = 0;
+		glm::u32vec2 m_size = { 0, 0 };
 
 		SDL::TextureInfo m_depthTextureInfo;
 		SDL::Texture m_depthTexture;

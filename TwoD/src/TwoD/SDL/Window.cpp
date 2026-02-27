@@ -64,7 +64,7 @@ namespace TwoD
 			return false;
 		}
 
-		if (!SDL_GetWindowSize(window, &m_width, &m_height))
+		if (!SDL_GetWindowSize(window, (int*)&m_size.x, (int*)&m_size.y))
 		{
 			TD_CORE_CRITICAL("Failed to get window size: {}", SDL_GetError());
 		}
@@ -74,8 +74,8 @@ namespace TwoD
 		m_raw = std::make_unique<Raw>(window, device);
 
 		m_depthTextureInfo.type = SDL::TextureType::TWO_D;
-		m_depthTextureInfo.width = m_width;
-		m_depthTextureInfo.height = m_height;
+		m_depthTextureInfo.width = m_size.x;
+		m_depthTextureInfo.height = m_size.y;
 		m_depthTextureInfo.layerCountOrDepth = 1;
 		m_depthTextureInfo.numLevels = 1;
 		m_depthTextureInfo.sampleCount = SDL::SampleCount::ONE;
@@ -87,8 +87,8 @@ namespace TwoD
 			{
 				if (event.windowID == m_windowID)
 				{
-					m_width = event.x;
-					m_height = event.y;
+					m_size.x = static_cast<uint32_t>(event.x);
+					m_size.y = static_cast<uint32_t>(event.y);
 					m_depthTextureInfo.width = event.x;
 					m_depthTextureInfo.height = event.y;
 					m_depthTexture.Release();
@@ -100,11 +100,10 @@ namespace TwoD
 		return true;
 	}
 	
-	void Window::GetSize(int& width, int& height) const
+	glm::u32vec2 Window::GetSize() const
 	{
 		TD_CORE_ASSERT(m_raw && !m_releasedAndDestroyed);
-		width = m_width;
-		height = m_height;
+		return m_size;
 	}
 	uint32_t Window::GetWindowID() const
 	{

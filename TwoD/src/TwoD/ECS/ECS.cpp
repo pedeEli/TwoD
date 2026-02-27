@@ -1,6 +1,7 @@
 #include "tdpch.hpp"
 #include "ECS.hpp"
 #include "Transform.hpp"
+#include "UITransform.hpp"
 
 namespace TwoD
 {
@@ -45,10 +46,21 @@ namespace TwoD
 		return entity;
 	}
 
+	Entity& ECS::CreateUIEntity(const std::string& name)
+	{
+		EntityHandle handle{ m_nextEntity++ };
+		auto& entity = m_entities.Add(handle, handle, name);
+		entity.AddComponent<UITransform>();
+		return entity;
+	}
+
 	Entity& ECS::CreateEntity(const std::string& name, EntityHandle parent)
 	{
-		auto& entity = CreateEntity(name);
-		entity.GetComponent<Transform>().SetParent(parent);
+		auto* transform = ECS::TryGetComponent<UITransform>(parent);
+		auto& entity = transform == nullptr
+			? CreateEntity(name)
+			: CreateUIEntity(name);
+		entity.GetTransform()->SetParent(parent);
 		return entity;
 	}
 

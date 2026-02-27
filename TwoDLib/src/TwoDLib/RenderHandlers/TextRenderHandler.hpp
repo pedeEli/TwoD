@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <typeindex>
+#include "TwoD.hpp"
 
 #include "TwoD/Renderer/RenderHandler.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"

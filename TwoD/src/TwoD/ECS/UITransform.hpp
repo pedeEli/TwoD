@@ -1,5 +1,7 @@
 #pragma once
-#include "TwoD.hpp"
+#include "ECSDefines.hpp"
+#include "Transform.hpp"
+#include "TwoD/Core/YAML.hpp"
 
 TD_YAML_ENUM_WITH_BASE(TwoD, Anchor, uint8_t,
 	TD_YAML_ENUM_FIELD(CENTER, 0),
@@ -13,12 +15,25 @@ TD_YAML_ENUM_WITH_BASE(TwoD, Anchor, uint8_t,
 	TD_YAML_ENUM_FIELD(BOTTOM_LEFT, BOTTOM | LEFT)
 )
 
+
 namespace TwoD
 {
-	class RectTransform : public Component
+	class UITransform : public Transform
 	{
-		using Component::Component;
+		using Transform::Transform;
 	public:
+		struct internal_load_data : public Transform::internal_load_data
+		{
+			glm::fvec2 size = { 0.0f, 0.0f };
+			glm::fvec2 offset = { 0.0f, 0.0f };
+			Anchor anchor = Anchor::CENTER;
+		};
+		static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node);
+		void Load(const void* data) override;
+#ifdef TD_IMGUI
+		void Debug() override;
+#endif
+
 		void SetSize(glm::fvec2 size);
 		void SetWidth(float width);
 		void SetHeight(float height);
@@ -31,14 +46,14 @@ namespace TwoD
 
 		void SetAnchor(Anchor anchor);
 
+	private:
 		void UpdateTransform();
 		void UpdateTransform(glm::fvec2 parentSize);
 
-	public:
-		TD_COMPONENT(
-			TD_COMPONENT_FIELD_WITH_UPDATER(glm::fvec2, size, {}, SetSize(size);),
-			TD_COMPONENT_FIELD_WITH_UPDATER(glm::fvec2, offset, {}, SetOffset(size);),
-			TD_COMPONENT_FIELD_WITH_UPDATER(Anchor, anchor, Anchor::CENTER, SetAnchor(anchor);)
-		)
+	private:
+		glm::fvec2 m_size = { 0.0f, 0.0f };
+		glm::fvec2 m_offset = { 0.0f, 0.0f };
+		Anchor m_anchor = Anchor::CENTER;
 	};
 }
+

@@ -1,7 +1,6 @@
 #pragma once
 #include "TwoD.hpp"
 
-#include "TwoDLib/Components/UI/RectTransform.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
 
@@ -24,7 +23,6 @@ namespace TwoD
 		)
 
 	private:
-		ComponentHandle<RectTransform> m_rectTransform;
 		ComponentHandle<ColorRenderer> m_colorRenderer;
 		ComponentHandle<TextRenderer> m_textRenderer;
 	};

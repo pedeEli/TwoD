@@ -111,11 +111,13 @@ namespace TwoD
 	requires(std::is_base_of_v<Component, T>)
 	const void* ComponentStorageImpl<T>::CreateLoadData(const YAML::Node& node) const
 	{
-		if constexpr (requires(const YAML::Node& n) {
-			{ T::CreateLoadData(n) } -> std::convertible_to<const void*>;
+		if constexpr (requires(T::internal_load_data* d, const YAML::Node& n) {
+			{ T::CreateLoadData(d, n) };
 		})
 		{
-			return T::CreateLoadData(node);
+			auto* loadData = new T::internal_load_data();
+			T::CreateLoadData(loadData, node);
+			return loadData;
 		}
 		return nullptr;
 	}
