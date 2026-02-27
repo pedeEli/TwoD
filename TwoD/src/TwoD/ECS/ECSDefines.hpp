@@ -1,5 +1,5 @@
 #pragma once
-#include "TwoD/Debug/ImGui.hpp"
+#include "TwoD/Debug/Debuggable.hpp"
 
 namespace TwoD
 {
@@ -45,7 +45,7 @@ namespace TwoD
 	}
 
 #define TD_INTERNAL_COMPONENT_DEBUG_FIELD(values) TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP values
-#define TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP(updater, type, f_name, ...) if(::TwoD::ImGuiType<type>::Draw( \
+#define TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP(updater, type, f_name, ...) if(::TwoD::Debuggable<type>::Draw( \
 		f_name, \
 		std::format("{}##{}", #f_name, typeid(std::remove_pointer_t<decltype(this)>).name()).c_str()) \
 	) { updater }

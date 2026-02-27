@@ -1,6 +1,6 @@
 #pragma once
 #include "TwoD/Core/Base.hpp"
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 
 #include "DebugDefines.hpp"
 #include <imgui.h>
@@ -12,7 +12,7 @@
 namespace TwoD
 {
 	template<>
-	struct ImGuiType<float>
+	struct Debuggable<float>
 	{
 		static bool Draw(float& value, const char* name)
 		{
@@ -21,7 +21,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<bool>
+	struct Debuggable<bool>
 	{
 		static bool Draw(bool& value, const char* name)
 		{
@@ -30,7 +30,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<glm::fvec2>
+	struct Debuggable<glm::fvec2>
 	{
 		static bool Draw(glm::fvec2& value, const char* name)
 		{
@@ -39,7 +39,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<glm::fvec3>
+	struct Debuggable<glm::fvec3>
 	{
 		static bool Draw(glm::fvec3& value, const char* name)
 		{
@@ -48,7 +48,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<glm::fvec4>
+	struct Debuggable<glm::fvec4>
 	{
 		static bool Draw(glm::fvec4& value, const char* name)
 		{
@@ -57,7 +57,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<glm::u8vec4>
+	struct Debuggable<glm::u8vec4>
 	{
 		static bool Draw(glm::u8vec4& value, const char* name)
 		{
@@ -66,7 +66,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<std::string>
+	struct Debuggable<std::string>
 	{
 		static bool Draw(std::string& value, const char* name)
 		{
@@ -75,7 +75,7 @@ namespace TwoD
 	};
 
 	template<>
-	struct ImGuiType<std::string_view>
+	struct Debuggable<std::string_view>
 	{
 		static bool Draw(std::string_view& value, const char* name)
 		{
@@ -92,9 +92,9 @@ namespace TwoD
 	template<typename T>
 	requires (requires(T& value, const char* name)
 	{
-		{ ImGuiType<T>::Draw(value, name) } -> std::same_as<bool>;
+		{ Debuggable<T>::Draw(value, name) } -> std::same_as<bool>;
 	})
-	struct ImGuiType<std::vector<T>>
+	struct Debuggable<std::vector<T>>
 	{
 		static bool Draw(std::vector<T>& value, const char* name)
 		{
@@ -102,7 +102,7 @@ namespace TwoD
 			ImGui::Text(name);
 			for (size_t i = 0; i < value.size(); i++)
 			{
-				changed |= ImGuiType<T>::Draw(value[i], std::format("{}", i).c_str());
+				changed |= Debuggable<T>::Draw(value[i], std::format("{}", i).c_str());
 			}
 			return changed;
 		}
@@ -110,7 +110,7 @@ namespace TwoD
 
 	template<typename T>
 	requires(std::is_integral_v<T>)
-	struct ImGuiType<T>
+	struct Debuggable<T>
 	{
 		static bool Draw(T& value, const char* name)
 		{
@@ -120,7 +120,7 @@ namespace TwoD
 
 	template<typename T>
 	requires(std::is_base_of_v<Asset, T>)
-	struct ImGuiType<T*>
+	struct Debuggable<T*>
 	{
 		using pointer = T*;
 		static bool Draw(pointer& value, const char* name)
@@ -131,7 +131,7 @@ namespace TwoD
 	};
 
 	template<typename T>
-	struct ImGuiType<std::optional<T>>
+	struct Debuggable<std::optional<T>>
 	{
 		static bool Draw(std::optional<T>& value, const char* name)
 		{
@@ -150,7 +150,7 @@ namespace TwoD
 			}
 			if (selected)
 			{
-				changed |= ImGuiType<T>::Draw(*value, "");
+				changed |= Debuggable<T>::Draw(*value, "");
 			}
 			return changed;
 		}

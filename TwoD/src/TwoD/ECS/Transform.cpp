@@ -163,13 +163,13 @@ namespace TwoD
 		return m_children;
 	}
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 	void Transform::Debug()
 	{
 		bool changed = false;
-		changed |= ImGuiType<glm::fvec2>::Draw(m_position, "position");
-		changed |= ImGuiType<float>::Draw(m_rotation, "rotation");
-		changed |= ImGuiType<glm::fvec2>::Draw(m_scale, "scale");
+		changed |= Debuggable<glm::fvec2>::Draw(m_position, "position");
+		changed |= Debuggable<float>::Draw(m_rotation, "rotation");
+		changed |= Debuggable<glm::fvec2>::Draw(m_scale, "scale");
 		if (changed)
 		{
 			CalculateMatrices();

@@ -21,7 +21,7 @@ namespace TwoD
 		static void Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass);
 		static void HandleMultipleWindows();
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		static bool GameIsRunning();
 #else
 		static constexpr bool GameIsRunning();

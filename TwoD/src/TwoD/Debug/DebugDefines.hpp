@@ -5,5 +5,5 @@ namespace TwoD
 	class Debug;
 
 	template<typename T>
-	struct ImGuiType;
+	struct Debuggable;
 }

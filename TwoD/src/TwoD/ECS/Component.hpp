@@ -40,7 +40,7 @@ namespace TwoD
 		virtual void UpdateBefore(float delta) {}
 		virtual void Update(float delta) {}
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		virtual void Debug() {};
 #endif
 

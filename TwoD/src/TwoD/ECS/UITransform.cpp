@@ -31,14 +31,14 @@ namespace TwoD
 		Transform::Load(data);
 	}
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 	void UITransform::Debug()
 	{
 		Transform::Debug();
 		bool changed = false;
-		changed |= ImGuiType<glm::fvec2>::Draw(m_size, "size");
-		changed |= ImGuiType<glm::fvec2>::Draw(m_offset, "offset");
-		changed |= ImGuiType<Anchor>::Draw(m_anchor, "anchor");
+		changed |= Debuggable<glm::fvec2>::Draw(m_size, "size");
+		changed |= Debuggable<glm::fvec2>::Draw(m_offset, "offset");
+		changed |= Debuggable<Anchor>::Draw(m_anchor, "anchor");
 	}
 #endif
 

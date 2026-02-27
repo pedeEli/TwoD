@@ -1,7 +1,7 @@
 #include "tdpch.hpp"
 #include "Debug.hpp"
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 #include <imgui.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlgpu3.h>
@@ -24,14 +24,14 @@ namespace TwoD
 		bool paused = false;
 		bool nextFrame = false;
 	};
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 	static DebugState s_debugState;
 	static PauseState s_pauseState;
 #endif
 
 	static void InitImGui(SDL_Window* window, SDL_GPUDevice* device)
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		auto& io = ImGui::GetIO();
@@ -61,7 +61,7 @@ namespace TwoD
 	}
 	static void InitEventHandlers()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
 			{
 				if (event.repeat || (event.mod & Keymod::CTRL) == Keymod::NONE)
@@ -79,7 +79,7 @@ namespace TwoD
 
 	void Debug::Init(const Window& window)
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		TD_CORE_ASSERT(window.m_raw && !window.m_releasedAndDestroyed);
 		InitImGui(window.m_raw->window, window.m_raw->device);
 		InitEventHandlers();
@@ -87,7 +87,7 @@ namespace TwoD
 	}
 	void Debug::Shutdown()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		ImGui_ImplSDL3_Shutdown();
 		ImGui_ImplSDLGPU3_Shutdown();
 		ImGui::DestroyContext();
@@ -96,7 +96,7 @@ namespace TwoD
 
 	void Debug::Render(const SDL::CommandBuffer& commandBuffer, const SDL::RenderPass& renderPass)
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		TD_CORE_ASSERT(commandBuffer.m_raw && !commandBuffer.m_submitted);
 		TD_CORE_ASSERT(renderPass.m_raw && !renderPass.m_ended);
 		ImGui::Render();
@@ -108,7 +108,7 @@ namespace TwoD
 
 	void Debug::HandleMultipleWindows()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 #endif
@@ -116,7 +116,7 @@ namespace TwoD
 
 	static void DrawPause()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		if (s_pauseState.paused)
 		{
 			if (ImGui::Button("resume"))
@@ -175,7 +175,7 @@ namespace TwoD
 	}
 	static void DrawSceneInfo()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		auto& scene = Scene::GetActive();
 		auto& entities = scene.GetRootEntities();
 		uint32_t id = 0;
@@ -205,7 +205,7 @@ namespace TwoD
 	}
 	static void DrawEntityInfo()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		bool components = s_debugState.selectedEntity;
 		if (components)
 		{
@@ -223,7 +223,7 @@ namespace TwoD
 	}
 	static void DrawDebug()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		if (!s_debugState.open)
 		{
 			return;
@@ -244,7 +244,7 @@ namespace TwoD
 	
 	void Debug::Update()
 	{
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		ImGui_ImplSDLGPU3_NewFrame();
 		ImGui_ImplSDL3_NewFrame();
 		ImGui::NewFrame();
@@ -259,7 +259,7 @@ namespace TwoD
 	}
 
 
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 	bool Debug::GameIsRunning()
 	{
 		return !s_pauseState.paused || s_pauseState.nextFrame;

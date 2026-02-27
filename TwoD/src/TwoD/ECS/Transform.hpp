@@ -18,7 +18,7 @@ namespace TwoD
 		static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node);
 		void Load(const void* data) override;
 		void Destroy() override;
-#ifdef TD_IMGUI
+#ifdef TD_CREATE_DEBUGGER
 		void Debug() override;
 #endif
 

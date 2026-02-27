@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <yaml-cpp/yaml.h>
 #include "TwoD/Core/Base.hpp"
-#include "TwoD/Debug/ImGui.hpp"
+#include "TwoD/Debug/Debuggable.hpp"
 
 #define TD_INTERNAL_YAML_STRUCT_FIELD(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT, TD_INTERNAL_YAML_STRUCT_FIELD_WITH_DEFAULT, values)
 #define TD_INTERNAL_YAML_STRUCT_FIELD_NO_DEFAULT(preprocess, type, name) type name;
@@ -33,11 +33,11 @@
 }
 
 #define TD_INTERNAL_YAML_STRUCT_IMGUI_FIELD(values) TD_INTERNAL_YAML_STRUCT_IMGUI_FIELD_UNWRAP values
-#define TD_INTERNAL_YAML_STRUCT_IMGUI_FIELD_UNWRAP(preprocess, type, name, ...) preprocess(changed |= ImGuiType<type>::Draw(value.name, #name);)
+#define TD_INTERNAL_YAML_STRUCT_IMGUI_FIELD_UNWRAP(preprocess, type, name, ...) preprocess(changed |= Debuggable<type>::Draw(value.name, #name);)
 
 #define TD_INTERNAL_YAML_STRUCT_IMGUI(ns_name, struct_name, ...)  namespace TwoD { \
 		template<> \
-		struct ImGuiType<::ns_name::struct_name> { \
+		struct Debuggable<::ns_name::struct_name> { \
 			static bool Draw(::ns_name::struct_name& value, const char* name) { \
 				ImGui::Text(name); \
 				bool changed = false; \
@@ -133,7 +133,7 @@ constexpr enum_name& operator op##=(enum_name& a, enum_name b) noexcept { \
 
 #define TD_INTERNAL_YAML_ENUM_IMGUI(ns_name, enum_name, ...) namespace TwoD { \
 		template<> \
-		struct ImGuiType<::ns_name::enum_name> { \
+		struct Debuggable<::ns_name::enum_name> { \
 			static bool Draw(::ns_name::enum_name& value, const char* name) { \
 				using internal_enum = ns_name::enum_name; \
 				ImGui::Text(name); \

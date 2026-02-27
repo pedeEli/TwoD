@@ -16,7 +16,7 @@
 #endif
 
 #ifndef TD_DIST
-	#define TD_IMGUI
+	#define TD_CREATE_DEBUGGER
 #endif
 
 #define TD_EXPAND_MACRO(x) x
