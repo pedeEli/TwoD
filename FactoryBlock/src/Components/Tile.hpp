@@ -12,6 +12,14 @@ class Tile : public Component
 	};
 public:
 	void Start() override;
+	void Update(float delta) override;
+
+	TD_COMPONENT(
+		TD_COMPONENT_FIELD(float, rotationSpeed, 20.0f)
+	)
+
+public:
+	float targetRotation = 0.0f;
 
 private:
 	void AddPath(const char* name, Direction dir);

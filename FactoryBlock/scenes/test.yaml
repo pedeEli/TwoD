@@ -4,6 +4,13 @@ entities:
 - name: tile
   components:
   - type: class Tile
+    rotationSpeed: 20.0
+  - type: class TwoD::Hitbox
+    layer: 11
+    x: -0.5
+    y: -0.5
+    w: 1.0
+    h: 1.0
 
 - name: player
   components:

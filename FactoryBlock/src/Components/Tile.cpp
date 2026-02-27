@@ -14,6 +14,13 @@ void Tile::Start()
 	AddPath("top", Direction::TOP);
 }
 
+void Tile::Update(float delta)
+{
+	auto* transform = GetTransform();
+	auto current = transform->GetRotation();
+	transform->SetRotation(std::lerp(current, targetRotation, delta * rotationSpeed));
+}
+
 
 constexpr static glm::fvec2 s_pathScales[4] = {
 	{ 0.1f,  0.55f },

@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include <glm/glm.hpp>
 #include "Ore.hpp"
+#include "Tile.hpp"
 
 void Player::Start()
 {
@@ -21,6 +22,24 @@ void Player::Start()
 			App::Get<RenderSystem>().UpdateLayerFor<SpriteRenderer>(renderer.layer);
 
 			AssetManager::Get<Audio>("vibraphone").Play();
+			return false;
+		});
+	TwoD::EventHandler::On<TwoD::MouseDownEvent>([this](auto& e)
+		{
+			if (e.button != TwoD::MouseButton::LEFT)
+			{
+				return false;
+			}
+
+			auto hit = Hitbox::Hit(Camera::Get()->GetMousePositionWorld());
+			if (hit && (*hit)->GetEntity().name == "iron ore")
+			{
+				(*hit)->GetEntity().Destroy();
+			}
+			else if (hit && (*hit)->GetEntity().name == "tile")
+			{
+				(*hit)->GetComponent<Tile>().targetRotation += glm::half_pi<float>();
+			}
 			return false;
 		});
 }
@@ -50,16 +69,5 @@ void Player::Update(float delta)
 	{
 		glm::fvec3 normalized = glm::normalize(dir) * speed * delta;
 		GetComponent<Transform>().Translate(normalized);
-	}
-
-	
-	if (TwoD::Inputs::GetMouseDown(TwoD::MouseButton::LEFT))
-	{
-		auto& mousePos = camera->GetMousePositionWorld();
-		auto hit = Hitbox::Hit(mousePos);
-		if (hit && (*hit)->GetEntity().name == "iron ore")
-		{
-			(*hit)->GetEntity().Destroy();
-		}
 	}
 }
