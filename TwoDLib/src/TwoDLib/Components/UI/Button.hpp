@@ -11,6 +11,7 @@ namespace TwoD
 		using Component::Component;
 	public:
 		void StartBefore() override;
+		void Update(float delta) override;
 
 	public:
 		TD_COMPONENT(

@@ -2,6 +2,7 @@
 #include "ECSDefines.hpp"
 #include "Transform.hpp"
 #include "TwoD/Core/YAML.hpp"
+#include "TwoD/Math/Rect.hpp"
 
 TD_YAML_ENUM_WITH_BASE(TwoD, Anchor, uint8_t,
 	TD_YAML_ENUM_FIELD(CENTER, 0),
@@ -45,6 +46,8 @@ namespace TwoD
 		glm::fvec2 GetOffset() const;
 
 		void SetAnchor(Anchor anchor);
+
+		Rect<float> GetRect() const;
 
 	private:
 		void UpdateTransform();

@@ -11,3 +11,5 @@
 #include "TwoD/Assets/Scene.hpp"
 
 #include "TwoD/SDL/Defines.hpp"
+
+#include "TwoD/Math/Rect.hpp"

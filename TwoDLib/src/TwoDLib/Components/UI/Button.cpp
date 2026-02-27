@@ -25,4 +25,18 @@ namespace TwoD
 		transform.SetSize(textSize * size + padding * 2.0f);
 		transform.SetAnchor(anchor);
 	}
+
+	void Button::Update(float delta)
+	{
+		auto rect = GetComponent<UITransform>().GetRect();
+		auto mouse = Inputs::GetMousePosition();
+		if (rect.IsInside(mouse))
+		{
+			m_colorRenderer->a = 100;
+		}
+		else
+		{
+			m_colorRenderer->a = 255;
+		}
+	}
 }

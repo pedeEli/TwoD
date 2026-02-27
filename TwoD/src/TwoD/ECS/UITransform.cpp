@@ -126,4 +126,13 @@ namespace TwoD
 		m_anchor = anchor;
 		UpdateTransform();
 	}
+
+	Rect<float> UITransform::GetRect() const
+	{
+		glm::fvec2 center = m_worldMatrix[2];
+		return {
+			center - m_size * 0.5f,
+			center + m_size * 0.5f
+		};
+	}
 }
