@@ -3,7 +3,7 @@
 
 //#include <SDL3/SDL_events.h>
 
-TD_YAML_ENUM(TwoD, EventType,
+TD_YAML_ENUM_WITH_NS(TwoD, EventType,
 	TD_YAML_ENUM_FIELD(INVALID),
 	TD_YAML_ENUM_FIELD(QUIT),
 

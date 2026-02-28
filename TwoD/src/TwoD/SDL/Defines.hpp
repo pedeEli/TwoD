@@ -6,7 +6,7 @@ namespace TwoD
     class Window;
 }
 
-TD_YAML_ENUM_WITH_BASE(TwoD, WindowFlags, uint64_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD, WindowFlags, uint64_t,
 	TD_YAML_ENUM_FIELD(FULLSCREEN, 0x0000000000000001ULL),
 	TD_YAML_ENUM_FIELD(OPENGL, 0x0000000000000002ULL),
 	TD_YAML_ENUM_FIELD(OCCLUDED, 0x0000000000000004ULL),
@@ -67,11 +67,11 @@ namespace TwoD::SDL
 // Misc ************************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, Filter,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, Filter,
 	TD_YAML_ENUM_FIELD(NEAREST),
 	TD_YAML_ENUM_FIELD(LINEAR)
 )
-TD_YAML_ENUM(TwoD::SDL, CompareOp,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, CompareOp,
 	TD_YAML_ENUM_FIELD(INVALID),
 	TD_YAML_ENUM_FIELD(NEVER),
 	TD_YAML_ENUM_FIELD(LESS),
@@ -82,7 +82,7 @@ TD_YAML_ENUM(TwoD::SDL, CompareOp,
 	TD_YAML_ENUM_FIELD(GREATER_OR_EQUAL),
 	TD_YAML_ENUM_FIELD(ALWAYS)
 )
-TD_YAML_ENUM(TwoD::SDL, BlendFactor,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, BlendFactor,
 	TD_YAML_ENUM_FIELD(INVALID),
 	TD_YAML_ENUM_FIELD(ZERO),
 	TD_YAML_ENUM_FIELD(ONE),
@@ -98,7 +98,7 @@ TD_YAML_ENUM(TwoD::SDL, BlendFactor,
 	TD_YAML_ENUM_FIELD(ONE_MINUS_CONSTANT_COLOR),
 	TD_YAML_ENUM_FIELD(SRC_ALPHA_SATURATE)
 )
-TD_YAML_ENUM(TwoD::SDL, BlendOp,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, BlendOp,
 	TD_YAML_ENUM_FIELD(INVALID),
 	TD_YAML_ENUM_FIELD(ADD),
 	TD_YAML_ENUM_FIELD(SUBTRACT),
@@ -106,7 +106,7 @@ TD_YAML_ENUM(TwoD::SDL, BlendOp,
 	TD_YAML_ENUM_FIELD(MIN),
 	TD_YAML_ENUM_FIELD(MAX)
 )
-TD_YAML_ENUM(TwoD::SDL, SampleCount,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, SampleCount,
 	TD_YAML_ENUM_FIELD(ONE),
 	TD_YAML_ENUM_FIELD(TWO),
 	TD_YAML_ENUM_FIELD(FOUR),
@@ -118,7 +118,7 @@ TD_YAML_STRUCT(TwoD::SDL, Rect,
 	TD_YAML_STRUCT_FIELD(uint32_t, w, 0),
 	TD_YAML_STRUCT_FIELD(uint32_t, h, 0)
 )
-TD_YAML_ENUM(TwoD::SDL, LoadOp,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, LoadOp,
 	TD_YAML_ENUM_FIELD(LOAD),
 	TD_YAML_ENUM_FIELD(CLEAR),
 	TD_YAML_ENUM_FIELD(DONT_CARE)
@@ -129,7 +129,7 @@ TD_YAML_STRUCT(TwoD::SDL, FColor,
 	TD_YAML_STRUCT_FIELD(float, b, 0.0f),
 	TD_YAML_STRUCT_FIELD(float, a, 0.0f)
 )
-TD_YAML_ENUM(TwoD::SDL, FlipMode,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, FlipMode,
 	TD_YAML_ENUM_FIELD(NONE),
 	TD_YAML_ENUM_FIELD(HORIZONTAL),
 	TD_YAML_ENUM_FIELD(VERTICAL)
@@ -139,7 +139,7 @@ TD_YAML_ENUM(TwoD::SDL, FlipMode,
 // Buffer **********************************************
 // *****************************************************
 
-TD_YAML_ENUM_WITH_BASE(TwoD::SDL, BufferUsage, uint32_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, BufferUsage, uint32_t,
 	TD_YAML_ENUM_FIELD(VERTEX, (1u << 0)),
 	TD_YAML_ENUM_FIELD(INDEX, (1u << 1)),
 	TD_YAML_ENUM_FIELD(INDIRECT, (1u << 2)),
@@ -156,7 +156,7 @@ TD_YAML_STRUCT(TwoD::SDL, BufferInfo,
 // TransferBuffer **************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, TransferBufferUsage,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, TransferBufferUsage,
 	TD_YAML_ENUM_FIELD(UPLOAD),
 	TD_YAML_ENUM_FIELD(DOWNLOAD)
 )
@@ -169,7 +169,7 @@ TD_YAML_STRUCT(TwoD::SDL, TransferBufferInfo,
 // Texture *********************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, TextureFormat,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, TextureFormat,
     TD_YAML_ENUM_FIELD(INVALID),
     TD_YAML_ENUM_FIELD(A8_UNORM),
     TD_YAML_ENUM_FIELD(R8_UNORM),
@@ -276,14 +276,14 @@ TD_YAML_ENUM(TwoD::SDL, TextureFormat,
     TD_YAML_ENUM_FIELD(ASTC_12x10_FLOAT),
     TD_YAML_ENUM_FIELD(ASTC_12x12_FLOAT)
 )
-TD_YAML_ENUM(TwoD::SDL, TextureType,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, TextureType,
     TD_YAML_ENUM_FIELD(TWO_D),
     TD_YAML_ENUM_FIELD(TWO_D_ARRAY),
     TD_YAML_ENUM_FIELD(THREE_D),
     TD_YAML_ENUM_FIELD(CUBE),
     TD_YAML_ENUM_FIELD(CUBE_ARRAY)
 )
-TD_YAML_ENUM_WITH_BASE(TwoD::SDL, TextureUsageFlags, uint32_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, TextureUsageFlags, uint32_t,
     TD_YAML_ENUM_FIELD(SAMPLER, (1u << 0)),
     TD_YAML_ENUM_FIELD(COLOR_TARGET, (1u << 1)),
     TD_YAML_ENUM_FIELD(DEPTH_STENCIL_TARGET, (1u << 2)),
@@ -327,11 +327,11 @@ TD_YAML_STRUCT(TwoD::SDL, BlitInfo,
 // Sampler *********************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, SamplerMipmapMode,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, SamplerMipmapMode,
     TD_YAML_ENUM_FIELD(NEAREST),
     TD_YAML_ENUM_FIELD(LINEAR)
 )
-TD_YAML_ENUM(TwoD::SDL, SamplerAddressMode,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, SamplerAddressMode,
     TD_YAML_ENUM_FIELD(REPEAT),
     TD_YAML_ENUM_FIELD(MIRRORED_REPEAT),
     TD_YAML_ENUM_FIELD(CLAMP_TO_EDGE)
@@ -356,7 +356,7 @@ TD_YAML_STRUCT(TwoD::SDL, SamplerInfo,
 // Shader **********************************************
 // *****************************************************
 
-TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ShaderFormat, uint32_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, ShaderFormat, uint32_t,
     TD_YAML_ENUM_FIELD(INVALID,  0),
     TD_YAML_ENUM_FIELD(PRIVATE,  (1u << 0)),
     TD_YAML_ENUM_FIELD(SPIRV,    (1u << 1)),
@@ -365,7 +365,7 @@ TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ShaderFormat, uint32_t,
     TD_YAML_ENUM_FIELD(MSL,      (1u << 4)),
     TD_YAML_ENUM_FIELD(METALLIB, (1u << 5))
 )
-TD_YAML_ENUM(TwoD::SDL, ShaderStage,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, ShaderStage,
     TD_YAML_ENUM_FIELD(VERTEX),
     TD_YAML_ENUM_FIELD(FRAGMENT)
 )
@@ -385,7 +385,7 @@ TD_YAML_STRUCT(TwoD::SDL, ShaderInfo,
 // RenderPass ******************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, IndexElementSize,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, IndexElementSize,
     TD_YAML_ENUM_FIELD(SIXTEEN_BIT),
     TD_YAML_ENUM_FIELD(THIRTY_TWO_BIT)
 )
@@ -433,7 +433,7 @@ TD_YAML_STRUCT(TwoD::SDL, BufferRegion,
 // GraphicsPipeline ************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, VertexElementFormat,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, VertexElementFormat,
     TD_YAML_ENUM_FIELD(INVALID),
     TD_YAML_ENUM_FIELD(INT),
     TD_YAML_ENUM_FIELD(INT2),
@@ -454,31 +454,31 @@ TD_YAML_ENUM(TwoD::SDL, VertexElementFormat,
     TD_YAML_ENUM_FIELD(BYTE2_NORM),
     TD_YAML_ENUM_FIELD(BYTE4_NORM)
 )
-TD_YAML_ENUM(TwoD::SDL, VertexInputRate,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, VertexInputRate,
     TD_YAML_ENUM_FIELD(VERTEX),
     TD_YAML_ENUM_FIELD(INSTANCE)
 )
-TD_YAML_ENUM(TwoD::SDL, PrimitiveType,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, PrimitiveType,
     TD_YAML_ENUM_FIELD(TRIANGLELIST),
     TD_YAML_ENUM_FIELD(TRIANGLESTRIP),
     TD_YAML_ENUM_FIELD(LINELIST),
     TD_YAML_ENUM_FIELD(LINESTRIP),
     TD_YAML_ENUM_FIELD(POINTLIST)
 )
-TD_YAML_ENUM(TwoD::SDL, FrontFace,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, FrontFace,
     (COUNTER_CLOCKWISE),
     (CLOCKWISE)
 )
-TD_YAML_ENUM(TwoD::SDL, CullMode,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, CullMode,
     TD_YAML_ENUM_FIELD(NONE),
     TD_YAML_ENUM_FIELD(FRONT),
     TD_YAML_ENUM_FIELD(BACK)
 )
-TD_YAML_ENUM(TwoD::SDL, FillMode,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, FillMode,
     TD_YAML_ENUM_FIELD(FILL),
     TD_YAML_ENUM_FIELD(LINE)
 )
-TD_YAML_ENUM(TwoD::SDL, StencilOp,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, StencilOp,
     TD_YAML_ENUM_FIELD(INVALID),
     TD_YAML_ENUM_FIELD(KEEP),
     TD_YAML_ENUM_FIELD(ZERO),
@@ -489,7 +489,7 @@ TD_YAML_ENUM(TwoD::SDL, StencilOp,
     TD_YAML_ENUM_FIELD(INCREMENT_AND_WRAP),
     TD_YAML_ENUM_FIELD(DECREMENT_AND_WRAP)
 )
-TD_YAML_ENUM_WITH_BASE(TwoD::SDL, ColorComponentFlags, uint8_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, ColorComponentFlags, uint8_t,
     TD_YAML_ENUM_FIELD(R, (1u << 0)),
     TD_YAML_ENUM_FIELD(G, (1u << 1)),
     TD_YAML_ENUM_FIELD(B, (1u << 2)),
@@ -576,7 +576,7 @@ TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineInfo,
 // Surface *********************************************
 // *****************************************************
 
-TD_YAML_ENUM(TwoD::SDL, PixelFormat,
+TD_YAML_ENUM_WITH_NS(TwoD::SDL, PixelFormat,
     TD_YAML_ENUM_FIELD(UNKNOWN, 0),
     TD_YAML_ENUM_FIELD(INDEX1LSB, 0x11100100u),
     TD_YAML_ENUM_FIELD(INDEX1MSB, 0x11200100u),

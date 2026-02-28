@@ -5,6 +5,7 @@ entities:
   components:
   - type: class Tile
     rotationSpeed: 20.0
+    directions: [ TOP, LEFT ]
   - type: class TwoD::Hitbox
     layer: 11
     x: -0.5

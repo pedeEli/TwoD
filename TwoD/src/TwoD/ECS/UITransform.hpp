@@ -4,7 +4,7 @@
 #include "TwoD/Core/YAML.hpp"
 #include "TwoD/Math/Rect.hpp"
 
-TD_YAML_ENUM_WITH_BASE(TwoD, Anchor, uint8_t,
+TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD, Anchor, uint8_t,
 	TD_YAML_ENUM_FIELD(CENTER, 0),
 	TD_YAML_ENUM_FIELD(TOP, 1),
 	TD_YAML_ENUM_FIELD(RIGHT, 2),

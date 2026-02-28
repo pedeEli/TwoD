@@ -10,8 +10,10 @@ void Tile::Start()
 	groundRenderer.g = 200;
 	groundRenderer.b = 100;
 
-	AddPath("right", Direction::RIGHT);
-	AddPath("top", Direction::TOP);
+	for (auto dir : directions)
+	{
+		AddPath("", dir);
+	}
 }
 
 void Tile::Update(float delta)

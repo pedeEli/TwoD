@@ -3,18 +3,22 @@
 
 using namespace TwoD;
 
+TD_YAML_ENUM(Direction,
+	TD_YAML_ENUM_FIELD(TOP),
+	TD_YAML_ENUM_FIELD(RIGHT),
+	TD_YAML_ENUM_FIELD(BOTTOM),
+	TD_YAML_ENUM_FIELD(LEFT)
+)
+
 class Tile : public Component
 {
 	using Component::Component;
-	enum class Direction : uint8_t
-	{
-		TOP, RIGHT, BOTTOM, LEFT
-	};
 public:
 	void Start() override;
 	void Update(float delta) override;
 
 	TD_COMPONENT(
+		TD_COMPONENT_FIELD(std::vector<Direction>, directions, {}),
 		TD_COMPONENT_FIELD(float, rotationSpeed, 20.0f)
 	)
 
