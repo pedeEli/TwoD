@@ -5,7 +5,7 @@
 #include "TwoD/SDL/GraphicsPipeline.hpp"
 
 
-TD_YAML_STRUCT(TwoD, ShaderInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD, ShaderInfo,
 	TD_YAML_STRUCT_FIELD(std::string, file),
 	TD_YAML_STRUCT_FIELD(uint32_t, samplerCount, 0),
 	TD_YAML_STRUCT_FIELD(uint32_t, storageTextureCount, 0),

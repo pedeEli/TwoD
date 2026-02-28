@@ -34,7 +34,7 @@ TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD, WindowFlags, uint64_t,
 	TD_YAML_ENUM_FIELD(NOT_FOCUSABLE, 0x0000000080000000ULL)
 )
 
-TD_YAML_STRUCT(TwoD, WindowInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD, WindowInfo,
 	TD_YAML_STRUCT_FIELD(int, width),
 	TD_YAML_STRUCT_FIELD(int, height),
 	TD_YAML_STRUCT_FIELD(std::string_view, title),
@@ -112,7 +112,7 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, SampleCount,
 	TD_YAML_ENUM_FIELD(FOUR),
 	TD_YAML_ENUM_FIELD(EIGHT)
 )
-TD_YAML_STRUCT(TwoD::SDL, Rect,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, Rect,
 	TD_YAML_STRUCT_FIELD(uint32_t, x, 0),
 	TD_YAML_STRUCT_FIELD(uint32_t, y, 0),
 	TD_YAML_STRUCT_FIELD(uint32_t, w, 0),
@@ -123,7 +123,7 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, LoadOp,
 	TD_YAML_ENUM_FIELD(CLEAR),
 	TD_YAML_ENUM_FIELD(DONT_CARE)
 )
-TD_YAML_STRUCT(TwoD::SDL, FColor,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, FColor,
 	TD_YAML_STRUCT_FIELD(float, r, 0.0f),
 	TD_YAML_STRUCT_FIELD(float, g, 0.0f),
 	TD_YAML_STRUCT_FIELD(float, b, 0.0f),
@@ -147,7 +147,7 @@ TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, BufferUsage, uint32_t,
 	TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_READ, (1u << 4)),
 	TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_WRITE, (1u << 5))
 )
-TD_YAML_STRUCT(TwoD::SDL, BufferInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, BufferInfo,
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::BufferUsage, usage),
 	TD_YAML_STRUCT_FIELD(uint32_t, size)
 )
@@ -160,7 +160,7 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, TransferBufferUsage,
 	TD_YAML_ENUM_FIELD(UPLOAD),
 	TD_YAML_ENUM_FIELD(DOWNLOAD)
 )
-TD_YAML_STRUCT(TwoD::SDL, TransferBufferInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TransferBufferInfo,
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::TransferBufferUsage, usage),
 	TD_YAML_STRUCT_FIELD(uint32_t, size)
 )
@@ -292,7 +292,7 @@ TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, TextureUsageFlags, uint32_t,
     TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_WRITE, (1u << 5)),
     TD_YAML_ENUM_FIELD(COMPUTE_STORAGE_SIMULTANEOUS_READ_WRITE, (1u << 6))
 )
-TD_YAML_STRUCT(TwoD::SDL, TextureInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TextureInfo,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureType, type),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, format),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureUsageFlags, usage),
@@ -303,7 +303,7 @@ TD_YAML_STRUCT(TwoD::SDL, TextureInfo,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::SampleCount, sampleCount, TwoD::SDL::SampleCount::ONE)
 )
 
-TD_YAML_STRUCT(TwoD::SDL, BlitRegion,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, BlitRegion,
 	TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Texture*, texture),
 	TD_YAML_STRUCT_FIELD(uint32_t, mipLevel, 1),
 	TD_YAML_STRUCT_FIELD(uint32_t, layerOrDepthPlane, 1),
@@ -313,7 +313,7 @@ TD_YAML_STRUCT(TwoD::SDL, BlitRegion,
 	TD_YAML_STRUCT_FIELD(uint32_t, h, 0)
 )
 
-TD_YAML_STRUCT(TwoD::SDL, BlitInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, BlitInfo,
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::BlitRegion, source, {}),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::BlitRegion, destination, {}),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::LoadOp, loadOp, TwoD::SDL::LoadOp::DONT_CARE),
@@ -336,7 +336,7 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, SamplerAddressMode,
     TD_YAML_ENUM_FIELD(MIRRORED_REPEAT),
     TD_YAML_ENUM_FIELD(CLAMP_TO_EDGE)
 )
-TD_YAML_STRUCT(TwoD::SDL, SamplerInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, SamplerInfo,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::Filter, minFilter),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::Filter, magFilter),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::SamplerMipmapMode, mipmapMode),
@@ -369,7 +369,7 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, ShaderStage,
     TD_YAML_ENUM_FIELD(VERTEX),
     TD_YAML_ENUM_FIELD(FRAGMENT)
 )
-TD_YAML_STRUCT(TwoD::SDL, ShaderInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, ShaderInfo,
     TD_YAML_STRUCT_FIELD(uint32_t, codeSize),
     TD_YAML_STRUCT_FIELD_NO_PARSING(uint8_t*, code),
     TD_YAML_STRUCT_FIELD(std::string, entrypoint),
@@ -389,11 +389,11 @@ TD_YAML_ENUM_WITH_NS(TwoD::SDL, IndexElementSize,
     TD_YAML_ENUM_FIELD(SIXTEEN_BIT),
     TD_YAML_ENUM_FIELD(THIRTY_TWO_BIT)
 )
-TD_YAML_STRUCT(TwoD::SDL, TextureSamplerBinding,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TextureSamplerBinding,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Texture*, texture),
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Sampler*, sampler)
 )
-TD_YAML_STRUCT(TwoD::SDL, BufferBinding,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, BufferBinding,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Buffer*, buffer),
     TD_YAML_STRUCT_FIELD(uint32_t, offset)
 )
@@ -402,13 +402,13 @@ TD_YAML_STRUCT(TwoD::SDL, BufferBinding,
 // CopyPass ********************************************
 // *****************************************************
 
-TD_YAML_STRUCT(TwoD::SDL, TextureTransferInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TextureTransferInfo,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::TransferBuffer*, transferBuffer),
     TD_YAML_STRUCT_FIELD(uint32_t, offset),
     TD_YAML_STRUCT_FIELD(uint32_t, pixelsPerRow),
     TD_YAML_STRUCT_FIELD(uint32_t, rowsPerLayer)
 )
-TD_YAML_STRUCT(TwoD::SDL, TextureRegion,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TextureRegion,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Texture*, texture),
     TD_YAML_STRUCT_FIELD(uint32_t, mipLevel),
     TD_YAML_STRUCT_FIELD(uint32_t, layer),
@@ -419,11 +419,11 @@ TD_YAML_STRUCT(TwoD::SDL, TextureRegion,
     TD_YAML_STRUCT_FIELD(uint32_t, h),
     TD_YAML_STRUCT_FIELD(uint32_t, d)
 )
-TD_YAML_STRUCT(TwoD::SDL, TransferBufferLocation,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, TransferBufferLocation,
     TD_YAML_STRUCT_FIELD_NO_PARSING(const TwoD::SDL::TransferBuffer*, transferBuffer),
     TD_YAML_STRUCT_FIELD(uint32_t, offset)
 )
-TD_YAML_STRUCT(TwoD::SDL, BufferRegion,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, BufferRegion,
     TD_YAML_STRUCT_FIELD_NO_PARSING(const TwoD::SDL::Buffer*, buffer),
     TD_YAML_STRUCT_FIELD(uint32_t, offset),
     TD_YAML_STRUCT_FIELD(uint32_t, size)
@@ -495,7 +495,7 @@ TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD::SDL, ColorComponentFlags, uint8_t,
     TD_YAML_ENUM_FIELD(B, (1u << 2)),
     TD_YAML_ENUM_FIELD(A, (1u << 3))
 )
-TD_YAML_STRUCT(TwoD::SDL, ColorTargetBlendState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, ColorTargetBlendState,
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, srcColorBlendfactor, {}),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendFactor, dstColorBlendfactor, {}),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::BlendOp, colorBlendOp, {}),
@@ -506,32 +506,32 @@ TD_YAML_STRUCT(TwoD::SDL, ColorTargetBlendState,
     TD_YAML_STRUCT_FIELD(bool, enableBlend, false),
     TD_YAML_STRUCT_FIELD(bool, enableColorWriteMask, false)
 )
-TD_YAML_STRUCT(TwoD::SDL, VertexBufferDescription,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, VertexBufferDescription,
     TD_YAML_STRUCT_FIELD(uint32_t, slot),
     TD_YAML_STRUCT_FIELD(uint32_t, pitch),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputRate, inputRate)
 )
-TD_YAML_STRUCT(TwoD::SDL, VertexAttribute,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, VertexAttribute,
     TD_YAML_STRUCT_FIELD(uint32_t, location),
     TD_YAML_STRUCT_FIELD(uint32_t, bufferSlot),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexElementFormat, format),
     TD_YAML_STRUCT_FIELD(uint32_t, offset)
 )
-TD_YAML_STRUCT(TwoD::SDL, StencilOpState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, StencilOpState,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, failOp, TwoD::SDL::StencilOp::INVALID),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, passOp, TwoD::SDL::StencilOp::INVALID),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOp, depthFailOp, TwoD::SDL::StencilOp::INVALID),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::CompareOp, compareOp, TwoD::SDL::CompareOp::INVALID)
 )
-TD_YAML_STRUCT(TwoD::SDL, ColorTargetDescription,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, ColorTargetDescription,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, format, TwoD::SDL::TextureFormat::INVALID),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::ColorTargetBlendState, blendState)
 )
-TD_YAML_STRUCT(TwoD::SDL, VertexInputState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, VertexInputState,
 	TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexBufferDescription>, vertexBufferDescriptions, {}),
 	TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::VertexAttribute>, vertexAttributes, {})
 )
-TD_YAML_STRUCT(TwoD::SDL, RasterizerState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, RasterizerState,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::FillMode, fillMode, TwoD::SDL::FillMode::FILL),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::CullMode, cullMode, TwoD::SDL::CullMode::NONE),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::FrontFace, frontFace, TwoD::SDL::FrontFace::COUNTER_CLOCKWISE),
@@ -541,12 +541,12 @@ TD_YAML_STRUCT(TwoD::SDL, RasterizerState,
     TD_YAML_STRUCT_FIELD(bool, enableDepthBias, false),
     TD_YAML_STRUCT_FIELD(bool, enableDepthClip, false)
 )
-TD_YAML_STRUCT(TwoD::SDL, MultisampleState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, MultisampleState,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::SampleCount, sampleCount, TwoD::SDL::SampleCount::ONE),
     TD_YAML_STRUCT_FIELD(uint32_t, sampleMask, 0),
     TD_YAML_STRUCT_FIELD(bool, enableMask, false)
 )
-TD_YAML_STRUCT(TwoD::SDL, DepthStencilState,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, DepthStencilState,
     TD_YAML_STRUCT_FIELD(TwoD::SDL::CompareOp, compareOp, TwoD::SDL::CompareOp::INVALID),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOpState, backStencilState, {}),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::StencilOpState, frontStencilState, {}),
@@ -556,12 +556,12 @@ TD_YAML_STRUCT(TwoD::SDL, DepthStencilState,
     TD_YAML_STRUCT_FIELD(bool, enableDepthWrite, false),
     TD_YAML_STRUCT_FIELD(bool, enableStencilTest, false)
 )
-TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineTargetInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, GraphicsPipelineTargetInfo,
     TD_YAML_STRUCT_FIELD(std::vector<TwoD::SDL::ColorTargetDescription>, colorTargetDescriptions),
     TD_YAML_STRUCT_FIELD(TwoD::SDL::TextureFormat, depthStencilFormat, TwoD::SDL::TextureFormat::INVALID),
     TD_YAML_STRUCT_FIELD(bool, hasDepthStencilTarget, false)
 )
-TD_YAML_STRUCT(TwoD::SDL, GraphicsPipelineInfo,
+TD_YAML_STRUCT_WITH_NS(TwoD::SDL, GraphicsPipelineInfo,
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Shader*, vertexShader, nullptr),
     TD_YAML_STRUCT_FIELD_NO_PARSING(TwoD::SDL::Shader*, fragmentShader, nullptr),
 	TD_YAML_STRUCT_FIELD(TwoD::SDL::VertexInputState, vertexInputState, {}),

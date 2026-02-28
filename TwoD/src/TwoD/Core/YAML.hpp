@@ -24,13 +24,13 @@
 #define TD_INTERNAL_YAML_STRUCT_YAML(ns_name, struct_name, ...) \
 	namespace YAML { \
 		template<> \
-		struct convert<ns_name::struct_name> { \
-			static Node encode(const ns_name::struct_name& rhs) { \
+		struct convert<ns_name struct_name> { \
+			static Node encode(const ns_name struct_name& rhs) { \
 				Node node; \
 				TD_APPLY_EACH(TD_INTERNAL_YAML_STRUCT_ENCODE, __VA_ARGS__) \
 				return node; \
 			} \
-			static bool decode(const Node& node, ns_name::struct_name& rhs) { \
+			static bool decode(const Node& node, ns_name struct_name& rhs) { \
 				TD_APPLY_EACH(TD_INTERNAL_YAML_STRUCT_DECODE, __VA_ARGS__) \
 				return true; \
 			} \
@@ -43,8 +43,8 @@
 #define TD_INTERNAL_YAML_STRUCT_IMGUI(ns_name, struct_name, ...) \
 	namespace TwoD { \
 		template<> \
-		struct Debuggable<::ns_name::struct_name> { \
-			static bool Draw(::ns_name::struct_name& value, const char* name) { \
+		struct Debuggable<ns_name struct_name> { \
+			static bool Draw(ns_name struct_name& value, const char* name) { \
 				ImGui::Text(name); \
 				bool changed = false; \
 				TD_APPLY_EACH(TD_INTERNAL_YAML_STRUCT_IMGUI_FIELD, __VA_ARGS__) \
@@ -53,17 +53,27 @@
 		}; \
 	}
 
-#define TD_YAML_STRUCT(ns_name, struct_name, ...) \
-	namespace ns_name { \
-		struct struct_name { \
-			TD_APPLY_EACH(TD_INTERNAL_YAML_STRUCT_FIELD, __VA_ARGS__) \
-		}; \
-	} \
+#define TD_INTERNAL_YAML_STRUCT_DEF(struct_name, ...) \
+	struct struct_name { \
+		TD_APPLY_EACH(TD_INTERNAL_YAML_STRUCT_FIELD, __VA_ARGS__) \
+	};
+#define TD_INTERNAL_YAML_STRUCT_FUN_DEF(ns_name, struct_name, ...) \
 	TD_INTERNAL_YAML_STRUCT_YAML(ns_name, struct_name, __VA_ARGS__) \
 	TD_INTERNAL_YAML_STRUCT_IMGUI(ns_name, struct_name, __VA_ARGS__)
 
+#define TD_YAML_STRUCT(struct_name, ...) \
+	TD_INTERNAL_YAML_STRUCT_DEF(struct_name, __VA_ARGS__) \
+	TD_INTERNAL_YAML_STRUCT_FUN_DEF(, struct_name, __VA_ARGS__)
+#define TD_YAML_STRUCT_WITH_NS(ns_name, struct_name, ...) \
+	namespace ns_name { \
+		TD_INTERNAL_YAML_STRUCT_DEF(struct_name, __VA_ARGS__) \
+	} \
+	TD_INTERNAL_YAML_STRUCT_FUN_DEF(::ns_name::, struct_name, __VA_ARGS__)
+
 #define TD_YAML_STRUCT_FIELD(...) (TD_EXPAND_MACRO, __VA_ARGS__)
 #define TD_YAML_STRUCT_FIELD_NO_PARSING(...) (TD_INTERNAL_YAML_STRUCT_FIELD_NO_PARSING, __VA_ARGS__)
+
+
 
 
 #define TD_INTERNAL_YAML_ENUM_FIELD(values) TD_CHOOSE_MACRO_2(TD_INTERNAL_YAML_ENUM_FIELD_NO_DEFAULT, TD_INTERNAL_YAML_ENUM_FIELD_WITH_DEFAULT, values)
@@ -191,7 +201,7 @@
 
 //#include <imgui.h>
 //#include "TwoD/Debug/ImGui.hpp"
-//TD_YAML_STRUCT(Foo, Bar, TD_YAML_STRUCT_FIELD(uint32_t, age))
+//TD_YAML_STRUCT_WITH_NS(Foo, Bar, TD_YAML_STRUCT_FIELD(uint32_t, age))
 //TD_YAML_ENUM_WITH_NS(Foo, Bar, TD_YAML_ENUM_FIELD(ONE))
 
 namespace YAML
