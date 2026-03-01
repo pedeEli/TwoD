@@ -6,6 +6,7 @@
 #include "TwoD/SDL/Texture.hpp"
 #include "TwoD/SDL/Sampler.hpp"
 #include "TwoD/ECS/ECS.hpp"
+#include "TwoD/Math/Rect.hpp"
 
 namespace TwoD
 {
@@ -18,6 +19,7 @@ namespace TwoD
 		size_t rendererIndex;
 		int32_t layer;
 		const glm::fmat4x4* projection;
+		const Rect<float>* scissorRect;
 
 		bool operator<(const RendererHandlerInfo& other) const noexcept
 		{
@@ -95,6 +97,7 @@ namespace TwoD
 			size_t startIndex = 0;
 			size_t size = 0;
 			const glm::fmat4x4* projection;
+			const Rect<float>* scissorRect;
 		};
 
 	private:

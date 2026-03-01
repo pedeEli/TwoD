@@ -12,6 +12,7 @@
 #include "TwoDLib/Components/SpriteRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
+#include "TwoDLib/Components/ScissorRect.hpp"
 
 #include "TwoDLib/Components/UI/Button.hpp"
 
@@ -42,6 +43,7 @@ namespace TwoDLib
 		components.Register<TwoD::SpriteRenderer>();
 		components.Register<TwoD::TextRenderer>();
 		components.Register<TwoD::ColorRenderer>();
+		components.Register<TwoD::ScissorRect>();
 
 		components.Register<TwoD::Button>();
 	}

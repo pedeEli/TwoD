@@ -4,6 +4,7 @@
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoDLib/Components/Camera.hpp"
+#include "TwoDLib/Components/ScissorRect.hpp"
 
 namespace TwoD
 {
@@ -55,13 +56,15 @@ namespace TwoD
 		for (size_t i = 0; i < size; i++)
 		{
 			auto* rect = renderers[i].TryGetComponent<UITransform>();
+			auto* scissor = renderers[i].TryGetComponent<ScissorRect>();
 			m_rendererInfos.emplace_back(
 				handlerIndex,
 				i,
 				renderers[i].layer,
 				rect == nullptr
 					? &camera->GetProjectionViewMatrix()
-					: &camera->GetProjectionMatrixFixedZoom()
+					: &camera->GetProjectionMatrixFixedZoom(),
+				scissor == nullptr ? nullptr : &scissor->rect
 			);
 		}
 

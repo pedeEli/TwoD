@@ -76,7 +76,11 @@ namespace TwoD
 		m_currentRenderCommand = {};
 		for (auto& info : infos)
 		{
-			if (m_currentRenderCommand.handlerIndex != info.handlerIndex || m_currentRenderCommand.projection != info.projection)
+			if (
+				m_currentRenderCommand.handlerIndex != info.handlerIndex ||
+				m_currentRenderCommand.projection != info.projection ||
+				*m_currentRenderCommand.scissorRect != *info.scissorRect
+			)
 			{
 				if (m_currentRenderCommand.size != 0)
 				{
@@ -86,6 +90,7 @@ namespace TwoD
 				m_currentRenderCommand.startIndex = m_quadIndex;
 				m_currentRenderCommand.size = 0;
 				m_currentRenderCommand.projection = info.projection;
+				m_currentRenderCommand.scissorRect = info.scissorRect;
 			}
 			(*handlers)[info.handlerIndex]->Render(*this, info.rendererIndex);
 		}
@@ -217,12 +222,22 @@ namespace TwoD
 		m_renderPass->BindIndexBuffer({ &m_indexBuffer, 0 }, SDL::IndexElementSize::THIRTY_TWO_BIT);
 
 		const glm::fmat4x4* currentProjection = nullptr;
+		const Rect<float>* scissorRect;
 		for (auto& renderCommand : m_renderCommands)
 		{
 			if (currentProjection != renderCommand.projection)
 			{
 				currentProjection = renderCommand.projection;
 				m_commandBuffer->PushVertexUniformData<glm::fmat4x4>(0, *currentProjection);
+			}
+			if (*scissorRect != *renderCommand.scissorRect)
+			{
+				scissorRect = renderCommand.scissorRect;
+				Rect<float> transformed{
+					(*currentProjection) * glm::fvec3(scissorRect->min, 1.0f),
+					(*currentProjection) * scissorRect->max
+				};
+				m_renderPass->SetScissorRect(scissorRect);
 			}
 			(*m_handlers)[renderCommand.handlerIndex]->Bind(m_commandBuffer, m_renderPass);
 			m_renderPass->DrawIndexedPrimitives(

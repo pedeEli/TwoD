@@ -126,6 +126,25 @@ namespace TwoD::SDL
 		SDL_DrawGPUPrimitives(m_raw->renderPass, numVertices, numInstances, firstVertex, firstInstance);
 	}
 
+	void RenderPass::SetScissorRect(const std::optional<::TwoD::Rect<int>> rect) const
+	{
+		TD_CORE_ASSERT(m_raw && !m_ended);
+		if (!rect)
+		{
+			SDL_SetGPUScissor(m_raw->renderPass, nullptr);
+		}
+		else
+		{
+			SDL_Rect r{
+				.x = rect->min.x,
+				.y = rect->min.y,
+				.w = rect->max.x - rect->min.x,
+				.h = rect->max.y - rect->min.y
+			};
+			SDL_SetGPUScissor(m_raw->renderPass, &r);
+		}
+	}
+
 	RenderPass::operator bool() const noexcept
 	{
 		return static_cast<bool>(m_raw);

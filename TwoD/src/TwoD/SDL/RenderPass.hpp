@@ -1,7 +1,8 @@
 #pragma once
+#include "Defines.hpp"
 #include "TwoD/Debug/DebugDefines.hpp"
 
-#include "Defines.hpp"
+#include "TwoD/Math/Rect.hpp"
 
 namespace TwoD
 {
@@ -31,6 +32,8 @@ namespace TwoD::SDL
 		void BindIndexBuffer(const BufferBinding& binding, IndexElementSize indexElementSize) const;
 		void DrawIndexedPrimitives(uint32_t numIndices, uint32_t numInstances, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) const;
 		void DrawPrimitives(uint32_t numVertices, uint32_t numInstances, uint32_t firstVertex, uint32_t firstInstance) const;
+
+		void SetScissorRect(const std::optional<::TwoD::Rect<int>> rect) const;
 
 		operator bool() const noexcept;
 

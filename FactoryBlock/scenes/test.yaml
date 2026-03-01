@@ -42,3 +42,7 @@ screen:
     size: 50
     padding: { x: 10.0, y: 10.0 }
     background: { x: 0, y: 100, z: 200, w: 255 }
+  - type: class TwoD::ScissorRect
+    rect:
+      min: { x: 940, y: 5 }
+      max: { x: 980, y: 20 }
