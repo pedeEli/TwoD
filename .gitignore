@@ -20,3 +20,6 @@ imgui.ini
 !vendor/premake/
 !vendor/premake/bin/
 !vendor/premake/bin/premake5.exe
+
+#scripts
+node_modules
