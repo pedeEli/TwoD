@@ -9,70 +9,38 @@
 
 #include "TwoD/Assets/AssetDefines.hpp"
 
+#define TDI_DEBUGGABLE_SINGLE(type, imgui_type)  \
+	template<> \
+	struct Debuggable<type> { \
+		static bool Draw(type& value, const char* name) { \
+			return ImGui::DragScalar(name, ImGuiDataType_ ## imgui_type, &value); \
+		} \
+	};
+
+#define TDI_DEBUGGABLE_GLM(type, imgui_type) \
+	template<glm::length_t N> \
+	struct Debuggable<glm::vec<N, type, glm::defaultp>> { \
+		static bool Draw(glm::vec<N, type, glm::defaultp>& value, const char* name) { \
+			return ImGui::DragScalarN(name, ImGuiDataType_ ## imgui_type, &value, N); \
+		} \
+	};
+#define TDI_DEBUGGABLE(type, imgui_type) \
+	TDI_DEBUGGABLE_SINGLE(type, imgui_type) \
+	TDI_DEBUGGABLE_GLM(type, imgui_type)
+
 namespace TwoD
 {
-	template<>
-	struct Debuggable<float>
-	{
-		static bool Draw(float& value, const char* name)
-		{
-			return ImGui::DragFloat(name, &value);
-		}
-	};
-
-	template<>
-	struct Debuggable<bool>
-	{
-		static bool Draw(bool& value, const char* name)
-		{
-			return ImGui::Checkbox(name, &value);
-		}
-	};
-
-	template<>
-	struct Debuggable<int>
-	{
-		static bool Draw(int& value, const char* name)
-		{
-			return ImGui::DragInt(name, &value);
-		}
-	};
-
-	template<>
-	struct Debuggable<glm::fvec2>
-	{
-		static bool Draw(glm::fvec2& value, const char* name)
-		{
-			return ImGui::DragFloat2(name, (float*)&value);
-		}
-	};
-
-	template<>
-	struct Debuggable<glm::fvec3>
-	{
-		static bool Draw(glm::fvec3& value, const char* name)
-		{
-			return ImGui::DragFloat3(name, (float*)&value);
-		}
-	};
-
-	template<>
-	struct Debuggable<glm::fvec4>
-	{
-		static bool Draw(glm::fvec4& value, const char* name)
-		{
-			return ImGui::DragFloat4(name, (float*)&value);
-		}
-	};
-
-	template<>
-	struct Debuggable<glm::u8vec4>
-	{
-		static bool Draw(glm::u8vec4& value, const char* name)
-		{
-			return ImGui::DragInt4(name, (int*)&value);
-		}
-	};
+	TDI_DEBUGGABLE(float, Float)
+	TDI_DEBUGGABLE(double, Double)
+	TDI_DEBUGGABLE(int8_t, S8)
+	TDI_DEBUGGABLE(int16_t, S16)
+	TDI_DEBUGGABLE(int32_t, S32)
+	TDI_DEBUGGABLE(int64_t, S64)
+	TDI_DEBUGGABLE(uint8_t, U8)
+	TDI_DEBUGGABLE(uint16_t, U16)
+	TDI_DEBUGGABLE(uint32_t, U32)
+	TDI_DEBUGGABLE(uint64_t, U64)
+	TDI_DEBUGGABLE(bool, Bool)
 
 	template<>
 	struct Debuggable<std::string>
@@ -83,26 +51,7 @@ namespace TwoD
 		}
 	};
 
-	template<>
-	struct Debuggable<std::string_view>
-	{
-		static bool Draw(std::string_view& value, const char* name)
-		{
-			std::string str(value);
-			auto changed = ImGui::InputText(name, &str);
-			if (changed)
-			{
-				value = str;
-			}
-			return changed;
-		}
-	};
-
 	template<typename T>
-	requires (requires(T& value, const char* name)
-	{
-		{ Debuggable<T>::Draw(value, name) } -> std::same_as<bool>;
-	})
 	struct Debuggable<std::vector<T>>
 	{
 		static bool Draw(std::vector<T>& value, const char* name)
@@ -114,16 +63,6 @@ namespace TwoD
 				changed |= Debuggable<T>::Draw(value[i], std::format("{}", i).c_str());
 			}
 			return changed;
-		}
-	};
-
-	template<typename T>
-	requires(std::is_integral_v<T>)
-	struct Debuggable<T>
-	{
-		static bool Draw(T& value, const char* name)
-		{
-			return ImGui::DragInt(name, (int*)&value);
 		}
 	};
 
