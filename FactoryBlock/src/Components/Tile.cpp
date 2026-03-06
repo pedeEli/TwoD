@@ -9,9 +9,21 @@ void Tile::Start()
 	groundRenderer.g = 200;
 	groundRenderer.b = 100;
 
-	for (auto dir : directions)
+	if ((directions & Direction::TOP) != Direction::NONE)
 	{
-		AddPath("", dir);
+		AddPath("top", Direction::TOP);
+	}
+	if ((directions & Direction::LEFT) != Direction::NONE)
+	{
+		AddPath("left", Direction::LEFT);
+	}
+	if ((directions & Direction::BOTTOM) != Direction::NONE)
+	{
+		AddPath("bottom", Direction::BOTTOM);
+	}
+	if ((directions & Direction::RIGHT) != Direction::NONE)
+	{
+		AddPath("right", Direction::RIGHT);
 	}
 }
 
@@ -38,6 +50,7 @@ constexpr static glm::fvec2 s_pathPositions[4] = {
 
 void Tile::AddPath(const char* name, Direction dir)
 {
+	auto index = std::bit_width(static_cast<uint8_t>(dir)) - 1;
 	auto& path = CreateEntity(std::format("path-{}", name));
 	auto& pathRenderer = path.AddComponent<ColorRenderer>();
 	pathRenderer.SetLayer(101);
@@ -45,6 +58,6 @@ void Tile::AddPath(const char* name, Direction dir)
 	pathRenderer.g = 150;
 	pathRenderer.b = 150;
 	auto& pathTransform = path.GetComponent<Transform>();
-	pathTransform.SetScale(s_pathScales[static_cast<uint8_t>(dir)]);
-	pathTransform.SetPosition(s_pathPositions[static_cast<uint8_t>(dir)]);
+	pathTransform.SetScale(s_pathScales[index]);
+	pathTransform.SetPosition(s_pathPositions[index]);
 }

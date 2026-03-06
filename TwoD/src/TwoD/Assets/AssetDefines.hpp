@@ -33,10 +33,10 @@ namespace TwoD
 	}
 
 #define TD_INTERNAL_ASSET_LOAD(...) void Load(const Deserializer& deserializer) override { \
-		TD_APPLY_EACH(TD_INTERNAL_ASSET_LOAD_FIELD, __VA_ARGS__) \
+		TD_APPLY_EACH_CONCAT(TD_INTERNAL_ASSET_LOAD_FIELD, __VA_ARGS__) \
 	}
 
-#define TD_ASSET(...) TD_APPLY_EACH(TD_INTERNAL_ASSET_FIELD, __VA_ARGS__) \
+#define TD_ASSET(...) TD_APPLY_EACH_CONCAT(TD_INTERNAL_ASSET_FIELD, __VA_ARGS__) \
 	TD_INTERNAL_ASSET_LOAD(__VA_ARGS__)
 
 #define TD_ASSET_FIELD(...) (__VA_ARGS__)

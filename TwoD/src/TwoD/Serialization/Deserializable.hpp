@@ -8,9 +8,9 @@
 #define TDI_GLM_VEC_DESERIALIZE_IF(x) && deserializer[#x]
 #define TDI_GLM_VEC_DESERIALIZE_SET(x) if(!deserializer[#x].As<T>(value.x)) { return false; }
 #define TDI_GLM_VEC_DESERIALIZE_UNION(x, ...) \
-	if (deserializer[#x] __VA_OPT__(TD_APPLY_EACH(TDI_GLM_VEC_DESERIALIZE_IF, __VA_ARGS__))) { \
+	if (deserializer[#x] __VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_GLM_VEC_DESERIALIZE_IF, __VA_ARGS__))) { \
 		TDI_GLM_VEC_DESERIALIZE_SET(x) \
-		__VA_OPT__(TD_APPLY_EACH(TDI_GLM_VEC_DESERIALIZE_SET, __VA_ARGS__)) \
+		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_GLM_VEC_DESERIALIZE_SET, __VA_ARGS__)) \
 		return true; \
 	}
 #define TDI_GLM_VEC_DESERIALIZE(size, u1, u2, u3) \

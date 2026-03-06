@@ -47,16 +47,20 @@
 #define TDI_GET_NO_SERIALIZE(data) TD_GET8 data
 #define TDI_GET_NO_DEBUG(data) TD_GET9 data
 
-#define TDI_GET_TEMPLATE_DEF_SINGLE(t) , TD_GET1 t TD_GET2 t
-#define TDI_GET_TEMPLATE_DEF_INSIDE(t, ...) TD_GET1 t TD_GET2 t __VA_OPT__(TD_APPLY_EACH(TDI_GET_TEMPLATE_DEF_SINGLE, __VA_ARGS__))
-#define TDI_GET_TEMPLATE_DEF(data) TD_APPLY_IF(template<TDI_GET_TEMPLATE_DEF_INSIDE TD_UNWRAP, (TDI_GET_TEMPLATE(data))) TD_IF_ELSE((TDI_GET_TEMPLATE(data)), >, )
+#define TDI_GET_TEMPLATE_DEF_TYPE(type) TD_GET1 type TD_GET2 type
+#define TDI_GET_TEMPLATE_DEF(data, ...) TD_IF_ELSE( \
+		(TDI_GET_TEMPLATE(data)), \
+		template<TD_DEFER(TD_APPLY_EACH)(TDI_GET_TEMPLATE_DEF_TYPE, TD_UNWRAP TDI_GET_TEMPLATE(data))>, \
+		__VA_OPT__(__VA_ARGS__) \
+	)
 
-#define TDI_GET_QUALIFIED_NAME_TEMPLATE_SINGLE(t) , TD_GET2 t
-#define TDI_GET_QUALIFIED_NAME_TEMPLATE(t, ...) TD_GET2 t __VA_OPT__(TD_APPLY_EACH(TDI_GET_QUALIFIED_NAME_TEMPLATE_SINGLE, __VA_ARGS__))
 #define TDI_GET_QUALIFIED_NAME(data) \
 	TDI_GET_NAMESPACE(data) \
 	TDI_GET_NAME(data) \
-	TD_APPLY_IF(<TDI_GET_QUALIFIED_NAME_TEMPLATE TD_UNWRAP, (TDI_GET_TEMPLATE(data))) TD_IF_ELSE((TDI_GET_TEMPLATE(data)),>, )
+	TD_IF_ELSE( \
+		(TDI_GET_TEMPLATE(data)), \
+		<TD_DEFER(TD_APPLY_EACH)(TD_GET2 TD_UNWRAP, TD_UNWRAP TDI_GET_TEMPLATE(data))>, \
+	)
 
 // data combinator
 #define TDI_DATA_CONCAT(x, y) TD_DEFER(TD_ZIP_WITH)(TD_CONCAT_TOKEN, x, y)
@@ -69,7 +73,7 @@
 	TDI_GET_TEMPLATE_DEF(meta) \
 	struct TDI_GET_NAME(meta) TDI_GET_BASE(meta) { \
 	public: \
-		TD_APPLY_EACH(TDI_STRUCT_FIELD_DEF, TD_UNWRAP fields) \
+		TD_APPLY_EACH_CONCAT(TDI_STRUCT_FIELD_DEF, TD_UNWRAP fields) \
 		__VA_ARGS__ \
 	};
 
@@ -82,11 +86,11 @@
 	)
 #define TDI_STRUCT_DESERIALIZABLE(meta, fields) \
 	namespace TwoD { \
-		TD_IF_ELSE((TDI_GET_TEMPLATE(meta)), TDI_GET_TEMPLATE_DEF(meta), template<>) \
+		TDI_GET_TEMPLATE_DEF(meta, template<>) \
 		struct Deserializable<TDI_GET_QUALIFIED_NAME(meta)> { \
 			static bool Deserialize(const Deserializer& deserializer, TDI_GET_QUALIFIED_NAME(meta)& value) { \
 				bool success = true; \
-				TD_APPLY_EACH(TDI_STRUCT_DESERIALIZE_FIELD, TD_UNWRAP fields) \
+				TD_APPLY_EACH_CONCAT(TDI_STRUCT_DESERIALIZE_FIELD, TD_UNWRAP fields) \
 				return success; \
 			} \
 		}; \
@@ -101,11 +105,11 @@
 	)
 #define TDI_STRUCT_DEBUG(meta, fields) \
 	namespace TwoD { \
-		TD_IF_ELSE((TDI_GET_TEMPLATE(meta)), TDI_GET_TEMPLATE_DEF(meta), template<>) \
+		TDI_GET_TEMPLATE_DEF(meta, template<>) \
 		struct Debuggable<TDI_GET_QUALIFIED_NAME(meta)> { \
 			static bool Draw(TDI_GET_QUALIFIED_NAME(meta)& value, const char* name) { \
 				bool changed = false; \
-				TD_APPLY_EACH(TDI_STRUCT_DEBUG_FIELD, TD_UNWRAP fields) \
+				TD_APPLY_EACH_CONCAT(TDI_STRUCT_DEBUG_FIELD, TD_UNWRAP fields) \
 				return changed; \
 			} \
 		}; \
@@ -132,20 +136,23 @@
 	))
 
 
-//#include <glm/glm.hpp>
+
+//TD_STRUCT(
+//	(TD_NAME(Test)),
+//	(TD_STRUCT_FIELD(uint8_t, age))
+//)
 //TD_STRUCT(
 //	(TD_NAME(Foo), TD_NAMESPACE(TwoD)),
 //	(
 //		TD_STRUCT_FIELD(int, age, TD_INIT(42)),
-//		TD_STRUCT_FIELD(const char*, name),
+//		TD_STRUCT_FIELD(std::string, name),
 //		TD_STRUCT_FIELD(float, speed, TD_INIT(6.9f)),
 //		TD_STRUCT_FIELD(glm::fvec2, position, TD_NO_SERIALIZE, TD_NO_DEBUG)
-//		),
-//	0
+//	),
 //)
 
 // enum defs
-#define TDI_ENUM_FIELD_DEF(field) TDI_GET_NAME(field) TD_APPLY_IF(= TD_EXPAND, (TDI_GET_INIT(field))),
+#define TDI_ENUM_FIELD_DEF(field) TDI_GET_NAME(field) TD_APPLY_IF(= TD_EXPAND, (TDI_GET_INIT(field)))
 #define TDI_ENUM_DEF(meta, fields) \
 	enum class TDI_GET_NAME(meta) TDI_GET_BASE(meta) { \
 		TD_APPLY_EACH(TDI_ENUM_FIELD_DEF, TD_UNWRAP fields) \
@@ -187,7 +194,7 @@
 					if (!deserializer.As<std::string>(str)) { \
 						return false; \
 					} \
-					TD_APPLY_EACH(TDI_ENUM_DESERIALIZE_FIELD, TD_UNWRAP fields) \
+					TD_APPLY_EACH_CONCAT(TDI_ENUM_DESERIALIZE_FIELD, TD_UNWRAP fields) \
 					return false; \
 				}; \
 				if (deserializer.IsSequence()) { \
@@ -209,12 +216,64 @@
 
 // enum debug
 #ifdef TD_CREATE_DEBUGGER
+#define TDI_ENUM_DEBUG_IS_FLAGS_FIELD(field) \
+	TD_IF_ELSE( \
+		(TDI_GET_NO_DEBUG(field)), \
+		&& true, \
+		&& (static_cast<_underlying>(_type::TDI_GET_NAME(field)) == 0 || std::has_single_bit(static_cast<_unsigned>(_type::TDI_GET_NAME(field)))) \
+	)
+#define TDI_ENUM_DEBUG_IS_FLAGS(fields) true TD_APPLY_EACH_CONCAT(TDI_ENUM_DEBUG_IS_FLAGS_FIELD, TD_UNWRAP fields)
+
+#define TDI_ENUM_DEBUG_FLAGS_FIELD(field) \
+	TD_IF_ELSE( \
+		(TDI_GET_NO_DEBUG(field)),, \
+		if constexpr (static_cast<_underlying>(_type::TDI_GET_NAME(field)) == 0) { \
+			bool selected = static_cast<_underlying>(value) == 0; \
+			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), selected) && !selected) { \
+				value = _type::TDI_GET_NAME(field); \
+				changed = true; \
+			} \
+		} else { \
+			bool selected = (value & _type::TDI_GET_NAME(field)) != static_cast<_type>(0); \
+			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), &selected)) { \
+				if (selected) { \
+					value |= _type::TDI_GET_NAME(field); \
+				} else { \
+					value &= ~_type::TDI_GET_NAME(field); \
+				} \
+				changed = true; \
+			} \
+		} \
+	)
+#define TDI_ENUM_DEBUG_FLAGS(fields) TD_APPLY_EACH_CONCAT(TDI_ENUM_DEBUG_FLAGS_FIELD, TD_UNWRAP fields)
+
+#define TDI_ENUM_DEBUG_SELECT_FIELD(field) \
+	TD_IF_ELSE( \
+		(TDI_GET_NO_DEBUG(field)),, \
+		{ \
+			bool selected = value == _type::TDI_GET_NAME(field); \
+			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), selected) && !selected) { \
+				value = _type::TDI_GET_NAME(field); \
+			} \
+		} \
+	)
+#define TDI_ENUM_DEBUG_SELECT(fields) TD_APPLY_EACH_CONCAT(TDI_ENUM_DEBUG_SELECT_FIELD, TD_UNWRAP fields)
+
 #define TDI_ENUM_DEBUG(meta, fields) \
 	namespace TwoD { \
 		template<> \
 		struct Debuggable<TDI_GET_QUALIFIED_NAME(meta)> { \
 			static bool Draw(TDI_GET_QUALIFIED_NAME(meta)& value, const char* name) { \
-				return false; \
+				using _type = TDI_GET_QUALIFIED_NAME(meta); \
+				using _underlying = std::underlying_type_t<_type>; \
+				using _unsigned = std::make_unsigned_t<_underlying>; \
+				bool changed = false; \
+				if constexpr (TDI_ENUM_DEBUG_IS_FLAGS(fields)) { \
+					TDI_ENUM_DEBUG_FLAGS(fields) \
+				} else { \
+					TDI_ENUM_DEBUG_SELECT(fields) \
+				} \
+				return changed; \
 			} \
 		}; \
 	}

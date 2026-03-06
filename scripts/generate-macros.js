@@ -91,29 +91,41 @@ function applyEach(out, iterations, macros, internal) {
 	out.write('#pragma once\n')
 	out.write('#include "UtilsMacros.hpp"\n')
 
-	// generate APPLY_EACH_i
+	// generate APPLY_EACH_i and APPLY_EACH_CONCAT_i
 	for (let i = 1; i <= iterations; i++) {
 		const arr = Array(i).fill(null).map((_, j) => j + 1)
+		const header = `(F, ${arr.map(j => `X${j}`).join(', ')}) `
+		const body = arr.map(j => `F(X${j})`)
 		let str = '#define '
-		// macro header
 		str += internal(`APPLY_EACH_${i}`)
-		str += `(F, ${arr.map(j => `X${j}`).join(', ')}) `
-		// macro body
-		str += `${arr.map(j => `F(X${j})`).join(' ')}\n`
+		str += header
+		str += `${body.join(', ')}\n`
+		out.write(str)
+
+		str = '#define '
+		str += internal(`APPLY_EACH_CONCAT_${i}`)
+		str += header
+		str += `${body.join(' ')}\n`
 		out.write(str)
 	}
 
-	// generate APPLY_EACH_N
+	// generate APPLY_EACH_N and APPLY_EACH_CONCAT_N
 	const applyEachN = internal('APPLY_EACH_N')
+	const applyEachConcatN = internal('APPLY_EACH_CONCAT_N')
 	{
 		const applyEachNParams = Array(iterations).fill(null).map((_, j) => `_${j + 1}`).join(', ')
 		let str = '#define '
 		str += applyEachN
 		str += `(${applyEachNParams}, macro, ...) macro\n`
 		out.write(str)
+		
+		str = '#define '
+		str += applyEachConcatN
+		str += `(${applyEachNParams}, macro, ...) macro\n`
+		out.write(str)
 	}
 
-	// generate APPLY_EACH
+	// generate APPLY_EACH and APPLY_EACH_CONCAT
 	{
 		const PER_ROW = 4
 		let str = '#define '
@@ -130,9 +142,25 @@ function applyEach(out, iterations, macros, internal) {
 		}
 		str += ')(F, __VA_ARGS__)\n'
 		out.write(str)
+
+		str = '#define '
+		// macro header
+		str += macros.applyEachConcat
+		str += '(F, ...) '
+		// macro body
+		str += `${applyEachConcatN}( \\\n`
+		str += '\t__VA_ARGS__, \\\n'
+		for (let i = iterations; i > 0; i -= PER_ROW) {
+			const arr = Array(Math.min(PER_ROW, i)).fill(null).map((_, j) => i - j);
+			str += `\t${arr.map(j => internal(`APPLY_EACH_CONCAT_${j}`)).join(', ')}`
+			str += `${i - PER_ROW <= 0 ? '' : ','} \\\n`
+		}
+		str += ')(F, __VA_ARGS__)\n'
+		out.write(str)
 	}
-	// generate APPLY_EACH_INDIRECT
+	// generate APPLY_EACH_INDIRECT and APPLY_EACH_CONCAT_INDIRECT
 	out.write(`#define ${macros.applyEachIndirect}() ${macros.applyEach}\n`)
+	out.write(`#define ${macros.applyEachConcatIndirect}() ${macros.applyEachConcat}\n`)
 }
 
 /** @type {FileGenerator} */
@@ -335,7 +363,7 @@ function helperMacros(out, iterations, macros, internal) {
  */
 function createMacroNames(prefix) {
 	return {
-		comma: prefix("comma"),
+		comma: prefix("COMMA"),
 		unwrap: prefix('UNWRAP'),
 		expand: prefix('EXPAND'),
 		apply: prefix('APPLY'),
@@ -358,6 +386,8 @@ function createMacroNames(prefix) {
 
 		applyEach: prefix('APPLY_EACH'),
 		applyEachIndirect: prefix('APPLY_EACH_INDIRECT'),
+		applyEachConcat: prefix('APPLY_EACH_CONCAT'),
+		applyEachConcatIndirect: prefix('APPLY_EACH_CONCAT_INDIRECT'),
 
 		zipWith: prefix('ZIP_WITH'),
 		zipWithIndirect: prefix('ZIP_WITH_INDIRECT'),

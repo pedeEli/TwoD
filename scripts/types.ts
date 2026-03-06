@@ -91,16 +91,18 @@ type Macros = {
 	parenthesis: string;
 	ifElse: string;
 	applyIf: string;
-
+	
 	defer: string;
 	deferIndirect: string,
 	deferN: (n: number) => string;
-
+	
 	getN: (n: number) => string;
 	setN: (n: number) => string;
-
+	
 	applyEach: string;
 	applyEachIndirect: string;
+	applyEachConcat: string;
+	applyEachConcatIndirect: string;
 
 	zipWith: string;
 	zipWithIndirect: string;
