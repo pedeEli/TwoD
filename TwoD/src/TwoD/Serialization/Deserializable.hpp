@@ -5,33 +5,46 @@
 
 #include <glm/glm.hpp>
 
-#define TDI_GLM_VEC_DESERIALIZE_IF(x) && deserializer[#x]
-#define TDI_GLM_VEC_DESERIALIZE_SET(x) if(!deserializer[#x].As<T>(value.x)) { return false; }
-#define TDI_GLM_VEC_DESERIALIZE_UNION(x, ...) \
-	if (deserializer[#x] __VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_GLM_VEC_DESERIALIZE_IF, __VA_ARGS__))) { \
-		TDI_GLM_VEC_DESERIALIZE_SET(x) \
-		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_GLM_VEC_DESERIALIZE_SET, __VA_ARGS__)) \
+#define TDI_DESERIALIZABLE_GLM_VEC_IF(x) && deserializer[#x]
+#define TDI_DESERIALIZABLE_GLM_VEC_SET(x) if(!deserializer[#x].As<T>(value.x)) { return false; }
+#define TDI_DESERIALIZABLE_GLM_VEC_UNION(x, ...) \
+	if (deserializer[#x] __VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_DESERIALIZABLE_GLM_VEC_IF, __VA_ARGS__))) { \
+		TDI_DESERIALIZABLE_GLM_VEC_SET(x) \
+		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_DESERIALIZABLE_GLM_VEC_SET, __VA_ARGS__)) \
 		return true; \
 	}
-#define TDI_GLM_VEC_DESERIALIZE(size, u1, u2, u3) \
+#define TDI_DESERIALIZABLE_GLM_VEC_SEQUENCE(size) \
+	if (deserializer.IsSequence()) { \
+		if (deserializer.GetSize() != size) { \
+			return false; \
+		} \
+		for (size_t i = 0; i < size; i++) { \
+			if (!deserializer[i].As<T>(value[static_cast<glm::vec<size, T, glm::defaultp>::length_type>(i)])) { \
+				return false; \
+			} \
+		} \
+		return true; \
+	}
+#define TDI_DESERIALIZABLE_GLM_VEC(size, u1, u2, u3) \
 	template<typename T> \
 	struct Deserializable<glm::vec<size, T, glm::defaultp>> \
 	{ \
 		static bool Deserialize(const Deserializer& deserializer, glm::vec<size, T, glm::defaultp>& value) \
 		{ \
-			TDI_GLM_VEC_DESERIALIZE_UNION u1 \
-			TDI_GLM_VEC_DESERIALIZE_UNION u2 \
-			TDI_GLM_VEC_DESERIALIZE_UNION u3 \
+			TDI_DESERIALIZABLE_GLM_VEC_SEQUENCE(size) \
+			TDI_DESERIALIZABLE_GLM_VEC_UNION u1 \
+			TDI_DESERIALIZABLE_GLM_VEC_UNION u2 \
+			TDI_DESERIALIZABLE_GLM_VEC_UNION u3 \
 			return false; \
 		} \
-	}
+	};
 
 namespace TwoD
 {
-	TDI_GLM_VEC_DESERIALIZE(1, (x), (r), (s));
-	TDI_GLM_VEC_DESERIALIZE(2, (x, y), (r, g), (s, t));
-	TDI_GLM_VEC_DESERIALIZE(3, (x, y, z), (r, g, b), (s, t, p));
-	TDI_GLM_VEC_DESERIALIZE(4, (x, y, z, w), (r, g, b, a), (s, t, p, q));
+	TDI_DESERIALIZABLE_GLM_VEC(1, (x), (r), (s))
+	TDI_DESERIALIZABLE_GLM_VEC(2, (x, y), (r, g), (s, t))
+	TDI_DESERIALIZABLE_GLM_VEC(3, (x, y, z), (r, g, b), (s, t, p))
+	TDI_DESERIALIZABLE_GLM_VEC(4, (x, y, z, w), (r, g, b, a), (s, t, p, q))
 
 	template<typename T>
 	struct Deserializable<std::vector<T>>
