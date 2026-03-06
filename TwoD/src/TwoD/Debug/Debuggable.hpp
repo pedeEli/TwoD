@@ -8,7 +8,6 @@
 #include <glm/glm.hpp>
 
 #include "TwoD/Assets/AssetDefines.hpp"
-#include "TwoD/Math/Rect.hpp"
 
 namespace TwoD
 {
@@ -27,6 +26,15 @@ namespace TwoD
 		static bool Draw(bool& value, const char* name)
 		{
 			return ImGui::Checkbox(name, &value);
+		}
+	};
+
+	template<>
+	struct Debuggable<int>
+	{
+		static bool Draw(int& value, const char* name)
+		{
+			return ImGui::DragInt(name, &value);
 		}
 	};
 
@@ -153,19 +161,6 @@ namespace TwoD
 			{
 				changed |= Debuggable<T>::Draw(*value, "");
 			}
-			return changed;
-		}
-	};
-
-	template<typename T>
-	struct Debuggable<Rect<T>>
-	{
-		static bool Draw(Rect<T>& value, const char* name)
-		{
-			ImGui::Text(name);
-			bool changed = false;
-			changed |= Debuggable<decltype(value.min)>::Draw(value.min, "min");
-			changed |= Debuggable<decltype(value.max)>::Draw(value.max, "max");
 			return changed;
 		}
 	};

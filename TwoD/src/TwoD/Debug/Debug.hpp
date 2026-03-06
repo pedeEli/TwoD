@@ -1,8 +1,8 @@
 #pragma once
 #include "DebugDefines.hpp"
-#include "TwoD/SDL/Raw/Window.hpp"
-#include "TwoD/SDL/Raw/CommandBuffer.hpp"
-#include "TwoD/SDL/Raw/RenderPass.hpp"
+#include "TwoD/SDL/Window.hpp"
+#include "TwoD/SDL/CommandBuffer.hpp"
+#include "TwoD/SDL/RenderPass.hpp"
 
 namespace TwoD
 {

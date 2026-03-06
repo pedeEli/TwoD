@@ -1,7 +1,6 @@
 #pragma once
 #include "ECSDefines.hpp"
 
-#include "TwoD/Core/YAML.hpp"
 #include "TwoD/Core/Storage.hpp"
 #include "Entity.hpp"
 

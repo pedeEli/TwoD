@@ -3,18 +3,19 @@
 #include "TwoD/SDL/Surface.hpp"
 #include "SpriteAtlas.hpp"
 
+TD_STRUCT(
+	(TD_NAMESPACE(TwoD), TD_NAME(SpriteSlices)),
+	(
+		TD_STRUCT_FIELD(uint32_t, width),
+		TD_STRUCT_FIELD(uint32_t, height),
+		TD_STRUCT_FIELD(uint32_t, count)
+	),
+)
+
 namespace TwoD
 {
 	class Sprite : public Asset
 	{
-	public:
-		struct Slices
-		{
-			uint32_t width;
-			uint32_t height;
-			uint32_t count;
-		};
-
 	public:
 		~Sprite() = default;
 
@@ -33,7 +34,7 @@ namespace TwoD
 		TD_ASSET(
 			TD_ASSET_FIELD(std::string, file),
 			TD_ASSET_FIELD(std::string, name),
-			TD_ASSET_FIELD(std::optional<Slices>, slices, {})
+			TD_ASSET_FIELD(std::optional<SpriteSlices>, slices, {})
 		)
 
 	private:
@@ -42,33 +43,5 @@ namespace TwoD
 	private:
 		SpriteRect m_rect = { 0, 0, 0, 0 };
 		std::vector<SpriteRect> m_rects;
-	};
-}
-
-namespace YAML
-{
-	template<>
-	struct convert<TwoD::Sprite::Slices>
-	{
-		static Node encode(const TwoD::Sprite::Slices& rhs)
-		{
-			Node node;
-			node["width"] = rhs.width;
-			node["height"] = rhs.height;
-			node["count"] = rhs.count;
-		}
-		static bool decode(const Node& node, TwoD::Sprite::Slices& rhs)
-		{
-			auto width = node["width"];
-			auto height = node["height"];
-			auto count = node["count"];
-			TD_CORE_ASSERT(width);
-			TD_CORE_ASSERT(height);
-			TD_CORE_ASSERT(count);
-			rhs.width = width.as<uint32_t>();
-			rhs.height = height.as<uint32_t>();
-			rhs.count = count.as<uint32_t>();
-			return true;
-		}
 	};
 }

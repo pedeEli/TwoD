@@ -3,23 +3,32 @@
 
 namespace TwoD
 {
-	void UITransform::CreateLoadData(internal_load_data* loadData, const YAML::Node& node)
+	void UITransform::CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer)
 	{
-		Transform::CreateLoadData(loadData, node);
+		Transform::CreateLoadData(loadData, deserializer);
 		glm::fvec2 m_size = { 0.0f, 0.0f };
 		glm::fvec2 m_offset = { 0.0f, 0.0f };
 		Anchor m_anchor = Anchor::CENTER;
-		if (node["size"])
+		if (deserializer["size"])
 		{
-			loadData->size = node["size"].as<glm::fvec2>();
+			if (!deserializer["size"].As<glm::fvec2>(loadData->size))
+			{
+				TD_CORE_ASSERT(false, "failed to load ui transform");
+			}
 		}
-		if (node["offset"])
+		if (deserializer["offset"])
 		{
-			loadData->offset = node["offset"].as<glm::fvec2>();
+			if (!deserializer["offset"].As<glm::fvec2>(loadData->offset))
+			{
+				TD_CORE_ASSERT(false, "failed to load ui transform");
+			}
 		}
-		if (node["anchor"])
+		if (deserializer["anchor"])
 		{
-			loadData->anchor = node["anchor"].as<Anchor>();
+			if (!deserializer["anchor"].As<Anchor>(loadData->anchor))
+			{
+				TD_CORE_ASSERT(false, "failed to load ui transform");
+			}
 		}
 	}
 	void UITransform::Load(const void* data)

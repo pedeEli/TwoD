@@ -12,7 +12,7 @@ namespace TwoD
 	struct ComponentInfo
 	{
 		std::string type;
-		const void* loadData;
+		const void* loadData = nullptr;
 	};
 
 	struct EntityInfo
@@ -54,25 +54,23 @@ namespace TwoD
 		std::vector<EntityHandle> m_rootEntities;
 		EntityHandle m_screenRootEntity = EntityHandle::None;
 	};
-}
 
-namespace YAML
-{
+	
 	template<>
-	struct convert<TwoD::ComponentInfo>
+	struct Deserializable<TwoD::ComponentInfo>
 	{
-		static bool decode(const Node& node, TwoD::ComponentInfo& rhs);
+		static bool Deserialize(const Deserializer& node, TwoD::ComponentInfo& rhs);
 	};
 
 	template<>
-	struct convert<TwoD::EntityInfo>
+	struct Deserializable<TwoD::EntityInfo>
 	{
-		static bool decode(const Node& node, TwoD::EntityInfo& rhs);
+		static bool Deserialize(const Deserializer& node, TwoD::EntityInfo& rhs);
 	};
 
 	template<>
-	struct convert<TwoD::ScreenEntities>
+	struct Deserializable<TwoD::ScreenEntities>
 	{
-		static bool decode(const Node& node, TwoD::ScreenEntities& rhs);
+		static bool Deserialize(const Deserializer& node, TwoD::ScreenEntities& rhs);
 	};
 }

@@ -1,19 +1,21 @@
 #pragma once
 #include "ECSDefines.hpp"
 #include "Transform.hpp"
-#include "TwoD/Core/YAML.hpp"
 #include "TwoD/Math/Rect.hpp"
 
-TD_YAML_ENUM_WITH_NS_AND_BASE(TwoD, Anchor, uint8_t,
-	TD_YAML_ENUM_FIELD(CENTER, 0),
-	TD_YAML_ENUM_FIELD(TOP, 1),
-	TD_YAML_ENUM_FIELD(RIGHT, 2),
-	TD_YAML_ENUM_FIELD(BOTTOM, 4),
-	TD_YAML_ENUM_FIELD(LEFT, 8),
-	TD_YAML_ENUM_FIELD(TOP_RIGHT, TOP | RIGHT),
-	TD_YAML_ENUM_FIELD(TOP_LEFT, TOP | LEFT),
-	TD_YAML_ENUM_FIELD(BOTTOM_RIGHT, BOTTOM | RIGHT),
-	TD_YAML_ENUM_FIELD(BOTTOM_LEFT, BOTTOM | LEFT)
+TD_ENUM(
+	(TD_NAMESPACE(TwoD), TD_NAME(Anchor), TD_BASE(uint8_t)),
+	(
+		TD_ENUM_FIELD(CENTER, TD_INIT(0)),
+		TD_ENUM_FIELD(TOP, TD_INIT(1)),
+		TD_ENUM_FIELD(RIGHT, TD_INIT(2)),
+		TD_ENUM_FIELD(BOTTOM, TD_INIT(4)),
+		TD_ENUM_FIELD(LEFT, TD_INIT(8)),
+		TD_ENUM_FIELD(TOP_RIGHT, TD_INIT(TOP | RIGHT)),
+		TD_ENUM_FIELD(TOP_LEFT, TD_INIT(TOP | LEFT)),
+		TD_ENUM_FIELD(BOTTOM_RIGHT, TD_INIT(BOTTOM | RIGHT)),
+		TD_ENUM_FIELD(BOTTOM_LEFT, TD_INIT(BOTTOM | LEFT))
+	)
 )
 
 
@@ -29,7 +31,7 @@ namespace TwoD
 			glm::fvec2 offset = { 0.0f, 0.0f };
 			Anchor anchor = Anchor::CENTER;
 		};
-		static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node);
+		static void CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer);
 		void Load(const void* data) override;
 #ifdef TD_CREATE_DEBUGGER
 		void Debug() override;

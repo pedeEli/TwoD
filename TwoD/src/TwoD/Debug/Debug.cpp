@@ -9,6 +9,10 @@
 #include "TwoD/Assets/Scene.hpp"
 #include "TwoD/ECS/Transform.hpp"
 #include "TwoD/Events/EventHandler.hpp"
+
+#include "TwoD/SDL/Raw/Window.hpp"
+#include "TwoD/SDL/Raw/CommandBuffer.hpp"
+#include "TwoD/SDL/Raw/RenderPass.hpp"
 #endif
 
 namespace TwoD

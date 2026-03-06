@@ -1,6 +1,8 @@
 #pragma once
 #include "TwoD/Debug/Debuggable.hpp"
 
+#include "TwoD/Serialization/Serialization.hpp"
+
 namespace TwoD
 {
 	class Component;
@@ -19,7 +21,7 @@ namespace TwoD
 	class Canvas;
 }
 
-#define TD_INTERNAL_COMPONENT_FIELD(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_COMPONENT_FIELD_NO_DEFAULT, TD_INTERNAL_COMPONENT_FIELD_WITH_DEFAULT, values)
+#define TD_INTERNAL_COMPONENT_FIELD(values) TD_EVAL(TD_CHOOSE((TD_INTERNAL_COMPONENT_FIELD_WITH_DEFAULT, TD_INTERNAL_COMPONENT_FIELD_NO_DEFAULT,,), TD_UNWRAP values))
 #define TD_INTERNAL_COMPONENT_FIELD_WITH_DEFAULT(updater, type, name, value) type name = value;
 #define TD_INTERNAL_COMPONENT_FIELD_NO_DEFAULT(updater, type, name) type name;
 
@@ -35,13 +37,23 @@ namespace TwoD
 		TD_APPLY_EACH(TD_INTERNAL_COMPONENT_LOAD_FIELD, __VA_ARGS__) \
 	}
 
-#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD(values) TD_CHOOSE_MACRO_4(TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_NO_DEFAULT, TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_WITH_DEFAULT, values)
-#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_WITH_DEFAULT(updater, type, name, value) if (node[#name]) { loadData->name = node[#name].as<type>(); }
-#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_NO_DEFAULT(updater, type, name) TD_CORE_ASSERT(node[#name]); \
-	loadData->name = node[#name].as<type>();
+#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD(values) TD_EVAL(TD_CHOOSE((TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_WITH_DEFAULT, TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_NO_DEFAULT,,), TD_UNWRAP values))
+#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_WITH_DEFAULT(updater, type, name, value) \
+	if (deserializer[#name]) { \
+		if (!deserializer[#name].As<type>(loadData->name)) { \
+			return false; \
+		} \
+	}
+#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD_NO_DEFAULT(updater, type, name) \
+	TD_CORE_ASSERT(deserializer[#name]); \
+	if (!deserializer[#name].As<type>(loadData->name)) { \
+		return false; \
+	}
 
-#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA(...) static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node) { \
+#define TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA(...) \
+	static bool CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer) { \
 		TD_APPLY_EACH(TD_INTERNAL_COMPONENT_CREATE_LOAD_DATA_FIELD, __VA_ARGS__) \
+		return true; \
 	}
 
 #define TD_INTERNAL_COMPONENT_DEBUG_FIELD(values) TD_INTERNAL_COMPONENT_DEBUG_FIELD_UNWRAP values
@@ -66,4 +78,4 @@ namespace TwoD
 #define TD_INTERNAL_COMPONENT_FIELD_WITH_UPDATER_WITH_DEFAULT(type, name, value, updater) (updater, type, name, value)
 
 #define TD_COMPONENT_FIELD(...) (TD_INTERNAL_COMPONENT_FIELD_NO_UPDATER, __VA_ARGS__)
-#define TD_COMPONENT_FIELD_WITH_UPDATER(...) TD_CHOOSE_MACRO_4(TD_INTERNAL_COMPONENT_FIELD_WITH_UPDATER_NO_DEFAULT, TD_INTERNAL_COMPONENT_FIELD_WITH_UPDATER_WITH_DEFAULT, (__VA_ARGS__))
+#define TD_COMPONENT_FIELD_WITH_UPDATER(...) TD_EVAL(TD_CHOOSE((TD_INTERNAL_COMPONENT_FIELD_WITH_UPDATER_WITH_DEFAULT, TD_INTERNAL_COMPONENT_FIELD_WITH_UPDATER_NO_DEFAULT,,), __VA_ARGS__))

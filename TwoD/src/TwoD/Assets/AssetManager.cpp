@@ -2,6 +2,7 @@
 #include "AssetManager.hpp"
 
 #include "TwoD/Core/App.hpp"
+#include "TwoD/Serialization/Serialization.hpp"
 
 namespace TwoD
 {
@@ -44,18 +45,31 @@ namespace TwoD
 
 	const AssetManager::Callbacks AssetManager::LoadFile(const std::filesystem::path& path)
 	{
-		YAML::Node node = YAML::LoadFile(path.string());
+		std::ifstream file(path, std::ios::binary | std::ios::ate);
+		size_t size = file.tellg();
+		file.seekg(0);
+		std::vector<char> buffer(size + 1);
+		file.read(buffer.data(), size);
+		buffer[size] = '\0';
+		Deserializer deserializer(path.string(), buffer.data());
 
-		TD_CORE_ASSERT(node["type"]);
-		auto type = node["type"].as<std::string>();
+		TD_CORE_ASSERT(deserializer["type"]);
+		std::string type;
+		if (!deserializer["type"].As(type))
+		{
+			TD_CORE_ASSERT(false, std::format("failed to load asset: {}", path.string()));
+		}
 		auto storage = GetStorage(type);
 
-		TD_CORE_ASSERT(node["name"]);
-		auto name = node["name"].as<std::string>();
+		std::string name;
+		if (!deserializer["name"].As(name))
+		{
+			TD_CORE_ASSERT(false, std::format("failed to load asset: {}", path.string()));
+		}
 		auto& asset = storage->Add(name);
 
 		return Callbacks{
-			.Load = [&asset, node]() { asset.Load(node); },
+			.Load = [&asset, deserializer]() { asset.Load(deserializer); },
 			.Init = [&asset, path](const Window& window) { asset.Init(path, window); }
 		};
 	}

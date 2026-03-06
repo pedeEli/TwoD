@@ -1,8 +1,6 @@
 #include "tdpch.hpp"
 #include "SpriteRenderer.hpp"
 
-#include "TwoD/Core/App.hpp"
-
 namespace TwoD
 {
 	void SpriteRenderer::StartBefore()

@@ -1,13 +1,17 @@
 #pragma once
 #include "TwoD.hpp"
+#include "TwoDLib.hpp"
 
 using namespace TwoD;
 
-TD_YAML_ENUM(Direction,
-	TD_YAML_ENUM_FIELD(TOP),
-	TD_YAML_ENUM_FIELD(RIGHT),
-	TD_YAML_ENUM_FIELD(BOTTOM),
-	TD_YAML_ENUM_FIELD(LEFT)
+TD_ENUM(
+	(TD_NAME(Direction)),
+	(
+		TD_ENUM_FIELD(TOP),
+		TD_ENUM_FIELD(RIGHT),
+		TD_ENUM_FIELD(BOTTOM),
+		TD_ENUM_FIELD(LEFT)
+	)
 )
 
 class Tile : public Component

@@ -78,6 +78,7 @@ type ParseArguments = <const C extends Command>(name: string, command: C) => Par
 
 
 type Macros = {
+	comma: string;
 	unwrap: string;
 	expand: string;
 	apply: string;
@@ -86,10 +87,13 @@ type Macros = {
 	stringify: string;
 	concat: string;
 	concatToken: string;
+	eval: string;
+	parenthesis: string;
+	ifElse: string;
+	applyIf: string;
+
 	defer: string;
 	deferIndirect: string,
-	eval: string;
-	
 	deferN: (n: number) => string;
 
 	getN: (n: number) => string;

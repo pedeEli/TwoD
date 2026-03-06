@@ -30,7 +30,7 @@ namespace TwoD
 		virtual void Destroy(EntityHandle entity) = 0;
 		virtual void DestroyAll() = 0;
 
-		virtual const void* CreateLoadData(const YAML::Node& node) const = 0;
+		virtual bool CreateLoadData(const Deserializer& deserializer, const void*& value) const = 0;
 	};
 
 	template<typename T>
@@ -56,7 +56,7 @@ namespace TwoD
 		void Destroy(EntityHandle entity) override;
 		void DestroyAll() override;
 
-		const void* CreateLoadData(const YAML::Node& node) const override;
+		bool CreateLoadData(const Deserializer& deserializer, const void*& value) const override;
 		
 		T& Add(EntityHandle entity);
 

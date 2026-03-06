@@ -1,8 +1,5 @@
 #pragma once
-#include <optional>
-#include <glm/glm.hpp>
-#include <yaml-cpp/yaml.h>
-#include "TwoD/Core/App.hpp"
+#include "TwoD.hpp"
 #include "Camera.hpp"
 
 namespace TwoD

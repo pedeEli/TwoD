@@ -15,7 +15,7 @@ namespace TwoD
 			float rotation = 0;
 			glm::fvec2 scale = { 1.0f, 1.0f };
 		};
-		static void CreateLoadData(internal_load_data* loadData, const YAML::Node& node);
+		static void CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer);
 		void Load(const void* data) override;
 		void Destroy() override;
 #ifdef TD_CREATE_DEBUGGER

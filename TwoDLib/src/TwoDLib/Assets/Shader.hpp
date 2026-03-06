@@ -1,16 +1,15 @@
 #pragma once
+#include "TwoD.hpp"
 
-#include "TwoD/Core/YAML.hpp"
-#include "TwoD/Assets/AssetManager.hpp"
-#include "TwoD/SDL/GraphicsPipeline.hpp"
-
-
-TD_YAML_STRUCT_WITH_NS(TwoD, ShaderInfo,
-	TD_YAML_STRUCT_FIELD(std::string, file),
-	TD_YAML_STRUCT_FIELD(uint32_t, samplerCount, 0),
-	TD_YAML_STRUCT_FIELD(uint32_t, storageTextureCount, 0),
-	TD_YAML_STRUCT_FIELD(uint32_t, storageBufferCount, 0),
-	TD_YAML_STRUCT_FIELD(uint32_t, uniformBufferCount, 0)
+TD_STRUCT(
+	(TD_NAMESPACE(TwoD), TD_NAME(ShaderInfo)),
+	(
+		TD_STRUCT_FIELD(std::string, file),
+		TD_STRUCT_FIELD(uint32_t, samplerCount, TD_INIT(0)),
+		TD_STRUCT_FIELD(uint32_t, storageTextureCount, TD_INIT(0)),
+		TD_STRUCT_FIELD(uint32_t, storageBufferCount, TD_INIT(0)),
+		TD_STRUCT_FIELD(uint32_t, uniformBufferCount, TD_INIT(0))
+	),
 )
 
 namespace TwoD

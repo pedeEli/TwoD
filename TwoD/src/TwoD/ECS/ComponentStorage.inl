@@ -1,6 +1,7 @@
 #pragma once
 #include "tdpch.hpp"
 #include "ComponentStorage.hpp"
+#include "TwoD/Serialization/Serialization.hpp"
 
 namespace TwoD
 {
@@ -109,16 +110,16 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
-	const void* ComponentStorageImpl<T>::CreateLoadData(const YAML::Node& node) const
+	bool ComponentStorageImpl<T>::CreateLoadData(const Deserializer& deserializer, const void*& value) const
 	{
-		if constexpr (requires(T::internal_load_data* d, const YAML::Node& n) {
-			{ T::CreateLoadData(d, n) };
+		if constexpr (requires(T::internal_load_data* loadData, const Deserializer& deserializer) {
+			{ T::CreateLoadData(loadData, deserializer) } -> std::convertible_to<bool>;
 		})
 		{
-			auto* loadData = new T::internal_load_data();
-			T::CreateLoadData(loadData, node);
-			return loadData;
+			auto* v = new T::internal_load_data();
+			value = v;
+			return T::CreateLoadData(v, deserializer);
 		}
-		return nullptr;
+		return true;
 	}
 }

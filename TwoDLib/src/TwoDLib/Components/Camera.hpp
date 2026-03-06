@@ -1,6 +1,5 @@
 #pragma once
-#include "TwoD/Core/App.hpp"
-#include "TwoD/ECS/Transform.hpp"
+#include "TwoD.hpp"
 
 namespace TwoD
 {

@@ -19,9 +19,5 @@
 	#define TD_CREATE_DEBUGGER
 #endif
 
-#define TD_EXPAND_MACRO(x) x
-#define TD_STRINGIFY_MACRO(x) #x
-
-#include "TwoD/Generated/HelperMacros.hpp"
 #include "TwoD/Core/Asserts.hpp"
 #include "TwoD/Core/Log.hpp"

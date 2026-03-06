@@ -1,6 +1,5 @@
 #include "tdpch.hpp"
 #include "TextRenderer.hpp"
-
 #include "TwoDLib/Assets/MSDFData.hpp"
 
 namespace TwoD

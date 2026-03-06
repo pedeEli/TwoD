@@ -23,7 +23,7 @@ namespace TwoD
 		{
 			int width = 0;
 			int height = 0;
-			std::string_view title;
+			std::string title;
 			WindowFlags windowFlags = static_cast<WindowFlags>(0);
 			std::string startScene;
 			std::vector<std::filesystem::path> basePaths;

@@ -108,52 +108,58 @@ namespace TwoD
 	{
 		return m_screenRootEntity;
 	}
-}
 
-namespace YAML
-{
-	bool convert<TwoD::EntityInfo>::decode(const Node& node, TwoD::EntityInfo& rhs)
+	bool Deserializable<TwoD::ComponentInfo>::Deserialize(const Deserializer& deserializer, TwoD::ComponentInfo& value)
 	{
-		if (!node["name"])
-		{
-			TD_CORE_ERROR("missing field name in entity info");
-			return false;
-		}
-		rhs.name = node["name"].as<std::string>();
-
-		if (node["components"])
-		{
-			rhs.components = node["components"].as<std::vector<TwoD::ComponentInfo>>();
-		}
-
-		if (node["transform"])
-		{
-			rhs.transformLoadData = TwoD::ECS::CreateLoadData("class TwoD::Transform", node["transform"]);
-		}
-
-		if (node["children"])
-		{
-			rhs.children = node["children"].as<std::vector<TwoD::EntityInfo>>();
-		}
-
-		return true;
-	}
-
-	bool convert<TwoD::ComponentInfo>::decode(const Node& node, TwoD::ComponentInfo& rhs)
-	{
-		if (!node["type"])
+		if (!deserializer["type"])
 		{
 			TD_CORE_ERROR("missing field type in TwoD::ComponentInfo");
 			return false;
 		}
-		rhs.type = node["type"].as<std::string>();
-		rhs.loadData = TwoD::ECS::CreateLoadData(rhs.type, node);
+		if (!deserializer["type"].As<std::string>(value.type))
+		{
+			return false;
+		}
+		return TwoD::ECS::CreateLoadData(value.type, deserializer, value.loadData);
+	}
+
+	bool Deserializable<TwoD::EntityInfo>::Deserialize(const Deserializer& deserializer, TwoD::EntityInfo& value)
+	{
+		if (!deserializer["name"].As<std::string>(value.name))
+		{
+			return false;
+		}
+
+
+		if (deserializer["components"])
+		{
+			if (!deserializer["components"].As<std::vector<TwoD::ComponentInfo>>(value.components))
+			{
+				return false;
+			}
+		}
+
+		if (deserializer["transform"])
+		{
+			if (!TwoD::ECS::CreateLoadData("class TwoD::Transform", deserializer["transform"], value.transformLoadData))
+			{
+				return false;
+			}
+		}
+
+		if (deserializer["children"])
+		{
+			if (!deserializer["children"].As<std::vector<TwoD::EntityInfo>>(value.children))
+			{
+				return false;
+			}
+		}
+
 		return true;
 	}
 
-	bool convert<TwoD::ScreenEntities>::decode(const Node& node, TwoD::ScreenEntities& rhs)
+	bool Deserializable<TwoD::ScreenEntities>::Deserialize(const Deserializer& deserializer, TwoD::ScreenEntities& value)
 	{
-		rhs.entities = node.as<std::vector<TwoD::EntityInfo>>();
-		return true;
+		return deserializer.As<std::vector<TwoD::EntityInfo>>(value.entities);
 	}
 }

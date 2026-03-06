@@ -1,12 +1,17 @@
 #pragma once
 
-namespace YAML
+namespace TwoD
 {
 	template<class T>
-	requires(std::is_base_of_v<TwoD::Asset, T>)
-	bool convert<T*>::decode(const Node& node, pointer& rhs)
+	requires(std::is_base_of_v<Asset, T>)
+	bool Deserializable<T*>::Deserialize(const Deserializer& deserializer, T*& value)
 	{
-		rhs = &TwoD::AssetManager::Get<T>(node.as<std::string>());
+		std::string name;
+		if (!deserializer.As<std::string>(name))
+		{
+			return false;
+		}
+		value = &TwoD::AssetManager::Get<T>(name);
 		return true;
 	}
 }

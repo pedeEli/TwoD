@@ -5,19 +5,28 @@
 
 namespace TwoD
 {
-	void Transform::CreateLoadData(internal_load_data* loadData, const YAML::Node& node)
+	void Transform::CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer)
 	{
-		if (node["position"])
+		if (deserializer["position"])
 		{
-			loadData->position = node["position"].as<glm::fvec3>();
+			if (!deserializer["position"].As<glm::fvec2>(loadData->position))
+			{
+				TD_CORE_ASSERT(false, "failed to load transform");
+			}
 		}
-		if (node["rotation"])
+		if (deserializer["rotation"])
 		{
-			loadData->rotation = node["rotation"].as<float>();
+			if (!deserializer["rotation"].As<float>(loadData->rotation))
+			{
+				TD_CORE_ASSERT(false, "failed to load transform");
+			}
 		}
-		if (node["scale"])
+		if (deserializer["scale"])
 		{
-			loadData->scale = node["scale"].as<glm::fvec2>();
+			if (!deserializer["scale"].As<glm::fvec2>(loadData->scale))
+			{
+				TD_CORE_ASSERT(false, "failed to load transform");
+			}
 		}
 	}
 	void Transform::Load(const void* data)

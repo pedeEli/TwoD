@@ -18,7 +18,6 @@ project "FactoryBlock"
 		"%{wks.location}/TwoD/src",
 		"%{wks.location}/TwoDLib/src",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.imgui}"
 	}
 

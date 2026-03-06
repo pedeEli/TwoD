@@ -1,7 +1,5 @@
 #pragma once
-
-#include "TwoD/ECS/ECS.hpp"
-#include "TwoD/Core/App.hpp"
+#include "TwoD.hpp"
 #include "TwoDLib/Assets/Font.hpp"
 
 namespace TwoD

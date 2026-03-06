@@ -12,6 +12,7 @@
 #include "Component.hpp"
 #include "ComponentStorage.hpp"
 #include "TwoD/Assets/AssetDefines.hpp"
+#include "TwoD/Serialization/Serialization.hpp"
 
 namespace TwoD
 {
@@ -53,9 +54,9 @@ namespace TwoD
 			return m_entities.Get(handle);
 		}
 
-		static const void* CreateLoadData(const std::string& name, const YAML::Node& node)
+		static bool CreateLoadData(const std::string& name, const Deserializer& deserializer, const void*& value)
 		{
-			return GetStorage(name)->CreateLoadData(node);
+			return GetStorage(name)->CreateLoadData(deserializer, value);
 		}
 
 	private:

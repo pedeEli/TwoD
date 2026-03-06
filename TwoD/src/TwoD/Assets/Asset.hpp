@@ -1,7 +1,7 @@
 #pragma once
 #include "AssetDefines.hpp"
-#include "TwoD/Core/YAML.hpp"
 #include "TwoD/SDL/Window.hpp"
+#include "TwoD/Serialization/Serialization.hpp"
 
 namespace TwoD
 {
@@ -15,19 +15,15 @@ namespace TwoD
 		Asset& operator=(const Asset& other) = delete;
 		Asset& operator=(Asset&& other) = delete;
 
-		virtual void Load(const YAML::Node& node) = 0;
+		virtual void Load(const Deserializer& deserializer) = 0;
 		virtual void Init(const std::filesystem::path& path, const Window& window) {}
 		virtual void Destroy() {}
 	};
-}
 
-namespace YAML
-{
 	template<class T>
-	requires(std::is_base_of_v<TwoD::Asset, T>)
-	struct convert<T*>
+	requires(std::is_base_of_v<Asset, T>)
+	struct Deserializable<T*>
 	{
-		using pointer = T*;
-		static bool decode(const Node& node, pointer& rhs);
+		static bool Deserialize(const Deserializer& deserializer, T*& value);
 	};
 }

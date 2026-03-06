@@ -1,6 +1,5 @@
 #pragma once
 #include "TwoD.hpp"
-
 #include "TwoDLib/Components/ColorRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
 

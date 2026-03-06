@@ -60,11 +60,18 @@ const commands = createCommands({
 /** @type {FileGenerator} */
 function utils(out, iterations, macros, internal) {
 	out.write("#pragma once\n")
+	out.write(`#define ${macros.comma} ,\n`)
 	out.write(`#define ${macros.unwrap}(...) __VA_ARGS__\n`)
 	out.write(`#define ${macros.expand}(x) x\n`)
 	out.write(`#define ${macros.apply}(F, ...) F(__VA_ARGS__)\n`)
 	out.write(`#define ${macros.trash}(...)\n`)
 	out.write(`#define ${macros.empty}()\n`)
+	out.write(`#define ${macros.parenthesis}(...) ()\n`)
+	out.write('\n')
+
+	out.write(`#define ${internal('IF_ELSE')}(i, e, ...) ${macros.expand}(${macros.unwrap} __VA_OPT__(${macros.parenthesis})(e)) __VA_OPT__(i)\n`)
+	out.write(`#define ${macros.ifElse}(con, i, e) ${internal('IF_ELSE')}(i, e, ${macros.unwrap} con)\n`)
+	out.write(`#define ${macros.applyIf}(f, x) ${macros.ifElse}(x, f, ${macros.empty}) x\n`)
 	out.write('\n')
 
 	out.write(`#define ${macros.stringify}(x) #x\n`)
@@ -328,6 +335,7 @@ function helperMacros(out, iterations, macros, internal) {
  */
 function createMacroNames(prefix) {
 	return {
+		comma: prefix("comma"),
 		unwrap: prefix('UNWRAP'),
 		expand: prefix('EXPAND'),
 		apply: prefix('APPLY'),
@@ -337,6 +345,9 @@ function createMacroNames(prefix) {
 		concat: prefix('CONCAT'),
 		concatToken: prefix('CONCAT_TOKEN'),
 		eval: prefix('EVAL'),
+		parenthesis: prefix('PARENTHESIS'),
+		ifElse: prefix('IF_ELSE'),
+		applyIf: prefix('APPLY_IF'),
 		
 		defer: prefix('DEFER'),
 		deferIndirect: prefix('DEFER_INDIRECT'),
