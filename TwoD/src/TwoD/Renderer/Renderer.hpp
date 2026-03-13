@@ -13,15 +13,15 @@ namespace TwoD
 	class RenderSystem;
 	class RenderHandler;
 
-	struct RendererHandlerInfo
+	struct RenderHandlerInfo
 	{
 		size_t handlerIndex;
 		size_t rendererIndex;
 		int32_t layer;
 		const glm::fmat4x4* projection;
-		const Rect<float>* scissorRect;
+		std::optional<Rect<float>> scissorRect;
 
-		bool operator<(const RendererHandlerInfo& other) const noexcept
+		bool operator<(const RenderHandlerInfo& other) const noexcept
 		{
 			if (other.layer == layer)
 			{
@@ -47,6 +47,7 @@ namespace TwoD
 		Renderer& operator=(const Renderer& other) = delete;
 		Renderer& operator=(Renderer&& other) = delete;
 
+
 		void RenderQuad(
 			const glm::fmat3x3& transform,
 			const glm::fvec2& pos,
@@ -70,7 +71,7 @@ namespace TwoD
 		void Render(
 			const SDL::CommandBuffer& commandBuffer,
 			const SDL::RenderPass& renderPass,
-			const std::vector<RendererHandlerInfo>& infos,
+			const std::vector<RenderHandlerInfo>& infos,
 			const std::vector<std::unique_ptr<RenderHandler>>* handlers
 		);
 		void Shutdown();
@@ -97,7 +98,7 @@ namespace TwoD
 			size_t startIndex = 0;
 			size_t size = 0;
 			const glm::fmat4x4* projection;
-			const Rect<float>* scissorRect;
+			std::optional<Rect<float>> scissorRect;
 		};
 
 	private:

@@ -4,6 +4,7 @@
 #include "AssetDefines.hpp"
 #include "AssetManager.hpp"
 #include "TwoD/ECS/ECS.hpp"
+#include "TwoD/ECS/Transform.hpp"
 
 
 namespace TwoD
@@ -34,6 +35,7 @@ namespace TwoD
 	{
 	public:
 		static Scene& GetActive();
+		static void AddPropagationCallback(Transform::PropagationCallback callback);
 
 	public:
 		void Destroy() override;
@@ -41,6 +43,8 @@ namespace TwoD
 		void SetActive();
 		const std::vector<EntityHandle>& GetRootEntities() const;
 		EntityHandle GetScreenRootEntity() const;
+
+		void UpdateMatrices();
 
 		TD_ASSET(
 			TD_ASSET_FIELD(std::vector<EntityInfo>, entities),
@@ -53,6 +57,8 @@ namespace TwoD
 	private:
 		std::vector<EntityHandle> m_rootEntities;
 		EntityHandle m_screenRootEntity = EntityHandle::None;
+
+		static inline std::vector<Transform::PropagationCallback> m_callbacks;
 	};
 
 	

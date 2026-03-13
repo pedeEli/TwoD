@@ -1,7 +1,5 @@
 #pragma once
-
-#include "TwoD/ECS/ECS.hpp"
-#include "TwoD/Core/App.hpp"
+#include "TwoD.hpp"
 
 namespace TwoD
 {
@@ -9,18 +7,9 @@ namespace TwoD
 	{
 		using Component::Component;
 	public:
-		void StartBefore() override;
-		void Destroy() override;
-
-		void SetLayer(uint32_t layer);
-
-	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
-			TD_COMPONENT_FIELD(uint8_t, r, 0),
-			TD_COMPONENT_FIELD(uint8_t, g, 0),
-			TD_COMPONENT_FIELD(uint8_t, b, 0),
-			TD_COMPONENT_FIELD(uint8_t, a, 255)
+			TD_COMPONENT_FIELD(int32_t, layer),
+			TD_COMPONENT_FIELD(glm::u8vec4, color)
 		)
 	};
 }

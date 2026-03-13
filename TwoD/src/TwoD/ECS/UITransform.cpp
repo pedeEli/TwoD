@@ -51,6 +51,10 @@ namespace TwoD
 	}
 #endif
 
+	void UITransform::UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent)
+	{
+		Transform::UpdateMatrix(callbacks, parent);
+	}
 	void UITransform::UpdateTransform()
 	{
 		if (m_parent)

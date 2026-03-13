@@ -36,13 +36,6 @@ namespace TwoD
 		void Update(const Window& window);
 		void Shutdown();
 
-		template<class Renderer>
-		requires(std::is_base_of_v<Component, Renderer>)
-		void UpdateLayerFor(int32_t layer)
-		{
-			m_dirty = true;
-		}
-
 		template<class Handler>
 		requires(std::is_base_of_v<RenderHandler, Handler>)
 		void RegisterHandler()
@@ -52,21 +45,7 @@ namespace TwoD
 					return dynamic_cast<Handler*>(handler.get()) == nullptr;
 				}), "Cannot register RenderHandler twice!");
 
-			auto handler = std::make_unique<Handler>();
-			const auto& types = handler->GetRendererTypes();
-			auto index = m_renderHandlers.size();
-			m_renderHandlers.push_back(std::move(handler));
-
-			for (const auto& type : types)
-			{
-				auto it = m_renderersToHandlers.find(type);
-				if (it == m_renderersToHandlers.end())
-				{
-					m_renderersToHandlers[type] = { index };
-					continue;
-				}
-				it->second.push_back(index);
-			}
+			m_renderHandlers.push_back(std::make_unique<Handler>());
 		}
 
 	private:
@@ -76,9 +55,7 @@ namespace TwoD
 	private:
 		Renderer m_renderer;
 		std::vector<std::unique_ptr<RenderHandler>> m_renderHandlers;
-		std::unordered_map<std::type_index, std::vector<size_t>> m_renderersToHandlers;
-		std::vector<RendererHandlerInfo> m_rendererHandlerInfos;
-		bool m_dirty = true;
+		std::vector<RenderHandlerInfo> m_renderHandlerInfos;
 		SDL::Fence m_fence;
 
 		SDL::Texture m_targetTexture;

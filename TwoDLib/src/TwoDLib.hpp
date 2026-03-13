@@ -44,6 +44,7 @@ namespace TwoDLib
 		components.Register<TwoD::TextRenderer>();
 		components.Register<TwoD::ColorRenderer>();
 		components.Register<TwoD::ScissorRect>();
+		components.Register<TwoD::ComputedScissorRect>();
 
 		components.Register<TwoD::Button>();
 	}
@@ -54,4 +55,6 @@ namespace TwoDLib
 		renderHandlers.Register<TwoD::ColorRenderHandler>();
 		renderHandlers.Register<TwoD::TextRenderHandler>();
 	}
+
+	void Misc();
 }

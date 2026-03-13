@@ -24,6 +24,7 @@ namespace TwoD
 		const glm::fvec2& GetMousePositionWorld() const { return m_mousePositionWorld; }
 
 		const glm::fvec2 ScreenToWorldSpace(const glm::fvec2 pos) const;
+		const glm::fvec2 WorldToScreenSpace(const glm::fvec2 pos) const;
 
 	public:
 		TD_COMPONENT(

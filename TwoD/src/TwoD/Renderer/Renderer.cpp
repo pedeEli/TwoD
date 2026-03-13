@@ -60,7 +60,7 @@ namespace TwoD
 	void Renderer::Render(
 		const SDL::CommandBuffer& commandBuffer,
 		const SDL::RenderPass& renderPass,
-		const std::vector<RendererHandlerInfo>& infos,
+		const std::vector<RenderHandlerInfo>& infos,
 		const std::vector<std::unique_ptr<RenderHandler>>* handlers
 	)
 	{
@@ -79,7 +79,7 @@ namespace TwoD
 			if (
 				m_currentRenderCommand.handlerIndex != info.handlerIndex ||
 				m_currentRenderCommand.projection != info.projection ||
-				*m_currentRenderCommand.scissorRect != *info.scissorRect
+				m_currentRenderCommand.scissorRect != info.scissorRect
 			)
 			{
 				if (m_currentRenderCommand.size != 0)
@@ -222,7 +222,7 @@ namespace TwoD
 		m_renderPass->BindIndexBuffer({ &m_indexBuffer, 0 }, SDL::IndexElementSize::THIRTY_TWO_BIT);
 
 		const glm::fmat4x4* currentProjection = nullptr;
-		//const Rect<float>* scissorRect = nullptr;
+		std::optional<Rect<float>> scissorRect;
 		for (auto& renderCommand : m_renderCommands)
 		{
 			if (currentProjection != renderCommand.projection)
@@ -230,15 +230,22 @@ namespace TwoD
 				currentProjection = renderCommand.projection;
 				m_commandBuffer->PushVertexUniformData<glm::fmat4x4>(0, *currentProjection);
 			}
-			//if (*scissorRect != *renderCommand.scissorRect)
-			//{
-				//scissorRect = renderCommand.scissorRect;
-				//Rect<float> transformed{
-				//	(*currentProjection) * glm::fvec3(scissorRect->min, 1.0f),
-				//	(*currentProjection) * scissorRect->max
-				//};
-				//m_renderPass->SetScissorRect(scissorRect);
-			//}
+			if (
+				(!scissorRect && renderCommand.scissorRect) ||
+				(scissorRect && !renderCommand.scissorRect) ||
+				(scissorRect && *scissorRect != *renderCommand.scissorRect)
+			)
+			{ 
+				scissorRect = renderCommand.scissorRect;
+				if (scissorRect) 
+				{
+					m_renderPass->SetScissorRect(*scissorRect);
+				}
+				else
+				{
+					m_renderPass->SetScissorRect({});
+				}
+			}
 			(*m_handlers)[renderCommand.handlerIndex]->Bind(m_commandBuffer, m_renderPass);
 			m_renderPass->DrawIndexedPrimitives(
 				static_cast<uint32_t>(renderCommand.size * 6),

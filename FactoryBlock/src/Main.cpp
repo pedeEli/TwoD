@@ -37,3 +37,8 @@ constexpr static void RegisterRenderHandlers(RenderHandlers renderHandlers)
 {
 	TwoDLib::RegisterRenderHandlers(renderHandlers);
 }
+
+void Misc()
+{
+	TwoDLib::Misc();
+}

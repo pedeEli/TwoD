@@ -52,7 +52,7 @@ namespace TwoD
 
 	const glm::fvec2 Camera::ScreenToWorldSpace(const glm::fvec2 pos) const
 	{
-		auto size = static_cast<glm::fvec2>(m_window->GetSize());
+		glm::fvec2 size = m_window->GetSize();
 
 		glm::fvec4 clipPos = {
 			(2.0f * pos.x) / size.x - 1.0f,
@@ -64,5 +64,15 @@ namespace TwoD
 		auto worldPos = GetCameraToWorldMatrix() * GetInverseProjectionMatrix() * clipPos;
 		worldPos /= worldPos.w;
 		return (glm::fvec2)worldPos;
+	}
+	const glm::fvec2 Camera::WorldToScreenSpace(const glm::fvec2 pos) const
+	{
+		glm::fvec2 size = m_window->GetSize();
+		auto clipPos = m_projectionViewMatrix * glm::fvec4(pos, 0.0f, 1.0f);
+		auto ndc = clipPos / clipPos.w;
+		return {
+			(ndc.x + 1.0f) * 0.5f * size.x,
+			(1.0f - ndc.y) * 0.5f * size.y
+		};
 	}
 }

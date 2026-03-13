@@ -35,13 +35,11 @@ namespace TwoD
 		m_position = loadData->position;
 		m_rotation = loadData->rotation;
 		m_scale = loadData->scale;
-		CalculateMatrices();
 	}
 
 	void Transform::SetPosition(glm::fvec2 pos)
 	{
 		m_position = pos;
-		CalculateMatrices();
 	}
 	void Transform::SetPosition(float x, float y)
 	{
@@ -50,7 +48,6 @@ namespace TwoD
 	void Transform::Translate(glm::fvec2 dpos)
 	{
 		m_position += dpos;
-		CalculateMatrices();
 	}
 	void Transform::Translate(float dx, float dy)
 	{
@@ -60,7 +57,6 @@ namespace TwoD
 	void Transform::SetScale(glm::fvec2 scale)
 	{
 		m_scale = scale;
-		CalculateMatrices();
 	}
 	void Transform::SetScale(float sx, float sy)
 	{
@@ -69,7 +65,6 @@ namespace TwoD
 	void Transform::Scale(glm::fvec2 dscale)
 	{
 		m_scale *= dscale;
-		CalculateMatrices();
 	}
 	void Transform::Scale(float dsx, float dsy)
 	{
@@ -79,40 +74,47 @@ namespace TwoD
 	void Transform::SetRotation(float r)
 	{
 		m_rotation = r;
-		CalculateMatrices();
 	}
 	void Transform::Rotate(float dr)
 	{
 		m_rotation += dr;
-		CalculateMatrices();
 	}
 
 	void Transform::SetLocalMatrix(const glm::fmat3x3& local)
 	{
+		m_position = local[2];
+
+		auto a = m_localMatrix[0][0];
+		auto b = m_localMatrix[1][0];
+		auto c = m_localMatrix[0][1];
+		auto d = m_localMatrix[1][1];
+
+		m_scale = { std::sqrt(a * a + c * c), std::sqrt(b * b + d * d) };
+		m_rotation = std::atan2(c / m_scale.x, a / m_scale.x);
+
+		if (a * d - b * c < 0)
+		{
+			m_scale.y *= -1;
+		}
+
 		m_localMatrix = local;
-		UpdateParentAndChildren();
 	}
 
-	void Transform::CalculateMatrices()
+	void Transform::UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent)
 	{
 		float c = glm::cos(m_rotation);
 		float s = glm::sin(m_rotation);
 
-		m_localMatrix[0][0] =  c * m_scale.x;
-		m_localMatrix[0][1] =  s * m_scale.x;
+		m_localMatrix[0][0] = c * m_scale.x;
+		m_localMatrix[0][1] = s * m_scale.x;
 		m_localMatrix[1][0] = -s * m_scale.y;
-		m_localMatrix[1][1] =  c * m_scale.y;
-		m_localMatrix[2][0] =  m_position.x;
-		m_localMatrix[2][1] =  m_position.y;
+		m_localMatrix[1][1] = c * m_scale.y;
+		m_localMatrix[2][0] = m_position.x;
+		m_localMatrix[2][1] = m_position.y;
 
-		UpdateParentAndChildren();
-	}
-	void Transform::UpdateParentAndChildren()
-	{
-		if (m_parent)
+		if (parent)
 		{
-			auto& parentMatrix = m_parent->GetTransform()->GetWorldMatrix();
-			m_worldMatrix = parentMatrix * m_localMatrix;
+			m_worldMatrix = *parent * m_localMatrix;
 		}
 		else
 		{
@@ -120,9 +122,14 @@ namespace TwoD
 		}
 		m_inverseWorldMatrix = glm::inverse(m_worldMatrix);
 
+		for (auto& callback : callbacks)
+		{
+			callback(*this);
+		}
+
 		for (auto child : m_children)
 		{
-			child->GetTransform()->UpdateParentAndChildren();
+			child->GetTransform()->UpdateMatrix(callbacks, &m_worldMatrix);
 		}
 	}
 
@@ -154,7 +161,6 @@ namespace TwoD
 		{
 			parent->GetTransform()->m_children.push_back(entity);
 		}
-		UpdateParentAndChildren();
 	}
 	EntityHandle Transform::GetParent() const
 	{
@@ -175,14 +181,9 @@ namespace TwoD
 #ifdef TD_CREATE_DEBUGGER
 	void Transform::Debug()
 	{
-		bool changed = false;
-		changed |= Debuggable<glm::fvec2>::Draw(m_position, "position");
-		changed |= Debuggable<float>::Draw(m_rotation, "rotation");
-		changed |= Debuggable<glm::fvec2>::Draw(m_scale, "scale");
-		if (changed)
-		{
-			CalculateMatrices();
-		}
+		Debuggable<glm::fvec2>::Draw(m_position, "position");
+		Debuggable<float>::Draw(m_rotation, "rotation");
+		Debuggable<glm::fvec2>::Draw(m_scale, "scale");
 	}
 #endif
 }

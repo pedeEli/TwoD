@@ -17,11 +17,6 @@ namespace TwoD
 		};
 
 	public:
-		void StartBefore() override;
-		void Destroy() override;
-
-		void SetLayer(uint32_t layer);
-
 		void SetText(const std::string& text);
 		const std::vector<Glyph>& GetGlyphs() const;
 
@@ -29,7 +24,7 @@ namespace TwoD
 
 	public:
 		TD_COMPONENT(
-			TD_COMPONENT_FIELD_WITH_UPDATER(int32_t, layer, 0, SetLayer(layer);),
+			TD_COMPONENT_FIELD(int32_t, layer),
 			TD_COMPONENT_FIELD(float, size),
 			TD_COMPONENT_FIELD(Font*, font),
 			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();)

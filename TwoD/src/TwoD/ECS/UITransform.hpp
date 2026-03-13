@@ -36,6 +36,7 @@ namespace TwoD
 #ifdef TD_CREATE_DEBUGGER
 		void Debug() override;
 #endif
+		void UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent);
 
 		void SetSize(glm::fvec2 size);
 		void SetWidth(float width);

@@ -4,22 +4,6 @@
 
 namespace TwoD
 {
-	void TextRenderer::StartBefore()
-	{
-		SetGlyphs();
-	}
-
-	void TextRenderer::Destroy()
-	{
-		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
-	}
-
-	void TextRenderer::SetLayer(uint32_t layer)
-	{
-		this->layer = layer;
-		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
-	}
-
 	void TextRenderer::SetText(const std::string& text)
 	{
 		this->text = text;
@@ -85,7 +69,5 @@ namespace TwoD
 			glyph.quadMin.x -= m_size.x * 0.5f;
 			glyph.quadMin.y += m_size.y * 0.5f;
 		}
-
-		App::Get<RenderSystem>().UpdateLayerFor<TextRenderer>(layer);
 	}
 }

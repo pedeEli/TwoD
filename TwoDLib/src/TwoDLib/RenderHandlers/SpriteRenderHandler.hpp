@@ -1,31 +1,22 @@
 #pragma once
-#include <vector>
-#include <typeindex>
 #include "TwoD.hpp"
-
-#include "TwoD/Renderer/RenderHandler.hpp"
 #include "TwoDLib/Components/SpriteRenderer.hpp"
 #include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
+#include "DefaultRenderHandler.hpp"
 
 namespace TwoD
 {
-	class SpriteRenderHandler : public RenderHandler
+	class SpriteRenderHandler : public DefaultRenderHandler<SpriteRenderer>
 	{
 	public:
 		void Init() override;
 
 		void Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const override;
 		void Render(Renderer& renderer, size_t index) override;
-		void Update(size_t handlerIndex) override;
-
-		const std::vector<std::type_index>& GetRendererTypes() const override;
-
+		
 	private:
 		SpriteAtlas* m_spriteAtlas;
 		Shader* m_shader;
-
-	private:
-		static inline const std::vector<std::type_index> s_types = { typeid(SpriteRenderer) };
 	};
 }

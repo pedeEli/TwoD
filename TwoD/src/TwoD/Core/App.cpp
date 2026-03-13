@@ -108,6 +108,7 @@ namespace TwoD
 			if (Debug::GameIsRunning())
 			{
 				ECS::Update(delta);
+				Scene::GetActive().UpdateMatrices();
 			}
 
 			m_renderSystem.Update(m_window);

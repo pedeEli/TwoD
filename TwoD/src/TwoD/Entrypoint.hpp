@@ -5,6 +5,7 @@ extern constexpr void Initialize(Init init);
 extern constexpr void RegisterResources(Resources resources);
 extern constexpr void RegisterComponents(Components components);
 extern constexpr void RegisterRenderHandlers(RenderHandlers renderHandlers);
+extern void Misc();
 
 int main(void)
 {
@@ -18,6 +19,7 @@ int main(void)
 
 	info.basePaths.push_back(".");
 
+	Misc();
 	app.Init(info);
 	app.Run();
 }

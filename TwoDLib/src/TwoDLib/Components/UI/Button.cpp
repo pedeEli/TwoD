@@ -6,17 +6,14 @@ namespace TwoD
 	void Button::StartBefore()
 	{
 		auto& colorRenderer = AddComponent<ColorRenderer>();
-		colorRenderer.SetLayer(layer);
-		colorRenderer.r = background.r;
-		colorRenderer.g = background.g;
-		colorRenderer.b = background.b;
-		colorRenderer.a = background.a;
+		colorRenderer.layer = layer;
+		colorRenderer.color = background;
 		m_colorRenderer = colorRenderer;
 
 		auto& textRenderer = AddComponent<TextRenderer>();
 		textRenderer.font = &AssetManager::Get<Font>("Roboto");
 		textRenderer.SetText(text);
-		textRenderer.SetLayer(layer + 1);
+		textRenderer.layer = layer + 1;
 		textRenderer.size = size;
 		m_textRenderer = textRenderer;
 		auto textSize = textRenderer.GetSize();
@@ -32,11 +29,11 @@ namespace TwoD
 		auto mouse = Inputs::GetMousePosition();
 		if (rect.IsInside(mouse))
 		{
-			m_colorRenderer->a = 100;
+			m_colorRenderer->color.a = 100;
 		}
 		else
 		{
-			m_colorRenderer->a = 255;
+			m_colorRenderer->color.a = 255;
 		}
 	}
 }

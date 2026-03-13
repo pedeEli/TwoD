@@ -39,6 +39,10 @@ namespace TwoD
 		TD_CORE_ASSERT(s_activeScene);
 		return *s_activeScene;
 	}
+	void Scene::AddPropagationCallback(Transform::PropagationCallback callback)
+	{
+		m_callbacks.push_back(callback);
+	}
 
 	void Scene::Destroy()
 	{
@@ -98,6 +102,18 @@ namespace TwoD
 		}
 
 		s_activeScene = this;
+	}
+
+	void Scene::UpdateMatrices()
+	{
+		for (auto entity : m_rootEntities)
+		{
+			entity->GetTransform()->UpdateMatrix(m_callbacks);
+		}
+		if (m_screenRootEntity)
+		{
+			m_screenRootEntity->GetTransform()->UpdateMatrix(m_callbacks);
+		}
 	}
 
 	const std::vector<EntityHandle>& Scene::GetRootEntities() const

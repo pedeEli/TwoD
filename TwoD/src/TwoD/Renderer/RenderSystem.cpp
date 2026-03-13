@@ -125,15 +125,10 @@ namespace TwoD
 		
 		if (Debug::GameIsRunning())
 		{
-			if (m_dirty)
-			{
-				SortLayers();
-				m_dirty = false;
-			}
-
+			SortLayers();
 			m_fence.Wait();
 			auto renderPass = window.BeginRenderPass(&commandBuffer, &m_targetTexture);
-			m_renderer.Render(commandBuffer, renderPass, m_rendererHandlerInfos, &m_renderHandlers);
+			m_renderer.Render(commandBuffer, renderPass, m_renderHandlerInfos, &m_renderHandlers);
 			renderPass.End();
 		}
 
@@ -158,27 +153,25 @@ namespace TwoD
 
 	void RenderSystem::SortLayers()
 	{
+		m_renderHandlerInfos.clear();
 		size_t totalSize = 0;
+		std::vector<RenderHandlerInfo> temp;
+
 		for (size_t i = 0; i < m_renderHandlers.size(); i++)
 		{
 			auto& handler = m_renderHandlers[i];
 			handler->Update(i);
+			std::sort(handler->m_rendererInfos.begin(), handler->m_rendererInfos.end());
+
 			totalSize += handler->m_rendererInfos.size();
-		}
-
-		m_rendererHandlerInfos.clear();
-		m_rendererHandlerInfos.reserve(totalSize);
-		std::vector<RendererHandlerInfo> temp;
-		temp.reserve(totalSize);
-
-		for (auto& handler : m_renderHandlers)
-		{
+			temp.reserve(totalSize);
+			m_renderHandlerInfos.reserve(totalSize);
 			std::merge(
 				handler->m_rendererInfos.begin(), handler->m_rendererInfos.end(),
-				m_rendererHandlerInfos.begin(), m_rendererHandlerInfos.end(),
+				m_renderHandlerInfos.begin(), m_renderHandlerInfos.end(),
 				std::back_inserter(temp)
 			);
-			std::swap(m_rendererHandlerInfos, temp);
+			std::swap(m_renderHandlerInfos, temp);
 			temp.clear();
 		}
 	}
