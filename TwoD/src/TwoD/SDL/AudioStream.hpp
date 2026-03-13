@@ -1,5 +1,5 @@
 #pragma once
-#include "Defines.hpp"
+#include "SDLDefines.hpp"
 #include "TwoD/Audio/AudioDefines.hpp"
 
 namespace TwoD::SDL

@@ -1,5 +1,5 @@
 #pragma once
-#include "Defines.hpp"
+#include "SDLDefines.hpp"
 
 namespace TwoD::SDL
 {

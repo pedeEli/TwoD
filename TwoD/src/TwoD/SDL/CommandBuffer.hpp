@@ -1,7 +1,6 @@
 #pragma once
+#include "SDLDefines.hpp"
 #include "TwoD/Debug/DebugDefines.hpp"
-
-#include "Defines.hpp"
 
 namespace TwoD::SDL
 {

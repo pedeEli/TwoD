@@ -1,5 +1,5 @@
 #pragma once
-#include "Defines.hpp"
+#include "SDLDefines.hpp"
 #include "TwoD/Debug/DebugDefines.hpp"
 
 #include "TwoD/Math/Rect.hpp"

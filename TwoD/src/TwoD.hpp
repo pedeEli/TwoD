@@ -20,6 +20,6 @@
 
 #include "TwoD/Debug/Debug.hpp"
 
-#include "TwoD/SDL/Defines.hpp"
+#include "TwoD/SDL/SDLDefines.hpp"
 
 #include "TwoD/Math/Rect.hpp"

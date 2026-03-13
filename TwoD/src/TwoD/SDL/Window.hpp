@@ -1,7 +1,7 @@
 #pragma once
 #include "TwoD/Debug/DebugDefines.hpp"
 
-#include "Defines.hpp"
+#include "SDLDefines.hpp"
 #include "Buffer.hpp"
 #include "TransferBuffer.hpp"
 #include "CommandBuffer.hpp"
