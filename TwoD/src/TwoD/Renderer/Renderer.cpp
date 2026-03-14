@@ -82,13 +82,15 @@ namespace TwoD
 				m_currentRenderCommand.scissorRect != info.scissorRect
 			)
 			{
-				if (m_currentRenderCommand.size != 0)
+				if (m_currentRenderCommand.indexSize != 0)
 				{
 					m_renderCommands.push_back(m_currentRenderCommand);
 				}
 				m_currentRenderCommand.handlerIndex = info.handlerIndex;
-				m_currentRenderCommand.startIndex = m_quadIndex;
-				m_currentRenderCommand.size = 0;
+				m_currentRenderCommand.vertexStartIndex = m_vertexBufferIndex;
+				m_currentRenderCommand.vertexSize = 0;
+				m_currentRenderCommand.indexStartIndex = m_indexBufferIndex;
+				m_currentRenderCommand.indexSize = 0;
 				m_currentRenderCommand.projection = info.projection;
 				m_currentRenderCommand.scissorRect = info.scissorRect;
 			}
@@ -133,7 +135,7 @@ namespace TwoD
 		const glm::fvec4& color
 	)
 	{
-		if (m_quadIndex + 1 == s_maxNumberOfQuads)
+		if (m_vertexBufferIndex + 4 >= s_maxNumberOfVertices || m_indexBufferIndex + 6 >= s_maxNumberOfIndices)
 		{
 			NextBatch();
 		}
@@ -154,34 +156,83 @@ namespace TwoD
 		for (size_t i = 0; i < 4; i++)
 		{
 			auto transformed = transform * vertices[i];
-			m_vertexBufferPtr[m_quadIndex * 4 + i].pos.x = transformed.x;
-			m_vertexBufferPtr[m_quadIndex * 4 + i].pos.y = transformed.y;
-			m_vertexBufferPtr[m_quadIndex * 4 + i].tex = texture[i];
-			m_vertexBufferPtr[m_quadIndex * 4 + i].color = color;
+			m_vertexBufferPtr[m_vertexBufferIndex + i].pos.x = transformed.x;
+			m_vertexBufferPtr[m_vertexBufferIndex + i].pos.y = transformed.y;
+			m_vertexBufferPtr[m_vertexBufferIndex + i].tex = texture[i];
+			m_vertexBufferPtr[m_vertexBufferIndex + i].color = color;
 		}
 
-		auto indexBase = static_cast<uint32_t>(m_quadIndex * 4);
-		m_indexBufferPtr[m_quadIndex * 6 + 0] = indexBase + 0;
-		m_indexBufferPtr[m_quadIndex * 6 + 1] = indexBase + 1;
-		m_indexBufferPtr[m_quadIndex * 6 + 2] = indexBase + 2;
-		m_indexBufferPtr[m_quadIndex * 6 + 3] = indexBase + 3;
-		m_indexBufferPtr[m_quadIndex * 6 + 4] = indexBase + 2;
-		m_indexBufferPtr[m_quadIndex * 6 + 5] = indexBase + 1;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 0;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 1;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 2;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 3;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 2;
+		m_indexBufferPtr[m_indexBufferIndex++] = static_cast<uint32_t>(m_vertexBufferIndex) + 1;
+		
+		m_vertexBufferIndex += 4;
+		m_currentRenderCommand.vertexSize += 4;
+		m_currentRenderCommand.indexSize += 6;
+	}
 
-		m_quadIndex++;
+	void Renderer::RenderMesh(
+		const glm::fmat3x3& transform,
+		const std::vector<Vertex>& vertices,
+		const std::vector<uint32_t>& indices,
+		const glm::fvec4& color
+	)
+	{
+		if (m_vertexBufferIndex + vertices.size() >= s_maxNumberOfVertices || m_indexBufferIndex + indices.size() >= s_maxNumberOfIndices)
+		{
+			NextBatch();
+		}
 
-		m_currentRenderCommand.size++;
+		for (size_t i = 0; i < vertices.size(); i++)
+		{
+			auto& vertex = vertices[i];
+			auto& buffer = m_vertexBufferPtr[m_vertexBufferIndex + i];
+			buffer.pos = transform * glm::fvec3(vertex.pos, 1.0f);
+			buffer.tex = vertex.tex;
+			buffer.color = vertex.color * color;
+		}
+
+		for (size_t i = 0; i < indices.size(); i++)
+		{
+			m_indexBufferPtr[m_indexBufferIndex + i] = static_cast<uint32_t>(m_vertexBufferIndex + indices[i]);
+		}
+
+		m_vertexBufferIndex += vertices.size();
+		m_currentRenderCommand.vertexSize += vertices.size();
+		m_indexBufferIndex += indices.size();
+		m_currentRenderCommand.indexSize += indices.size();
+	}
+	void Renderer::RenderMesh(
+		const glm::fmat3x3& transform,
+		const std::vector<Vertex>& vertices,
+		const std::vector<uint32_t>& indices,
+		const TextureBinding& binding,
+		const glm::fvec4& color
+	)
+	{
+		TD_CORE_ASSERT(m_textureBindings[binding.slot] == &m_dummyBinding || m_textureBindings[binding.slot] == binding.binding, "Cannot assign different texture to same slot.");
+		if (m_textureBindings[binding.slot] == &m_dummyBinding)
+		{
+			m_textureBindings[binding.slot] = binding.binding;
+		}
+		RenderMesh(transform, vertices, indices, color);
 	}
 
 	void Renderer::NextBatch()
 	{
-		if (m_currentRenderCommand.size != 0)
+		if (m_currentRenderCommand.indexSize != 0)
 		{
 			m_renderCommands.push_back(m_currentRenderCommand);
 		}
-		m_currentRenderCommand.size = 0;
-		m_currentRenderCommand.startIndex = 0;
-		m_quadIndex = 0;
+		m_currentRenderCommand.vertexStartIndex = 0;
+		m_currentRenderCommand.vertexSize = 0;
+		m_currentRenderCommand.indexStartIndex = 0;
+		m_currentRenderCommand.indexSize = 0;
+		m_vertexBufferIndex = 0;
+		m_indexBufferIndex = 0;
 
 		auto vertexCopyPass = m_commandBuffer->BeginCopyPass();
 		vertexCopyPass.UploadToBuffer(
@@ -248,9 +299,9 @@ namespace TwoD
 			}
 			(*m_handlers)[renderCommand.handlerIndex]->Bind(m_commandBuffer, m_renderPass);
 			m_renderPass->DrawIndexedPrimitives(
-				static_cast<uint32_t>(renderCommand.size * 6),
+				static_cast<uint32_t>(renderCommand.indexSize),
 				1,
-				static_cast<uint32_t>(renderCommand.startIndex * 6),
+				static_cast<uint32_t>(renderCommand.indexStartIndex),
 				0,
 				0
 			);

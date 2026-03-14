@@ -29,14 +29,12 @@ void Tile::Start()
 	}
 
 	auto& city = CreateEntity("city");
-	auto& cityRenderer = city.AddComponent<ColorRenderer>();
-	cityRenderer.color.r = 200;
-	cityRenderer.color.g = 20;
-	cityRenderer.color.b = 100;
+	auto& cityRenderer = city.AddComponent<MeshRenderer>();
+	cityRenderer.layer = 103;
+	cityRenderer.mesh = &AssetManager::Get<Mesh>("triangle");
+	cityRenderer.color = { 137, 81, 41, 255 };
 	auto* transform = city.GetTransform();
-	transform->scale = { std::sqrt(2.0f), std::sqrt(2.0f) };
-	transform->position = { 0.5f, 0.5f };
-	transform->rotation = glm::quarter_pi<float>();
+	transform->rotation = glm::pi<float>();
 }
 
 void Tile::Update(float delta)

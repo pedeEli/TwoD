@@ -8,6 +8,15 @@
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoD/Math/Rect.hpp"
 
+TD_STRUCT(
+	(TD_NAME(Vertex), TD_NAMESPACE(TwoD)),
+	(
+		TD_STRUCT_FIELD(glm::fvec2, pos),
+		TD_STRUCT_FIELD(glm::fvec2, tex, TD_INIT({ 0.0f, 0.0f })),
+		TD_STRUCT_FIELD(glm::fvec4, color, TD_INIT({ 1.0f, 1.0f, 1.0f, 1.0f }))
+	),
+)
+
 namespace TwoD
 {
 	class RenderSystem;
@@ -47,6 +56,19 @@ namespace TwoD
 		Renderer& operator=(const Renderer& other) = delete;
 		Renderer& operator=(Renderer&& other) = delete;
 
+		void RenderMesh(
+			const glm::fmat3x3& transform,
+			const std::vector<Vertex>& vertices,
+			const std::vector<uint32_t>& indices,
+			const glm::fvec4& color = { 1.0f, 1.0f, 1.0f, 1.0f }
+		);
+		void RenderMesh(
+			const glm::fmat3x3& transform,
+			const std::vector<Vertex>& vertices,
+			const std::vector<uint32_t>& indices,
+			const TextureBinding& binding,
+			const glm::fvec4& color = { 1.0f, 1.0f, 1.0f, 1.0f }
+		);
 
 		void RenderQuad(
 			const glm::fmat3x3& transform,
@@ -86,17 +108,13 @@ namespace TwoD
 		);
 
 	private:
-		struct Vertex
-		{
-			glm::fvec2 pos;
-			glm::fvec2 tex;
-			glm::fvec4 color;
-		};
 		struct RenderCommand
 		{
 			size_t handlerIndex = 0;
-			size_t startIndex = 0;
-			size_t size = 0;
+			size_t vertexStartIndex = 0;
+			size_t vertexSize = 0;
+			size_t indexStartIndex = 0;
+			size_t indexSize = 0;
 			const glm::fmat4x4* projection;
 			std::optional<Rect<float>> scissorRect;
 		};
@@ -105,10 +123,11 @@ namespace TwoD
 		SDL::Buffer m_vertexBuffer;
 		SDL::TransferBuffer m_vertexTransferBuffer;
 		Vertex* m_vertexBufferPtr = nullptr;
+		size_t m_vertexBufferIndex = 0;
 		SDL::Buffer m_indexBuffer;
 		SDL::TransferBuffer m_indexTransferBuffer;
 		uint32_t* m_indexBufferPtr = nullptr;
-		size_t m_quadIndex = 0;
+		size_t m_indexBufferIndex = 0;
 
 		const SDL::CommandBuffer* m_commandBuffer = nullptr;
 		const SDL::RenderPass* m_renderPass = nullptr;
@@ -123,9 +142,8 @@ namespace TwoD
 		const std::vector<std::unique_ptr<RenderHandler>>* m_handlers = nullptr;
 
 	private:
-		static inline constexpr size_t s_maxNumberOfQuads = 4000;
-		static inline constexpr size_t s_maxNumberOfVertices = s_maxNumberOfQuads * 4;
-		static inline constexpr size_t s_maxNumberOfIndices = s_maxNumberOfQuads * 6;
+		static inline constexpr size_t s_maxNumberOfVertices = 16000;
+		static inline constexpr size_t s_maxNumberOfIndices = 24000;
 
 		friend class RenderSystem;
 	};

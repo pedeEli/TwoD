@@ -17,11 +17,11 @@ entities:
   components:
   - type: class TwoD::SpriteRenderer
     sprite: protagonist
-    layer: 10
+    layer: 1000
   - type: class Player
     speed: 5.0
   - type: class TwoD::Hitbox
-    layer: 10
+    layer: 1000
     x: -0.5
     y: -0.5
     w: 1.0
@@ -42,7 +42,3 @@ screen:
     size: 50
     padding: [ 10, 10 ]
     background: { x: 0, y: 100, z: 200, w: 255 }
-  - type: class TwoD::ScissorRect
-    rect:
-      min: { x: -20, y: -20 }
-      max: { x: 20, y: 20 }

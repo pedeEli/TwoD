@@ -6,6 +6,7 @@
 #include "TwoDLib/Assets/Shader.hpp"
 #include "TwoDLib/Assets/SpriteAtlas.hpp"
 #include "TwoDLib/Assets/Audio.hpp"
+#include "TwoDLib/Assets/Mesh.hpp"
 
 #include "TwoDLib/Components/Camera.hpp"
 #include "TwoDLib/Components/Hitbox.hpp"
@@ -13,12 +14,14 @@
 #include "TwoDLib/Components/TextRenderer.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
 #include "TwoDLib/Components/ScissorRect.hpp"
+#include "TwoDLib/Components/MeshRenderer.hpp"
 
 #include "TwoDLib/Components/UI/Button.hpp"
 
 #include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/ColorRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/TextRenderHandler.hpp"
+#include "TwoDLib/RenderHandlers/MeshRenderHandler.hpp"
 
 namespace TwoDLib
 {
@@ -34,6 +37,7 @@ namespace TwoDLib
 		resources.Register<TwoD::Shader>();
 		resources.Register<TwoD::SpriteAtlas>();
 		resources.Register<TwoD::Audio>();
+		resources.Register<TwoD::Mesh>();
 	}
 
 	constexpr static void RegisterComponents(Components& components)
@@ -45,6 +49,7 @@ namespace TwoDLib
 		components.Register<TwoD::ColorRenderer>();
 		components.Register<TwoD::ScissorRect>();
 		components.Register<TwoD::ComputedScissorRect>();
+		components.Register<TwoD::MeshRenderer>();
 
 		components.Register<TwoD::Button>();
 	}
@@ -54,6 +59,7 @@ namespace TwoDLib
 		renderHandlers.Register<TwoD::SpriteRenderHandler>();
 		renderHandlers.Register<TwoD::ColorRenderHandler>();
 		renderHandlers.Register<TwoD::TextRenderHandler>();
+		renderHandlers.Register<TwoD::MeshRenderHandler>();
 	}
 
 	void Misc();
