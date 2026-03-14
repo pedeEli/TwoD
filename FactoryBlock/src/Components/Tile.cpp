@@ -1,5 +1,7 @@
 #include "Tile.hpp"
 
+using namespace TwoD;
+
 void Tile::Start()
 {
 	auto& ground = CreateEntity("ground");
@@ -32,16 +34,15 @@ void Tile::Start()
 	cityRenderer.color.g = 20;
 	cityRenderer.color.b = 100;
 	auto* transform = city.GetTransform();
-	transform->SetScale(std::sqrt(2.0f), std::sqrt(2.0f));
-	transform->SetPosition(0.5f, 0.5f);
-	transform->SetRotation(glm::quarter_pi<float>());
+	transform->scale = { std::sqrt(2.0f), std::sqrt(2.0f) };
+	transform->position = { 0.5f, 0.5f };
+	transform->rotation = glm::quarter_pi<float>();
 }
 
 void Tile::Update(float delta)
 {
 	auto* transform = GetTransform();
-	auto current = transform->GetRotation();
-	transform->SetRotation(std::lerp(current, targetRotation, delta * rotationSpeed));
+	transform->rotation = std::lerp(transform->rotation, targetRotation, delta * rotationSpeed);
 }
 
 
@@ -68,6 +69,6 @@ void Tile::AddPath(const char* name, Direction dir)
 	pathRenderer.color.g = 150;
 	pathRenderer.color.b = 150;
 	auto& pathTransform = path.GetComponent<Transform>();
-	pathTransform.SetScale(s_pathScales[index]);
-	pathTransform.SetPosition(s_pathPositions[index]);
+	pathTransform.scale = s_pathScales[index];
+	pathTransform.position = s_pathPositions[index];
 }

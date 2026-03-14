@@ -51,7 +51,7 @@ namespace TwoD
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)
 		T& AddComponent() const;
-		Component& AddComponent(const std::string& name) const;
+		Component& AddComponent(const std::string& name, const void* data) const;
 
 		template<typename T>
 		requires(std::is_base_of_v<Component, T>)

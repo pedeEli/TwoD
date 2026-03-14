@@ -19,8 +19,8 @@ namespace TwoD
 		auto textSize = textRenderer.GetSize();
 
 		auto& transform = GetComponent<UITransform>();
-		transform.SetSize(textSize * size + padding * 2.0f);
-		transform.SetAnchor(anchor);
+		transform.size = textSize * size + padding * 2.0f;
+		transform.anchor = anchor;
 	}
 
 	void Button::Update(float delta)

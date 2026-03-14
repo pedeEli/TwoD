@@ -2,20 +2,17 @@
 #include "TwoD.hpp"
 #include "TwoDLib.hpp"
 
-using namespace TwoD;
 
-class Player : public Component
-{
-	using Component::Component;
+TD_COMPONENT(
+	(TD_NAME(Player)),
+	(
+		TD_COMPONENT_FIELD(float, speed, TD_INIT(1.5f))
+	)
+)
 public:
 	void Start() override;
 	void Update(float delta) override;
 
-public:
-	TD_COMPONENT(
-		TD_COMPONENT_FIELD(float, speed, 1.5)
-	)
-
-	Camera* camera;
+	TwoD::Camera* camera;
 };
 

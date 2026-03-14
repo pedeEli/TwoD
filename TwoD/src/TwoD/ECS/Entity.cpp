@@ -31,9 +31,9 @@ namespace TwoD
 	}
 
 
-	Component& Entity::AddComponent(const std::string& name) const
+	Component& Entity::AddComponent(const std::string& name, const void* data) const
 	{
-		return ECS::AddComponent(m_storageHandle, name);
+		return ECS::AddComponent(m_storageHandle, name, data);
 	}
 
 	Transform* Entity::GetTransform() const

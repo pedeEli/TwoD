@@ -1,19 +1,15 @@
 #pragma once
 #include "TwoD.hpp"
 
-using namespace TwoD;
 
-
-class Ground : public Component
-{
-	using Component::Component;
-public:
-	void Start() override;
-
-public:
-	TD_COMPONENT(
+TD_COMPONENT(
+	(TD_NAME(Ground)),
+	(
 		TD_COMPONENT_FIELD(uint32_t, width),
 		TD_COMPONENT_FIELD(uint32_t, height),
 		TD_COMPONENT_FIELD(uint32_t, foliage)
 	)
+)
+public:
+	void Start() override;
 };

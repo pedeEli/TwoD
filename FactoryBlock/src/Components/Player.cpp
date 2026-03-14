@@ -3,17 +3,19 @@
 #include "Ore.hpp"
 #include "Tile.hpp"
 
+using namespace TwoD;
+
 void Player::Start()
 {
 	camera = Camera::Get();
-	TwoD::EventHandler::On<TwoD::MouseWheelEvent>([this](auto& e)
+	EventHandler::On<MouseWheelEvent>([this](auto& e)
 		{
 			camera->zoom = glm::clamp(camera->zoom - e.y, 5.0f, 50.0f);
 			return false;
 		});
-	TwoD::EventHandler::On<TwoD::KeyDownEvent>([this](auto& e)
+	EventHandler::On<KeyDownEvent>([this](auto& e)
 		{
-			if (e.key != TwoD::Key::SPACE)
+			if (e.key != Key::SPACE)
 			{
 				return false;
 			}
@@ -23,9 +25,9 @@ void Player::Start()
 			AssetManager::Get<Audio>("vibraphone").Play();
 			return false;
 		});
-	TwoD::EventHandler::On<TwoD::MouseDownEvent>([this](auto& e)
+	EventHandler::On<MouseDownEvent>([this](auto& e)
 		{
-			if (e.button != TwoD::MouseButton::LEFT)
+			if (e.button != MouseButton::LEFT)
 			{
 				return false;
 			}
@@ -45,28 +47,28 @@ void Player::Start()
 
 void Player::Update(float delta)
 {
-	glm::fvec3 dir(0.0f, 0.0f, 0.0f);
+	glm::fvec2 dir(0.0f, 0.0f);
 
-	if (TwoD::Inputs::GetButtonDown(TwoD::Scancode::A))
+	if (Inputs::GetButtonDown(Scancode::A))
 	{
 		dir.x -= 1.0f;
 	}
-	if (TwoD::Inputs::GetButtonDown(TwoD::Scancode::D))
+	if (Inputs::GetButtonDown(Scancode::D))
 	{
 		dir.x += 1.0f;
 	}
-	if (TwoD::Inputs::GetButtonDown(TwoD::Scancode::W))
+	if (Inputs::GetButtonDown(Scancode::W))
 	{
 		dir.y -= 1.0f;
 	}
-	if (TwoD::Inputs::GetButtonDown(TwoD::Scancode::S))
+	if (Inputs::GetButtonDown(Scancode::S))
 	{
 		dir.y += 1.0f;
 	}
 
 	if (dir.x != 0.0 || dir.y != 0.0)
 	{
-		glm::fvec3 normalized = glm::normalize(dir) * speed * delta;
-		GetComponent<Transform>().Translate(normalized);
+		auto normalized = glm::normalize(dir) * speed * delta;
+		GetComponent<Transform>().position += normalized;
 	}
 }

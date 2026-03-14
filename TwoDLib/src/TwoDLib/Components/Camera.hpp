@@ -1,11 +1,12 @@
 #pragma once
 #include "TwoD.hpp"
 
-namespace TwoD
-{
-	class Camera : public Component
-	{
-		using Component::Component;
+TD_COMPONENT(
+	(TD_NAME(Camera), TD_NAMESPACE(TwoD)),
+	(
+		TD_COMPONENT_FIELD(float, zoom, TD_INIT(40.0f))
+	)
+)
 	public:
 		static Camera* Get();
 	public:
@@ -25,11 +26,6 @@ namespace TwoD
 
 		const glm::fvec2 ScreenToWorldSpace(const glm::fvec2 pos) const;
 		const glm::fvec2 WorldToScreenSpace(const glm::fvec2 pos) const;
-
-	public:
-		TD_COMPONENT(
-			TD_COMPONENT_FIELD(float, zoom, 40.0f)
-		)
 
 	private:
 		glm::fmat4x4 m_viewMatrix = {

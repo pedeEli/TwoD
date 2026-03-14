@@ -13,23 +13,14 @@ namespace TwoD
 	{
 		Entity& entity = *handle;
 
-		if (entityInfo.transformLoadData)
-		{
-			entity.GetComponent<Transform>().Load(entityInfo.transformLoadData);
-		}
-
 		for (auto& componentInfo : entityInfo.components)
 		{
-			auto& component = entity.AddComponent(componentInfo.type);
-			if (componentInfo.loadData)
-			{
-				component.Load(componentInfo.loadData);
-			}
+			auto& component = entity.AddComponent(componentInfo.type, componentInfo.loadData);
 		}
 
 		for (auto& childInfo : entityInfo.children)
 		{
-			auto& childEntity = ECS::CreateEntity(childInfo.name, handle);
+			auto& childEntity = ECS::CreateEntity(childInfo.name, handle, childInfo.transformLoadData);
 			LoadEntity(childInfo, childEntity);
 		}
 	}
@@ -74,31 +65,30 @@ namespace TwoD
 
 		for (auto& entityInfo : entities)
 		{
-			EntityHandle handle = ECS::CreateEntity(entityInfo.name);
+			EntityHandle handle = ECS::CreateEntity(entityInfo.name, entityInfo.transformLoadData);
 			m_rootEntities.push_back(handle);
 			LoadEntity(entityInfo, handle);
 		}
 
 		if (screen.entities.size() != 0)
 		{
-			m_screenRootEntity = ECS::CreateUIEntity("screen");
+			m_screenRootEntity = ECS::CreateUIEntity("screen", nullptr);
 			for (auto& entityInfo : screen.entities)
 			{
-				auto& entity = ECS::CreateEntity(entityInfo.name, m_screenRootEntity);
+				auto& entity = ECS::CreateEntity(entityInfo.name, m_screenRootEntity, entityInfo.transformLoadData);
 				LoadEntity(entityInfo, entity);
 			}
 
 			ComponentHandle<UITransform> transform = m_screenRootEntity->GetComponent<UITransform>();
+			auto size = static_cast<glm::fvec2>(App::Get<Window>().GetSize());
+			transform->size = size;
+			transform->anchor = Anchor::BOTTOM_RIGHT;
 			EventHandler::On<WindowResizedEvent>([transform](auto& event)
 				{
-					glm::fvec2 size = { static_cast<float>(event.x), static_cast<float>(event.x) };
-					transform->SetSize(size);
-					transform->SetPosition(size * 0.5f);
+					glm::fvec2 size = { static_cast<float>(event.x), static_cast<float>(event.y) };
+					transform->size = size;
 					return false;
 				});
-			auto size = static_cast<glm::fvec2>(App::Get<Window>().GetSize());
-			transform->SetSize(size);
-			transform->SetPosition(size * 0.5f);
 		}
 
 		s_activeScene = this;
@@ -108,11 +98,11 @@ namespace TwoD
 	{
 		for (auto entity : m_rootEntities)
 		{
-			entity->GetTransform()->UpdateMatrix(m_callbacks);
+			entity->GetComponent<Transform>().UpdateMatrix(m_callbacks);
 		}
 		if (m_screenRootEntity)
 		{
-			m_screenRootEntity->GetTransform()->UpdateMatrix(m_callbacks);
+			m_screenRootEntity->GetComponent<UITransform>().UpdateMatrix(m_callbacks);
 		}
 	}
 

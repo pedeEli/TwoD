@@ -2,11 +2,15 @@
 #include "TwoD.hpp"
 #include "TwoDLib/Assets/Font.hpp"
 
-namespace TwoD
-{
-	class TextRenderer : public Component
-	{
-		using Component::Component;
+TD_COMPONENT(
+	(TD_NAME(TextRenderer), TD_NAMESPACE(TwoD)),
+	(
+		TD_COMPONENT_FIELD(int32_t, layer),
+		TD_COMPONENT_FIELD(float, size),
+		TD_COMPONENT_FIELD(Font*, font),
+		TD_COMPONENT_FIELD(std::string, text, TD_UPDATER(SetGlyphs()))
+	)
+)
 	public:
 		struct Glyph
 		{
@@ -21,14 +25,6 @@ namespace TwoD
 		const std::vector<Glyph>& GetGlyphs() const;
 
 		glm::fvec2 GetSize() const;
-
-	public:
-		TD_COMPONENT(
-			TD_COMPONENT_FIELD(int32_t, layer),
-			TD_COMPONENT_FIELD(float, size),
-			TD_COMPONENT_FIELD(Font*, font),
-			TD_COMPONENT_FIELD_WITH_UPDATER(std::string, text, SetGlyphs();)
-		)
 
 	private:
 		void SetGlyphs();

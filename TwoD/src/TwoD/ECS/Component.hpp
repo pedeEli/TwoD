@@ -32,7 +32,6 @@ namespace TwoD
 		Component& operator=(const Component& other) = delete;
 		Component& operator=(Component&& other) = default;
 
-		virtual void Load(const void* data) {}
 		virtual void StartBefore() {}
 		virtual void Start() {}
 		virtual void Destroy() {}

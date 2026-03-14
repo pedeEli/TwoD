@@ -1,27 +1,23 @@
 #pragma once
 #include "TwoD.hpp"
 
-namespace TwoD
-{
-	class ScissorRect : public Component
-	{
-		using Component::Component;
+TD_COMPONENT(
+	(TD_NAME(ScissorRect), TD_NAMESPACE(TwoD)),
+	(
+		TD_COMPONENT_FIELD(Rect<float>, rect)
+	)
+)
 	public:
 		static void ComputeRect(Transform& transform);
-
-	public:
-		TD_COMPONENT(
-			TD_COMPONENT_FIELD(Rect<float>, rect)
-		)
 	};
+}
 
-	class ComputedScissorRect : public Component
-	{
-		using Component::Component;
-	public:
-		TD_COMPONENT(
-			TD_COMPONENT_FIELD(Rect<float>, rect)
-		)
+TD_COMPONENT(
+	(TD_NAME(ComputedScissorRect), TD_NAMESPACE(TwoD)),
+	(
+		TD_COMPONENT_FIELD(Rect<float>, rect)
+	)
+)
 	};
 }
 

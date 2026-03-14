@@ -42,9 +42,9 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
-	Component& ComponentStorageImpl<T>::AddComponent(EntityHandle entity)
+	Component& ComponentStorageImpl<T>::AddComponent(EntityHandle entity, const void* data)
 	{
-		auto& ref = Add(entity);
+		auto& ref = Add(entity, static_cast<const T::td_load_data*>(data));
 		return static_cast<Component&>(ref);
 	}
 
@@ -100,10 +100,14 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
-	T& ComponentStorageImpl<T>::Add(EntityHandle entity)
+	T& ComponentStorageImpl<T>::Add(EntityHandle entity, const T::td_load_data* data)
 	{
 		m_unstartedItems = true;
 		entity->m_components.push_back(typeid(T));
+		if (data)
+		{
+			return storage::Add(entity, entity, data);
+		}
 		return storage::Add(entity, entity);
 	}
 
@@ -112,14 +116,8 @@ namespace TwoD
 	requires(std::is_base_of_v<Component, T>)
 	bool ComponentStorageImpl<T>::CreateLoadData(const Deserializer& deserializer, const void*& value) const
 	{
-		if constexpr (requires(T::internal_load_data* loadData, const Deserializer& deserializer) {
-			{ T::CreateLoadData(loadData, deserializer) } -> std::convertible_to<bool>;
-		})
-		{
-			auto* v = new T::internal_load_data();
-			value = v;
-			return T::CreateLoadData(v, deserializer);
-		}
-		return true;
+		auto* v = new T::td_load_data();
+		value = v;
+		return T::TDCreateLoadData(v, deserializer);
 	}
 }

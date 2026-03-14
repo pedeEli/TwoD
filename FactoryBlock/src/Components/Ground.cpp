@@ -2,6 +2,8 @@
 #include <random>
 #include "TwoDLib.hpp"
 
+using namespace TwoD;
+
 void Ground::Start()
 {
 	float left = -(float)width * 0.5f;
@@ -16,7 +18,7 @@ void Ground::Start()
 
 			auto& ground = CreateEntity("ground");
 			auto& transform = ground.GetComponent<Transform>();
-			transform.SetPosition(x, y);
+			transform.position = { x, y };
 
 			auto& renderer = ground.AddComponent<SpriteRenderer>();
 			renderer.sprite = &TwoD::AssetManager::Get<Sprite>("grass");
@@ -36,7 +38,7 @@ void Ground::Start()
 		auto y = distrY(gen);
 		auto& entity = CreateEntity("foliage");
 		auto& transform = entity.GetComponent<Transform>();
-		transform.SetPosition(x, y);
+		transform.position = { x, y };
 		
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		renderer.slice = distrS(gen);

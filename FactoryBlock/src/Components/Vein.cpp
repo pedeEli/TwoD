@@ -2,6 +2,8 @@
 #include <random>
 #include "TwoDLib.hpp"
 
+using namespace TwoD;
+
 void Vein::Start()
 {
 	auto& iron = TwoD::AssetManager::Get<Sprite>("iron");
@@ -16,7 +18,8 @@ void Vein::Start()
 		int y = distr(gen);
 		auto& entity = CreateEntity("iron ore");
 		ComponentHandle<Transform> transform = entity.GetComponent<Transform>();
-		transform->SetPosition((float)x, (float)y);
+		transform->position.x = static_cast<float>(x);
+		transform->position.y = static_cast<float>(y);
 
 		auto& renderer = entity.AddComponent<SpriteRenderer>();
 		ComponentHandle<SpriteRenderer> rendererHandle = renderer;

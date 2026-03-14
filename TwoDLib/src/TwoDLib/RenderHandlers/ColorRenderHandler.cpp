@@ -23,7 +23,7 @@ namespace TwoD
 		auto* rect = colorRenderer.TryGetComponent<UITransform>();
 		if (rect)
 		{
-			size = rect->GetSize();
+			size = rect->size;
 			pos = -size * 0.5f;
 		}
 

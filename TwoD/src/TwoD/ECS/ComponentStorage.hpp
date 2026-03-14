@@ -20,7 +20,7 @@ namespace TwoD
 		ComponentStorage& operator=(const ComponentStorage& other) = delete;
 		ComponentStorage& operator=(ComponentStorage&& other) = delete;
 
-		virtual Component& AddComponent(EntityHandle entity) = 0;
+		virtual Component& AddComponent(EntityHandle entity, const void* data) = 0;
 		virtual Component& GetComponent(EntityHandle entity) = 0;
 
 		virtual void StartBefore() = 0;
@@ -46,7 +46,7 @@ namespace TwoD
 		ComponentStorageImpl& operator=(const ComponentStorageImpl<T>& other) = delete;
 		ComponentStorageImpl& operator=(ComponentStorageImpl<T>&& other) = delete;
 
-		Component& AddComponent(EntityHandle entity) override;
+		Component& AddComponent(EntityHandle entity, const void* data) override;
 		Component& GetComponent(EntityHandle entity) override;
 		
 		void StartBefore() override;
@@ -58,7 +58,7 @@ namespace TwoD
 
 		bool CreateLoadData(const Deserializer& deserializer, const void*& value) const override;
 		
-		T& Add(EntityHandle entity);
+		T& Add(EntityHandle entity, const T::td_load_data* data = nullptr);
 
 	private:
 		bool m_unstartedItems = false;

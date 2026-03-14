@@ -15,51 +15,23 @@ TD_ENUM(
 		TD_ENUM_FIELD(TOP_LEFT, TD_INIT(TOP | LEFT), TD_NO_DEBUG),
 		TD_ENUM_FIELD(BOTTOM_RIGHT, TD_INIT(BOTTOM | RIGHT), TD_NO_DEBUG),
 		TD_ENUM_FIELD(BOTTOM_LEFT, TD_INIT(BOTTOM | LEFT), TD_NO_DEBUG)
-	)
+		)
 )
 
-
-namespace TwoD
-{
-	class UITransform : public Transform
-	{
-		using Transform::Transform;
+TD_COMPONENT(
+	(TD_NAME(UITransform), TD_NAMESPACE(TwoD), TD_BASE(Transform)),
+	(
+		TD_COMPONENT_FIELD(glm::fvec2, size, TD_INIT({ 0.0f, 0.0f })),
+		TD_COMPONENT_FIELD(glm::fvec2, offset, TD_INIT({ 0.0f, 0.0f })),
+		TD_COMPONENT_FIELD(Anchor, anchor, TD_INIT(Anchor::CENTER))
+	)
+)
 	public:
-		struct internal_load_data : public Transform::internal_load_data
-		{
-			glm::fvec2 size = { 0.0f, 0.0f };
-			glm::fvec2 offset = { 0.0f, 0.0f };
-			Anchor anchor = Anchor::CENTER;
-		};
-		static void CreateLoadData(internal_load_data* loadData, const Deserializer& deserializer);
-		void Load(const void* data) override;
-#ifdef TD_CREATE_DEBUGGER
-		void Debug() override;
-#endif
-		void UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent);
-
-		void SetSize(glm::fvec2 size);
-		void SetWidth(float width);
-		void SetHeight(float height);
-		glm::fvec2 GetSize() const;
-		float GetWidth() const;
-		float GetHeight() const;
-
-		void SetOffset(glm::fvec2 offset);
-		glm::fvec2 GetOffset() const;
-
-		void SetAnchor(Anchor anchor);
-
+		void UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent = nullptr);
 		Rect<float> GetRect() const;
 
 	private:
-		void UpdateTransform();
-		void UpdateTransform(glm::fvec2 parentSize);
-
-	private:
-		glm::fvec2 m_size = { 0.0f, 0.0f };
-		glm::fvec2 m_offset = { 0.0f, 0.0f };
-		Anchor m_anchor = Anchor::CENTER;
+		void UpdateMatrix(const std::vector<PropagationCallback>& callbacks, glm::fmat3x3* parent, glm::fvec2 parentSize);
 	};
 }
 

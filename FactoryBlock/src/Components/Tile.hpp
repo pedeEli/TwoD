@@ -2,8 +2,6 @@
 #include "TwoD.hpp"
 #include "TwoDLib.hpp"
 
-using namespace TwoD;
-
 TD_ENUM(
 	(TD_NAME(Direction), TD_BASE(uint8_t)),
 	(
@@ -15,17 +13,16 @@ TD_ENUM(
 	)
 )
 
-class Tile : public Component
-{
-	using Component::Component;
+TD_COMPONENT(
+	(TD_NAME(Tile)),
+	(
+		TD_COMPONENT_FIELD(Direction, directions, TD_INIT({})),
+		TD_COMPONENT_FIELD(float, rotationSpeed, TD_INIT(20.0f))
+	)
+)
 public:
 	void Start() override;
 	void Update(float delta) override;
-
-	TD_COMPONENT(
-		TD_COMPONENT_FIELD(Direction, directions, {}),
-		TD_COMPONENT_FIELD(float, rotationSpeed, 20.0f)
-	)
 
 public:
 	float targetRotation = 0.0f;

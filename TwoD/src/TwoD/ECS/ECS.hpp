@@ -60,8 +60,9 @@ namespace TwoD
 		}
 
 	private:
-		static Entity& CreateEntity(const std::string& name);
-		static Entity& CreateUIEntity(const std::string& name);
+		static Entity& CreateEntity(const std::string& name, EntityHandle parent, const void* data);
+		static Entity& CreateEntity(const std::string& name, const void* data);
+		static Entity& CreateUIEntity(const std::string& name, const void* data);
 
 		template<class T>
 		requires(std::is_base_of_v<Component, T>)
@@ -84,10 +85,10 @@ namespace TwoD
 			m_unstartedComponents = true;
 			return GetStorage<T>()->Add(entity);
 		}
-		static Component& AddComponent(EntityHandle entity, const std::string& name)
+		static Component& AddComponent(EntityHandle entity, const std::string& name, const void* data)
 		{
 			m_unstartedComponents = true;
-			return GetStorage(name)->AddComponent(entity);
+			return GetStorage(name)->AddComponent(entity, data);
 		}
 
 		template<typename T>
