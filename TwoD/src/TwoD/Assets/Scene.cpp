@@ -148,7 +148,7 @@ namespace TwoD
 				}
 			}
 			
-			return DeserializePrefab(value, prefab.prefab, &deserializer);
+			return DeserializePrefab(value, prefab.prefab, deserializer);
 		}
 
 		if (!deserializer["name"].As<std::string>(value.name))
@@ -167,7 +167,7 @@ namespace TwoD
 
 		if (deserializer["transform"])
 		{
-			if (!ECS::CreateLoadData("class UITransform", deserializer["transform"], value.transformLoadData))
+			if (!ECS::CreateLoadData("class TwoD::UITransform", deserializer["transform"], value.transformLoadData))
 			{
 				return false;
 			}
@@ -183,9 +183,17 @@ namespace TwoD
 
 		return true;
 	}
-	bool Deserializable<EntityInfo>::DeserializePrefab(EntityInfo& value, EntityInfo& prefab, const Deserializer* deserializer)
+	bool Deserializable<EntityInfo>::DeserializePrefab(EntityInfo& value, EntityInfo& prefab, std::optional<Deserializer> deserializer)
 	{
 		value.transformLoadData = ECS::CopyLoadData("class TwoD::UITransform", prefab.transformLoadData);
+
+		if (deserializer && (*deserializer)["transform"])
+		{
+			if (!ECS::ModifyLoadData("class TwoD::UITransform", (*deserializer)["transform"], value.transformLoadData))
+			{
+				return false;
+			}
+		}
 
 		for (auto& component : prefab.components)
 		{
@@ -262,7 +270,7 @@ namespace TwoD
 					}
 				}
 			}
-			if (!DeserializePrefab(copy, prefabChild, &*child))
+			if (!DeserializePrefab(copy, prefabChild, child))
 			{
 				return false;
 			}

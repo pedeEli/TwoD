@@ -74,7 +74,7 @@ namespace TwoD
 	struct Deserializable<EntityInfo>
 	{
 		static bool Deserialize(const Deserializer& deserializer, EntityInfo& value);
-		static bool DeserializePrefab(EntityInfo& value, EntityInfo& prefab, const Deserializer* deserializer = nullptr);
+		static bool DeserializePrefab(EntityInfo& value, EntityInfo& prefab, std::optional<Deserializer> deserializer);
 	};
 
 	template<>

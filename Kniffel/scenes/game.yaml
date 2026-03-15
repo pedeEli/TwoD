@@ -13,8 +13,13 @@ entities:
 
 screen:
 - name: flex
+  transform:
+    anchor: BOTTOM
+    size: [ 0, 100 ]
   components:
   - type: class TwoD::FlexLayout
+    justify: CENTER
+    align: CENTER
     gap: 20
   children:
   - prefab: TwoDLib::ColorButton
