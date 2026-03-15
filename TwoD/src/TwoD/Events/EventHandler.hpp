@@ -18,15 +18,18 @@ namespace TwoD
 	public:
 		template<class E>
 		requires(std::is_base_of_v<Event<EventType>, E>)
-		static void On(Callback<E> callback)
+		static [[nodiscard]] std::function<void()> On(Callback<E> callback)
 		{
-			auto it = m_callbacks.find(E::GetStaticType());
-			if (it == m_callbacks.end())
-			{
-				m_callbacks[E::GetStaticType()] = { *(GenericCallback*)&callback };
-				return;
-			}
-			it->second.push_back(*(GenericCallback*)&callback);
+			auto& callbacks = m_callbacks[E::GetStaticType()];
+			auto index = callbacks.size();
+			callbacks.push_back(*(GenericCallback*)&callback);
+			return [index]()
+				{
+					auto& callbacks = m_callbacks[E::GetStaticType()];
+					auto& back = callbacks.back();
+					callbacks[index] = std::move(back);
+					callbacks.pop_back();
+				};
 		}
 
 	private:

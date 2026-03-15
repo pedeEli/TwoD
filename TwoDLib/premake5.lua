@@ -20,7 +20,10 @@ project "TwoDLib"
 
 	includedirs {
 		"src",
-		"%{wks.location}/TwoD/src",
+		"%{wks.location}/TwoD/src"
+	}
+
+	externalincludedirs {
 		"%{wks.location}/TwoD/vendor/spdlog/include",
 		"%{IncludeDir.SDL3}",
 		"%{IncludeDir.yaml_cpp}",
@@ -41,6 +44,7 @@ project "TwoDLib"
 	}
 
 	buildoptions { "/utf-8" }
+	warnings "Extra"
 	fatalwarnings { "all" }
 
 	filter "system:windows"

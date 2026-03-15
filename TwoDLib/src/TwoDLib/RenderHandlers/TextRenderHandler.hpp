@@ -16,6 +16,6 @@ namespace TwoD
 		void Render(Renderer& renderer, size_t index) override;
 		
 	private:
-		Shader* m_shader;
+		Shader* m_shader = nullptr;
 	};
 }

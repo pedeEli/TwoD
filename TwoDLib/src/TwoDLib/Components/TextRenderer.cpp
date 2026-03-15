@@ -4,9 +4,9 @@
 
 namespace TwoD
 {
-	void TextRenderer::SetText(const std::string& text)
+	void TextRenderer::SetText(const std::string& newText)
 	{
-		this->text = text;
+		text = newText;
 		SetGlyphs();
 	}
 	const std::vector<TextRenderer::Glyph> &TextRenderer::GetGlyphs() const

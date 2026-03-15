@@ -16,7 +16,7 @@ namespace TwoD
 		Asset& operator=(Asset&& other) = delete;
 
 		virtual void Load(const Deserializer& deserializer) = 0;
-		virtual void Init(const std::filesystem::path& path, const Window& window) {}
+		virtual void Init([[maybe_unused]] const std::filesystem::path& path, [[maybe_unused]] const Window& window) {}
 		virtual void Destroy() {}
 	};
 

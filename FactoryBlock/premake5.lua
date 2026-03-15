@@ -14,9 +14,12 @@ project "FactoryBlock"
 	}
 
 	includedirs {
-		"%{wks.location}/TwoD/vendor/spdlog/include",
 		"%{wks.location}/TwoD/src",
-		"%{wks.location}/TwoDLib/src",
+		"%{wks.location}/TwoDLib/src"
+	}
+
+	externalincludedirs {
+		"%{wks.location}/TwoD/vendor/spdlog/include",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.imgui}"
 	}
@@ -33,6 +36,7 @@ project "FactoryBlock"
 	}
 
 	buildoptions { "/utf-8" }
+	warnings "Extra"
 	fatalwarnings { "all" }
 	
 	defines {

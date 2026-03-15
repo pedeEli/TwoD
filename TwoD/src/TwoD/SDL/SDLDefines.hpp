@@ -476,8 +476,8 @@ TD_ENUM(
 TD_STRUCT(
 	(TD_NAMESPACE(TwoD::SDL), TD_NAME(TextureSamplerBinding)),
 	(
-		TD_STRUCT_FIELD(TwoD::SDL::Texture*, texture, TD_NO_SERIALIZE, TD_NO_DEBUG),
-		TD_STRUCT_FIELD(TwoD::SDL::Sampler*, sampler, TD_NO_SERIALIZE, TD_NO_DEBUG)
+		TD_STRUCT_FIELD(TwoD::SDL::Texture*, texture, TD_INIT(nullptr), TD_NO_SERIALIZE, TD_NO_DEBUG),
+		TD_STRUCT_FIELD(TwoD::SDL::Sampler*, sampler, TD_INIT(nullptr), TD_NO_SERIALIZE, TD_NO_DEBUG)
 	),
 )
 TD_STRUCT(

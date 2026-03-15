@@ -29,4 +29,5 @@ group ""
 
 group "Misc"
 	include "FactoryBlock"
+	include "Kniffel"
 group ""

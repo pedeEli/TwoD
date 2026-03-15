@@ -9,12 +9,12 @@ namespace TwoD
 		return localPos.x >= x && localPos.x <= x + w && localPos.y >= y && localPos.y <= y + h;
 	}
 
-	std::optional<const Hitbox*> Hitbox::Hit(const glm::fvec2& pos)
+	const Hitbox* Hitbox::Hit(const glm::fvec2& pos)
 	{
 		auto& hitboxs = ECS::GetComponents<Hitbox>();
 
 		int32_t currentLayer = std::numeric_limits<int32_t>::min();
-		std::optional<const Hitbox*> currentHitbox = {};
+		const Hitbox* currentHitbox = nullptr;
 
 		for (auto& hitbox : hitboxs)
 		{

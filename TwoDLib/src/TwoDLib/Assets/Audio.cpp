@@ -5,7 +5,7 @@
 
 namespace TwoD
 {
-	void Audio::Init(const std::filesystem::path& path, const Window& window)
+	void Audio::Init(const std::filesystem::path& path, [[maybe_unused]] const Window& window)
 	{
 		auto filePath = path.parent_path() / file;
 		m_source = SDL::AudioSource::LoadWAV(filePath);

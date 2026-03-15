@@ -23,7 +23,7 @@ namespace TwoD
 		transform.anchor = anchor;
 	}
 
-	void Button::Update(float delta)
+	void Button::Update([[maybe_unused]] float delta)
 	{
 		auto rect = GetComponent<UITransform>().GetRect();
 		auto mouse = Inputs::GetMousePosition();

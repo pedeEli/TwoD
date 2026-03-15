@@ -40,7 +40,14 @@ namespace TwoD
 	TDI_DEBUGGABLE(uint16_t, U16)
 	TDI_DEBUGGABLE(uint32_t, U32)
 	TDI_DEBUGGABLE(uint64_t, U64)
-	TDI_DEBUGGABLE(bool, Bool)
+	
+	template<>
+	struct Debuggable<bool> {
+		static bool Draw(bool& value, const char* name)
+		{
+			return ImGui::Checkbox(name, &value);
+		}
+	};
 
 	template<>
 	struct Debuggable<std::string>

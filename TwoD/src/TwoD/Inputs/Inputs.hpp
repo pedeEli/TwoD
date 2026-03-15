@@ -9,7 +9,7 @@ namespace TwoD
 	class Inputs
 	{
 	public:
-		static void Init(const Window& window);
+		static void Init();
 		static void Update();
 
 		static bool GetButtonDown(Scancode code);

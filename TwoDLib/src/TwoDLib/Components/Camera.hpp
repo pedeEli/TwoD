@@ -34,15 +34,15 @@ TD_COMPONENT(
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f,
 		};
-		glm::fmat4x4 m_inverseViewMatrix;
+		glm::fmat4x4 m_inverseViewMatrix = {};
 
-		glm::fmat4x4 m_projectionMatrix;
-		glm::fmat4x4 m_inverseProjectionMatrix;
+		glm::fmat4x4 m_projectionMatrix = {};
+		glm::fmat4x4 m_inverseProjectionMatrix = {};
 
-		glm::fmat4x4 m_projectionMatrixFixedZoom;
-		glm::fmat4x4 m_projectionViewMatrix;
+		glm::fmat4x4 m_projectionMatrixFixedZoom = {};
+		glm::fmat4x4 m_projectionViewMatrix = {};
 
-		glm::fvec2 m_mousePositionWorld;
-		Window* m_window;
+		glm::fvec2 m_mousePositionWorld = {};
+		Window* m_window = nullptr;
 	};
 }

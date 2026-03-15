@@ -21,7 +21,7 @@ namespace TwoD::SDL
 	{
 		SDL::ShaderFormat backendFormats = window.GetShaderFormats();
 		SDL::ShaderFormat format = SDL::ShaderFormat::INVALID;
-		const char* entrypoint;
+		const char* entrypoint = nullptr;
 
 		if ((backendFormats & SDL::ShaderFormat::SPIRV) != SDL::ShaderFormat::INVALID)
 		{

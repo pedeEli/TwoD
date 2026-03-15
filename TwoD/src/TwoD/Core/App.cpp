@@ -51,7 +51,7 @@ namespace TwoD
 		RegisterResource<Scene>();
 		
 		AudioDevices::Init();
-		Inputs::Init(m_window);
+		Inputs::Init();
 		AssetManager::Init(m_window);
 		m_renderSystem.Init(m_window);
 		Debug::Init(m_window);

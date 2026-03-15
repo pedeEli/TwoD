@@ -22,7 +22,7 @@ namespace TwoD
 		m_window = &App::Get<Window>();
 	}
 
-	void Camera::UpdateBefore(float delta)
+	void Camera::UpdateBefore([[maybe_unused]] float delta)
 	{
 		auto size = static_cast<glm::fvec2>(m_window->GetSize());
 

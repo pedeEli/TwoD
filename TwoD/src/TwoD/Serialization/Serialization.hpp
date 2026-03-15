@@ -28,7 +28,7 @@
 	namespace TwoD { \
 		TDI_GET_TEMPLATE_DEF(meta, template<>) \
 		struct Deserializable<TDI_GET_QUALIFIED_NAME(meta)> { \
-			static bool Deserialize(const Deserializer& deserializer, TDI_GET_QUALIFIED_NAME(meta)& value) { \
+			static bool Deserialize([[maybe_unused]] const Deserializer& deserializer, [[maybe_unused]] TDI_GET_QUALIFIED_NAME(meta)& value) { \
 				bool success = true; \
 				TD_APPLY_EACH_CONCAT(TDI_STRUCT_DESERIALIZE_FIELD, TD_UNWRAP fields) \
 				return success; \
@@ -47,8 +47,9 @@
 	namespace TwoD { \
 		TDI_GET_TEMPLATE_DEF(meta, template<>) \
 		struct Debuggable<TDI_GET_QUALIFIED_NAME(meta)> { \
-			static bool Draw(TDI_GET_QUALIFIED_NAME(meta)& value, const char* name) { \
+			static bool Draw([[maybe_unused]] TDI_GET_QUALIFIED_NAME(meta)& value, const char* name) { \
 				bool changed = false; \
+				ImGui::Text(name); \
 				TD_APPLY_EACH_CONCAT(TDI_STRUCT_DEBUG_FIELD, TD_UNWRAP fields) \
 				return changed; \
 			} \
@@ -208,6 +209,7 @@
 				using _underlying = std::underlying_type_t<_type>; \
 				using _unsigned = std::make_unsigned_t<_underlying>; \
 				bool changed = false; \
+				ImGui::Text(name); \
 				if constexpr (TDI_ENUM_DEBUG_IS_FLAGS(fields)) { \
 					TDI_ENUM_DEBUG_FLAGS(fields) \
 				} else { \

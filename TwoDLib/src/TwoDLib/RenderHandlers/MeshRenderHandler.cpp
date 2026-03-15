@@ -8,7 +8,7 @@ namespace TwoD
 		m_shader = &AssetManager::Get<Shader>("TwoDLib::ColorRenderer");
 	}
 
-	void TwoD::MeshRenderHandler::Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
+	void TwoD::MeshRenderHandler::Bind([[maybe_unused]] const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
 	{
 		m_shader->Bind(renderPass);
 	}

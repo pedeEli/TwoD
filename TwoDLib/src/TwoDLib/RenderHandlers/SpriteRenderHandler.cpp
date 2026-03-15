@@ -10,7 +10,7 @@ namespace TwoD
 		m_spriteAtlas->Pack();
 	}
 
-	void TwoD::SpriteRenderHandler::Bind(const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
+	void TwoD::SpriteRenderHandler::Bind([[maybe_unused]] const SDL::CommandBuffer* commandBuffer, const SDL::RenderPass* renderPass) const
 	{
         m_shader->Bind(renderPass);
 	}
@@ -37,7 +37,8 @@ namespace TwoD
 			size,
 			{ sprite.u, sprite.v },
 			{ sprite.u + sprite.w, sprite.v + sprite.h },
-			{ &m_spriteAtlas->binding, 0 }
+			{ &m_spriteAtlas->binding, 0 },
+			static_cast<glm::fvec4>(spriteRenderer.color) / 255.0f
 		);
 	}
 }

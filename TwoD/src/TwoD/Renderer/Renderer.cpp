@@ -290,7 +290,7 @@ namespace TwoD
 				scissorRect = renderCommand.scissorRect;
 				if (scissorRect) 
 				{
-					m_renderPass->SetScissorRect(*scissorRect);
+					m_renderPass->SetScissorRect(scissorRect);
 				}
 				else
 				{

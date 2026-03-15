@@ -49,16 +49,16 @@ namespace TwoD
 	public:
 		TD_ASSET(
 			TD_ASSET_FIELD(std::string, name),
-			TD_ASSET_FIELD(SDL::Filter, filter),
-			TD_ASSET_FIELD(SDL::PixelFormat, pixelFormat),
-			TD_ASSET_FIELD(SDL::TextureFormat, textureFormat),
+			TD_ASSET_FIELD(SDL::Filter, filter, SDL::Filter::LINEAR),
+			TD_ASSET_FIELD(SDL::PixelFormat, pixelFormat, SDL::PixelFormat::RGBA8888),
+			TD_ASSET_FIELD(SDL::TextureFormat, textureFormat, SDL::TextureFormat::R8G8B8A8_UNORM),
 			TD_ASSET_FIELD(uint32_t, gap, 0)
 		)
 
 		SDL::TextureSamplerBinding binding;
 
 	private:
-		std::vector<SpriteInfo> m_sprites{};
+		std::vector<SpriteInfo> m_sprites;
 		SDL::Texture m_texture;
 		SDL::Sampler m_sampler;
 	};

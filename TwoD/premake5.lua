@@ -21,7 +21,10 @@ project "TwoD"
 	}
 
 	includedirs {
-		"src",
+		"src"
+	}
+
+	externalincludedirs {
 		"vendor/spdlog/include",
 		"%{IncludeDir.SDL3}",
 		"%{IncludeDir.SDL3_image}",
@@ -44,6 +47,7 @@ project "TwoD"
 	}
 
 	buildoptions { "/utf-8" }
+	warnings "Extra"
 	fatalwarnings { "all" }
 
 	filter "system:windows"

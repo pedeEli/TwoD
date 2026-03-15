@@ -24,8 +24,8 @@ namespace TwoD
 				auto& projection = uiTransform ? camera->GetProjectionMatrixFixedZoom() : camera->GetProjectionViewMatrix();
 				std::optional<Rect<float>> scissorRect;
 
-				ComputedScissorRect* scissor = nullptr;
-				if (scissor = renderers[i].TryGetComponent<ComputedScissorRect>())
+				auto* scissor = renderers[i].TryGetComponent<ComputedScissorRect>();
+				if (scissor)
 				{
 					if (uiTransform)
 					{

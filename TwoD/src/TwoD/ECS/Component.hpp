@@ -35,8 +35,8 @@ namespace TwoD
 		virtual void StartBefore() {}
 		virtual void Start() {}
 		virtual void Destroy() {}
-		virtual void UpdateBefore(float delta) {}
-		virtual void Update(float delta) {}
+		virtual void UpdateBefore([[maybe_unused]] float delta) {}
+		virtual void Update([[maybe_unused]] float delta) {}
 
 #ifdef TD_CREATE_DEBUGGER
 		virtual void Debug() {};

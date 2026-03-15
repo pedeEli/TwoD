@@ -16,7 +16,7 @@ namespace TwoD
 		void Render(Renderer& renderer, size_t index) override;
 		
 	private:
-		SpriteAtlas* m_spriteAtlas;
-		Shader* m_shader;
+		SpriteAtlas* m_spriteAtlas = nullptr;
+		Shader* m_shader = nullptr;
 	};
 }

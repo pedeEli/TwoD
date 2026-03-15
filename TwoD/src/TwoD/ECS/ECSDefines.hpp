@@ -68,7 +68,7 @@ namespace TwoD
 		) \
 	)
 #define TDI_COMPONENT_CREATE_LD(...) \
-	static bool TDCreateLoadData(td_load_data* data, const ::TwoD::Deserializer& deserializer) { \
+	static bool TDCreateLoadData([[maybe_unused]] td_load_data* data, [[maybe_unused]] const ::TwoD::Deserializer& deserializer) { \
 		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_COMPONENT_CREATE_LD_FIELD, __VA_ARGS__)) \
 		return true; \
 	}
@@ -89,7 +89,7 @@ namespace TwoD
 #define TDI_COMPONENT_CON_INIT_FIELDS(...) __VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_COMPONENT_CON_INIT_FIELD, __VA_ARGS__))
 #define TDI_COMPONENT_CON(meta, ...) \
 	TDI_GET_NAME(meta)( \
-		::TwoD::EntityHandle handle, const td_load_data* data \
+		::TwoD::EntityHandle handle, [[maybe_unused]] const td_load_data* data \
 	) : TDI_COMPONENT_CON_INIT_BASE(meta) TDI_COMPONENT_CON_INIT_FIELDS(__VA_ARGS__) {} \
 	TDI_GET_NAME(meta)(::TwoD::EntityHandle handle) : TD_IF_ELSE( \
 		(TDI_GET_BASE(meta)), \
@@ -119,7 +119,7 @@ namespace TwoD
 	)
 #define TDI_COMPONENT_DEBUG(meta, ...) \
 	void Debug() override { \
-		const char* name = TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(meta)); \
+		[[maybe_unused]] const char* name = TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(meta)); \
 		TDI_COMPONENT_DEBUG_BASE(meta) \
 		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_COMPONENT_DEBUG_FIELD, __VA_ARGS__)) \
 	}

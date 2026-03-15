@@ -15,7 +15,7 @@ namespace TwoD
 
 		for (auto& componentInfo : entityInfo.components)
 		{
-			auto& component = entity.AddComponent(componentInfo.type, componentInfo.loadData);
+			entity.AddComponent(componentInfo.type, componentInfo.loadData);
 		}
 
 		for (auto& childInfo : entityInfo.children)

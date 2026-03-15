@@ -11,7 +11,7 @@
 TD_STRUCT(
 	(TD_NAME(Vertex), TD_NAMESPACE(TwoD)),
 	(
-		TD_STRUCT_FIELD(glm::fvec2, pos),
+		TD_STRUCT_FIELD(glm::fvec2, pos, TD_INIT({ 0.0f, 0.0f })),
 		TD_STRUCT_FIELD(glm::fvec2, tex, TD_INIT({ 0.0f, 0.0f })),
 		TD_STRUCT_FIELD(glm::fvec4, color, TD_INIT({ 1.0f, 1.0f, 1.0f, 1.0f }))
 	),

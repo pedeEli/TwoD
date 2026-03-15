@@ -5,9 +5,9 @@
 TD_COMPONENT(
 	(TD_NAME(TextRenderer), TD_NAMESPACE(TwoD)),
 	(
-		TD_COMPONENT_FIELD(int32_t, layer),
-		TD_COMPONENT_FIELD(float, size),
-		TD_COMPONENT_FIELD(Font*, font),
+		TD_COMPONENT_FIELD(int32_t, layer, TD_INIT(0)),
+		TD_COMPONENT_FIELD(float, size, TD_INIT(0.0f)),
+		TD_COMPONENT_FIELD(Font*, font, TD_INIT(nullptr)),
 		TD_COMPONENT_FIELD(std::string, text, TD_UPDATER(SetGlyphs()))
 	)
 )
@@ -31,6 +31,6 @@ TD_COMPONENT(
 
 	private:
 		std::vector<Glyph> m_glyphs;
-		glm::fvec2 m_size;
+		glm::fvec2 m_size = { 0.0f, 0.0f };
 	};
 }
