@@ -1,17 +1,16 @@
 #pragma once
-#include "Event.hpp"
 #include "EventTypes.hpp"
 #include "TwoD/Inputs/InputDefines.hpp"
 
 namespace TwoD
 {
-	class QuitEvent : public Event<EventType>
+	class QuitEvent : public EventHandler::Event<EventType>
 	{
 	public:
 		TD_EVENT_GETTERS(EventType, EventType::QUIT)
 	};
 
-	class ClipboardEvent : public Event<EventType>
+	class ClipboardEvent : public EventHandler::Event<EventType>
 	{
 	public:
 		TD_EVENT_GETTERS(EventType, EventType::CLIPBOARD_UPDATE)

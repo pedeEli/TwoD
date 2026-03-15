@@ -8,7 +8,7 @@
 
 namespace TwoD
 {
-	static void ConvertAndEmitEvent(SDL_Event& event, std::function<void(const Event<EventType>&)> emitter)
+	static void ConvertAndEmitEvent(SDL_Event& event, std::function<void(const EventHandler::Event<EventType>&)> emitter)
 	{
 		switch (event.type)
 		{

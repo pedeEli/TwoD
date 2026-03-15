@@ -122,8 +122,12 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
-	bool ComponentStorageImpl<T>::ModifyLoadData(const Deserializer& deserializer, void* value) const
+	bool ComponentStorageImpl<T>::ModifyLoadData(const Deserializer& deserializer, void*& value) const
 	{
+		if (value == nullptr)
+		{
+			value = new T::td_load_data();
+		}
 		return T::TDModifyLoadData(static_cast<T::td_load_data*>(value), deserializer);
 	}
 }

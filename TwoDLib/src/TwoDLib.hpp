@@ -23,6 +23,8 @@
 #include "TwoDLib/RenderHandlers/TextRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/MeshRenderHandler.hpp"
 
+#include "TwoDLib/Event.hpp"
+
 namespace TwoDLib
 {
 	constexpr static void Initialize(Init& init)

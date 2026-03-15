@@ -1,10 +1,11 @@
 #pragma once
-#include "Event.hpp"
 #include "EventTypes.hpp"
-#include "KeyboardEvents.hpp"
-#include "MouseEvents.hpp"
-#include "MiscEvents.hpp"
-#include "WindowEvents.hpp"
+
+#define TD_EVENT_GETTERS(type, name) \
+	static type GetStaticType() { return name; } \
+	type GetEventType() const override { return name; } \
+	const char* GetEventName() const override { return #name; }
+
 
 namespace TwoD
 {
@@ -12,9 +13,6 @@ namespace TwoD
 
 	class EventHandler
 	{
-		template<class E>
-		using Callback = std::function<bool(const E&)>;
-		using GenericCallback = Callback<Event<EventType>>;
 	public:
 		struct Handle
 		{
@@ -29,6 +27,25 @@ namespace TwoD
 			size_t index = 0;
 			EventType eventType = EventType::INVALID;
 		};
+
+		template<typename EventType>
+		class Event
+		{
+		public:
+			Event() = default;
+			virtual ~Event() = default;
+			Event(const Event& event) = delete;
+			Event(Event&& event) = delete;
+			Event& operator=(const Event& event) = delete;
+			Event& operator=(Event&& event) = delete;
+
+			virtual EventType GetEventType() const = 0;
+			virtual const char* GetEventName() const = 0;
+		};
+
+		template<class E>
+		using Callback = std::function<bool(const E&)>;
+		using GenericCallback = Callback<Event<EventType>>;
 
 	public:
 		template<class E>
@@ -54,3 +71,8 @@ namespace TwoD
 		friend class App;
 	};
 }
+
+#include "KeyboardEvents.hpp"
+#include "MouseEvents.hpp"
+#include "MiscEvents.hpp"
+#include "WindowEvents.hpp"

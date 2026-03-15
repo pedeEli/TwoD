@@ -31,7 +31,7 @@ namespace TwoD
 		virtual void DestroyAll() = 0;
 
 		virtual bool CreateLoadData(const Deserializer& deserializer, void*& value) const = 0;
-		virtual bool ModifyLoadData(const Deserializer& deserializer, void* value) const = 0;
+		virtual bool ModifyLoadData(const Deserializer& deserializer, void*& value) const = 0;
 	};
 
 	template<typename T>
@@ -58,7 +58,7 @@ namespace TwoD
 		void DestroyAll() override;
 
 		bool CreateLoadData(const Deserializer& deserializer, void*& value) const override;
-		bool ModifyLoadData(const Deserializer& deserializer, void* value) const override;
+		bool ModifyLoadData(const Deserializer& deserializer, void*& value) const override;
 		
 		T& Add(EntityHandle entity, const T::td_load_data* data = nullptr);
 

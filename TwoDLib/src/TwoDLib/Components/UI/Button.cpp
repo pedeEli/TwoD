@@ -15,6 +15,20 @@ namespace TwoD
 		m_textRenderer = textRenderer;
 
 		m_transform = GetComponent<UITransform>();
+
+		m_mouseClickHandle = EventHandler::On<MouseDownEvent>([this](auto& event)
+			{
+				if (hover)
+				{
+					mouseClick.Emit({});
+				}
+				return false;
+			});
+	}
+
+	void Button::Destroy()
+	{
+		m_mouseClickHandle.Off();
 	}
 
 	void Button::Update([[maybe_unused]] float delta)
@@ -24,13 +38,6 @@ namespace TwoD
 
 		auto rect = GetComponent<UITransform>().GetRect();
 		auto mouse = Inputs::GetMousePosition();
-		if (rect.IsInside(mouse))
-		{
-			m_colorRenderer->color.a = 100;
-		}
-		else
-		{
-			m_colorRenderer->color.a = 255;
-		}
+		hover = rect.IsInside(mouse);
 	}
 }

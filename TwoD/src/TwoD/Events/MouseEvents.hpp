@@ -1,11 +1,10 @@
 #pragma once
-#include "Event.hpp"
 #include "EventTypes.hpp"
 #include "TwoD/Inputs/InputDefines.hpp"
 
 namespace TwoD
 {
-	class MouseEvent : public Event<EventType>
+	class MouseEvent : public EventHandler::Event<EventType>
 	{
 	public:
 		uint32_t windowID{};

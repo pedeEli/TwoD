@@ -1,11 +1,10 @@
 #pragma once
-#include "Event.hpp"
 #include "EventTypes.hpp"
 #include "TwoD/Inputs/InputDefines.hpp"
 
 namespace TwoD
 {
-	class KeyboardEvent : public Event<EventType>
+	class KeyboardEvent : public EventHandler::Event<EventType>
 	{
 	public:
 		uint32_t windowID{};
@@ -32,7 +31,7 @@ namespace TwoD
 	};
 
 
-	class TextEvent : public Event<EventType>
+	class TextEvent : public EventHandler::Event<EventType>
 	{
 	public:
 		uint32_t windowID;

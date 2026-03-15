@@ -2,6 +2,7 @@
 #include "TwoD.hpp"
 #include "TwoDLib/Components/ColorRenderer.hpp"
 #include "TwoDLib/Components/TextRenderer.hpp"
+#include "TwoDLib/Event.hpp"
 
 TD_COMPONENT(
 	(TD_NAME(Button), TD_NAMESPACE(TwoD)),
@@ -13,12 +14,19 @@ TD_COMPONENT(
 )
 	public:
 		void StartBefore() override;
+		void Destroy() override;
 		void Update(float delta) override;
+
+	public:
+		Event<glm::fvec2> mouseClick;
+		bool hover = false;
 
 	private:
 		ComponentHandle<ColorRenderer> m_colorRenderer;
 		ComponentHandle<TextRenderer> m_textRenderer;
 		ComponentHandle<UITransform> m_transform;
+
+		EventHandler::Handle m_mouseClickHandle;
 	};
 }
 

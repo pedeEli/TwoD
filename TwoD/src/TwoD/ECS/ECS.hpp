@@ -58,7 +58,7 @@ namespace TwoD
 		{
 			return GetStorage(name)->CreateLoadData(deserializer, value);
 		}
-		static bool ModifyLoadData(const std::string& name, const Deserializer& deserializer, void* value)
+		static bool ModifyLoadData(const std::string& name, const Deserializer& deserializer, void*& value)
 		{
 			return GetStorage(name)->ModifyLoadData(deserializer, value);
 		}

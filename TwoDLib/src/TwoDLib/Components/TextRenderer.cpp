@@ -20,7 +20,7 @@ namespace TwoD
 	}
 	glm::fvec2 TextRenderer::GetSize() const
 	{
-		return m_size;
+		return m_size * size;
 	}
 
 	void TextRenderer::SetGlyphs()
