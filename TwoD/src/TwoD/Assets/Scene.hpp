@@ -65,21 +65,21 @@ namespace TwoD
 
 	
 	template<>
-	struct Deserializable<TwoD::ComponentInfo>
+	struct Deserializable<ComponentInfo>
 	{
-		static bool Deserialize(const Deserializer& deserializer, TwoD::ComponentInfo& rhs);
+		static bool Deserialize(const Deserializer& deserializer, ComponentInfo& value);
 	};
 
 	template<>
-	struct Deserializable<TwoD::EntityInfo>
+	struct Deserializable<EntityInfo>
 	{
-		static bool Deserialize(const Deserializer& deserializer, TwoD::EntityInfo& rhs);
-		static bool Modify(const Deserializer& deserializer, TwoD::EntityInfo& value);
+		static bool Deserialize(const Deserializer& deserializer, EntityInfo& value);
+		static bool DeserializePrefab(EntityInfo& value, EntityInfo& prefab, const Deserializer* deserializer = nullptr);
 	};
 
 	template<>
-	struct Deserializable<TwoD::ScreenEntities>
+	struct Deserializable<ScreenEntities>
 	{
-		static bool Deserialize(const Deserializer& deserializer, TwoD::ScreenEntities& rhs);
+		static bool Deserialize(const Deserializer& deserializer, ScreenEntities& value);
 	};
 }

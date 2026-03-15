@@ -17,7 +17,7 @@ namespace TwoD
 		m_releasedAndDestroyed = true;
 		if (m_raw)
 		{
-			m_windowResizedHandle.Off();
+			EventHandler::Remove(m_windowResizedHandle);
 			SDL_Window* window = m_raw->window;
 			SDL_GPUDevice* device = m_raw->device;
 			if (window && device)
@@ -83,7 +83,7 @@ namespace TwoD
 		m_depthTextureInfo.usage = SDL::TextureUsageFlags::DEPTH_STENCIL_TARGET | SDL::TextureUsageFlags::SAMPLER;
 		m_depthTexture = SDL::Texture(this, m_depthTextureInfo);
 
-		m_windowResizedHandle = EventHandler::On<WindowResizedEvent>([this](auto& event)
+		m_windowResizedHandle = EventHandler::Add<WindowResizedEvent>([this](auto& event)
 			{
 				if (event.windowID == m_windowID)
 				{

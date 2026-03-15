@@ -3,7 +3,7 @@
 
 namespace TwoD
 {
-	void Button::StartBefore()
+	void Button::Start()
 	{
 		auto& colorRenderer = GetComponent<ColorRenderer>();
 		colorRenderer.layer = layer;
@@ -16,7 +16,7 @@ namespace TwoD
 
 		m_transform = GetComponent<UITransform>();
 
-		m_mouseClickHandle = EventHandler::On<MouseDownEvent>([this]([[maybe_unused]] auto& event)
+		m_mouseClickHandle = EventHandler::Add<MouseDownEvent>([this]([[maybe_unused]] auto& event)
 			{
 				if (hover)
 				{
@@ -28,7 +28,7 @@ namespace TwoD
 
 	void Button::Destroy()
 	{
-		m_mouseClickHandle.Off();
+		EventHandler::Remove(m_mouseClickHandle);
 	}
 
 	void Button::Update([[maybe_unused]] float delta)

@@ -67,7 +67,7 @@ namespace TwoD
 	static void InitEventHandlers()
 	{
 #ifdef TD_CREATE_DEBUGGER
-		s_debugState.keyDownHandle = EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
+		s_debugState.keyDownHandle = EventHandler::Add<KeyDownEvent>([](const KeyDownEvent& event)
 			{
 				if (event.repeat || (event.mod & Keymod::CTRL) == Keymod::NONE)
 				{
@@ -96,7 +96,7 @@ namespace TwoD
 		ImGui_ImplSDL3_Shutdown();
 		ImGui_ImplSDLGPU3_Shutdown();
 		ImGui::DestroyContext();
-		s_debugState.keyDownHandle.Off();
+		EventHandler::Remove(s_debugState.keyDownHandle);
 #endif
 	}
 

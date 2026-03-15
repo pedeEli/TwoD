@@ -16,16 +16,17 @@ namespace TwoD
 	public:
 		struct Handle
 		{
-			void Off()
-			{
-				auto& callbacks = m_callbacks[eventType];
-				auto& back = callbacks.back();
-				callbacks[index] = std::move(back);
-				callbacks.pop_back();
-			}
+		public:
+			Handle() = default;
 
-			size_t index = 0;
-			EventType eventType = EventType::INVALID;
+		private:
+			Handle(size_t id, EventType type) : m_id(id), m_eventType(type) {}
+
+		private:
+			size_t m_id = 0;
+			EventType m_eventType = EventType::INVALID;
+
+			friend class EventHandler;
 		};
 
 		template<typename EventType>
@@ -50,12 +51,25 @@ namespace TwoD
 	public:
 		template<class E>
 		requires(std::is_base_of_v<Event<EventType>, E>)
-		[[nodiscard]] static Handle On(Callback<E> callback)
+		[[nodiscard]] static Handle Add(Callback<E> callback)
 		{
 			auto& callbacks = m_callbacks[E::GetStaticType()];
-			auto index = callbacks.size();
-			callbacks.push_back(*(GenericCallback*)&callback);
-			return { index, E::GetStaticType() };
+			Handle handle = { m_handle++, E::GetStaticType() };
+			callbacks.emplace_back(handle, std::move(*(GenericCallback*)&callback));
+			return handle;
+		}
+
+		static void Remove(Handle handle)
+		{
+			auto& callbacks = m_callbacks[handle.m_eventType];
+			auto it = std::find_if(callbacks.begin(), callbacks.end(), [handle](const auto& pair)
+				{
+					return pair.first.m_id == handle.m_id;
+				});
+			if (it != callbacks.end())
+			{
+				callbacks.erase(it);
+			}
 		}
 
 	private:
@@ -65,8 +79,9 @@ namespace TwoD
 	private:
 		static inline std::unordered_map<
 			EventType,
-			std::vector<GenericCallback>
+			std::vector<std::pair<Handle, GenericCallback>>
 		> m_callbacks;
+		static inline size_t m_handle = 0;
 
 		friend class App;
 	};

@@ -120,4 +120,8 @@ namespace TwoD
 	{
 		return GetStorage(name)->ModifyLoadData(deserializer, value);
 	}
+	void* ECS::CopyLoadData(const std::string& name, const void* value)
+	{
+		return GetStorage(name)->CopyLoadData(value);
+	}
 }

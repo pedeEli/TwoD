@@ -8,12 +8,12 @@ using namespace TwoD;
 void Player::Start()
 {
 	camera = Camera::Get();
-	EventHandler::On<MouseWheelEvent>([this](auto& e)
+	EventHandler::Add<MouseWheelEvent>([this](auto& e)
 		{
 			camera->zoom = glm::clamp(camera->zoom - e.y, 5.0f, 50.0f);
 			return false;
 		});
-	EventHandler::On<KeyDownEvent>([this](auto& e)
+	EventHandler::Add<KeyDownEvent>([this](auto& e)
 		{
 			if (e.key != Key::SPACE)
 			{
@@ -25,7 +25,7 @@ void Player::Start()
 			AssetManager::Get<Audio>("vibraphone").Play();
 			return false;
 		});
-	EventHandler::On<MouseDownEvent>([this](auto& e)
+	EventHandler::Add<MouseDownEvent>([this](auto& e)
 		{
 			if (e.button != MouseButton::LEFT)
 			{

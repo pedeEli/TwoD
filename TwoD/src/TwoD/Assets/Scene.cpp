@@ -61,7 +61,7 @@ namespace TwoD
 				s_activeScene->m_screenRootEntity->Destroy();
 				s_activeScene->m_screenRootEntity = EntityHandle::None;
 			}
-			s_activeScene->m_windowResizedHandle.Off();
+			EventHandler::Remove(s_activeScene->m_windowResizedHandle);
 		}
 
 		for (auto& entityInfo : entities)
@@ -84,7 +84,7 @@ namespace TwoD
 			auto size = static_cast<glm::fvec2>(App::Get<Window>().GetSize());
 			transform->size = size;
 			transform->anchor = Anchor::BOTTOM_RIGHT;
-			m_windowResizedHandle = EventHandler::On<WindowResizedEvent>([transform](auto& event)
+			m_windowResizedHandle = EventHandler::Add<WindowResizedEvent>([transform](auto& event)
 				{
 					glm::fvec2 size = { static_cast<float>(event.x), static_cast<float>(event.y) };
 					transform->size = size;
@@ -116,21 +116,21 @@ namespace TwoD
 		return m_screenRootEntity;
 	}
 
-	bool Deserializable<TwoD::ComponentInfo>::Deserialize(const Deserializer& deserializer, TwoD::ComponentInfo& value)
+	bool Deserializable<ComponentInfo>::Deserialize(const Deserializer& deserializer, ComponentInfo& value)
 	{
 		if (!deserializer["type"])
 		{
-			TD_CORE_ERROR("missing field type in TwoD::ComponentInfo");
+			TD_CORE_ERROR("missing field type in ComponentInfo");
 			return false;
 		}
 		if (!deserializer["type"].As<std::string>(value.type))
 		{
 			return false;
 		}
-		return TwoD::ECS::CreateLoadData(value.type, deserializer, value.loadData);
+		return ECS::CreateLoadData(value.type, deserializer, value.loadData);
 	}
 
-	bool Deserializable<TwoD::EntityInfo>::Deserialize(const Deserializer& deserializer, TwoD::EntityInfo& value)
+	bool Deserializable<EntityInfo>::Deserialize(const Deserializer& deserializer, EntityInfo& value)
 	{
 		if (deserializer["prefab"])
 		{
@@ -138,11 +138,8 @@ namespace TwoD
 			{
 				return false;
 			}
+			
 			auto& prefab = AssetManager::Get<Prefab>(value.name);
-			value.transformLoadData = prefab.prefab.transformLoadData;
-			value.components = prefab.prefab.components;
-			value.children = prefab.prefab.children;
-
 			if (deserializer["name"])
 			{
 				if (!deserializer["name"].As<std::string>(value.name))
@@ -150,8 +147,8 @@ namespace TwoD
 					return false;
 				}
 			}
-
-			return Modify(deserializer, value);
+			
+			return DeserializePrefab(value, prefab.prefab, &deserializer);
 		}
 
 		if (!deserializer["name"].As<std::string>(value.name))
@@ -162,7 +159,7 @@ namespace TwoD
 
 		if (deserializer["components"])
 		{
-			if (!deserializer["components"].As<std::vector<TwoD::ComponentInfo>>(value.components))
+			if (!deserializer["components"].As<std::vector<ComponentInfo>>(value.components))
 			{
 				return false;
 			}
@@ -170,7 +167,7 @@ namespace TwoD
 
 		if (deserializer["transform"])
 		{
-			if (!TwoD::ECS::CreateLoadData("class TwoD::UITransform", deserializer["transform"], value.transformLoadData))
+			if (!ECS::CreateLoadData("class UITransform", deserializer["transform"], value.transformLoadData))
 			{
 				return false;
 			}
@@ -178,7 +175,7 @@ namespace TwoD
 
 		if (deserializer["children"])
 		{
-			if (!deserializer["children"].As<std::vector<TwoD::EntityInfo>>(value.children))
+			if (!deserializer["children"].As<std::vector<EntityInfo>>(value.children))
 			{
 				return false;
 			}
@@ -186,20 +183,18 @@ namespace TwoD
 
 		return true;
 	}
-	bool Deserializable<TwoD::EntityInfo>::Modify(const Deserializer& deserializer, TwoD::EntityInfo& value)
+	bool Deserializable<EntityInfo>::DeserializePrefab(EntityInfo& value, EntityInfo& prefab, const Deserializer* deserializer)
 	{
-		auto transform = deserializer["transform"];
-		if (transform)
-		{
-			if (!ECS::ModifyLoadData("class TwoD::UITransform", transform, value.transformLoadData))
-			{
-				return false;
-			}
-		}
+		value.transformLoadData = ECS::CopyLoadData("class TwoD::UITransform", prefab.transformLoadData);
 
-		auto components = deserializer["components"];
-		if (components)
+		for (auto& component : prefab.components)
 		{
+			value.components.emplace_back(component.type, ECS::CopyLoadData(component.type, component.loadData));
+		}
+		
+		if (deserializer && (*deserializer)["components"])
+		{
+			auto components = (*deserializer)["components"];
 			if (!components.IsSequence())
 			{
 				return false;
@@ -207,13 +202,8 @@ namespace TwoD
 			for (size_t i = 0; i < components.GetSize(); i++)
 			{
 				auto component = components[i];
-				if (!component["type"])
-				{
-					TD_CORE_ERROR("missing field type in TwoD::ComponentInfo");
-					return false;
-				}
 				std::string type;
-				if (!component["type"].As<std::string>(type))
+				if (!component["type"] || !component["type"].As<std::string>(type))
 				{
 					return false;
 				}
@@ -222,72 +212,85 @@ namespace TwoD
 				{
 					if (existing.type == type)
 					{
-						exists = true;
 						ECS::ModifyLoadData(type, component, existing.loadData);
+						exists = true;
 						break;
 					}
 				}
 				if (!exists)
 				{
-					ComponentInfo newInfo;
-					if (!component.As<ComponentInfo>(newInfo))
+					ComponentInfo info;
+					if (!component.As<ComponentInfo>(info))
 					{
 						return false;
 					}
-					value.components.push_back(newInfo);
+					value.components.push_back(info);
 				}
 			}
 		}
 
-		auto children = deserializer["children"];
-		if (children)
+		std::vector<bool> childIsOnPrefab;
+		std::optional<Deserializer> children;
+		if (deserializer && (*deserializer)["children"])
 		{
-			if (!children.IsSequence())
+			children = (*deserializer)["children"];
+			if (!(*children).IsSequence())
 			{
 				return false;
 			}
-			for (size_t i = 0; i < children.GetSize(); i++)
+			childIsOnPrefab.resize(children->GetSize(), false);
+		}
+
+		for (auto& prefabChild : prefab.children)
+		{
+			EntityInfo copy;
+			std::optional<Deserializer> child;
+			if (children)
 			{
-				auto child = children[i];
-				if (!deserializer["name"])
+				for (size_t i = 0; i < children->GetSize(); i++)
 				{
-					TD_CORE_ERROR("missing field name in TwoD::EntityInfo");
-					return false;
-				}
-				std::string name;
-				if (!deserializer["name"].As<std::string>(name))
-				{
-					return false;
-				}
-				bool exists = false;
-				for (auto& existing : value.children)
-				{
-					if (existing.name == name)
-					{
-						exists = true;
-						if (!Modify(child, existing))
-						{
-							return false;
-						}
-						break;
-					}
-				}
-				if (!exists)
-				{
-					EntityInfo newInfo;
-					if (!child.As<EntityInfo>(newInfo))
+					std::string name;
+					if ((*children)[i].As<std::string>(name))
 					{
 						return false;
 					}
-					value.children.push_back(newInfo);
+					if (prefabChild.name == name)
+					{
+						child = (*children)[i];
+						childIsOnPrefab[i] = true;
+						break;
+					}
 				}
 			}
+			if (!DeserializePrefab(copy, prefabChild, &*child))
+			{
+				return false;
+			}
+			value.children.push_back(copy);
 		}
+
+		if (children)
+		{
+			for (size_t i = 0; i < children->GetSize(); i++)
+			{
+				if (childIsOnPrefab[i])
+				{
+					continue;
+				}
+				EntityInfo info;
+				if ((*children)[i].As<EntityInfo>(info))
+				{
+					return false;
+				}
+				value.children.push_back(info);
+			}
+		}
+
 		return true;
 	}
 
-	bool Deserializable<TwoD::ScreenEntities>::Deserialize(const Deserializer& deserializer, TwoD::ScreenEntities& value)
+	bool Deserializable<ScreenEntities>::Deserialize(const Deserializer& deserializer, ScreenEntities& value)
 	{
-		return deserializer.As<std::vector<TwoD::EntityInfo>>(value.entities);
+		return deserializer.As<std::vector<EntityInfo>>(value.entities);
 	}
 }

@@ -130,4 +130,15 @@ namespace TwoD
 		}
 		return T::TDModifyLoadData(static_cast<T::td_load_data*>(value), deserializer);
 	}
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
+	void* ComponentStorageImpl<T>::CopyLoadData(const void* value) const
+	{
+		if (value)
+		{
+			return new T::td_load_data(*static_cast<const T::td_load_data*>(value));
+		}
+		return nullptr;
+	}
 }

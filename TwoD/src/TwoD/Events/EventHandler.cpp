@@ -144,7 +144,7 @@ namespace TwoD
 		{
 			for (auto& callback : it->second)
 			{
-				if (callback(event))
+				if (callback.second(event))
 				{
 					break;
 				}

@@ -13,7 +13,7 @@ TD_COMPONENT(
 	)
 )
 	public:
-		void StartBefore() override;
+		void Start() override;
 		void Destroy() override;
 		void Update(float delta) override;
 

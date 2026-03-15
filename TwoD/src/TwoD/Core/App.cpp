@@ -59,7 +59,7 @@ namespace TwoD
 
 		AssetManager::Get<Scene>(info.startScene).SetActive();
 
-		m_windowCloseHandle = EventHandler::On<WindowCloseRequestedEvent>([this](auto& e)
+		m_windowCloseHandle = EventHandler::Add<WindowCloseRequestedEvent>([this](auto& e)
 			{
 				if (e.windowID == m_window.GetWindowID())
 				{
@@ -73,7 +73,7 @@ namespace TwoD
 	}
 	App::~App()
 	{
-		m_windowCloseHandle.Off();
+		EventHandler::Remove(m_windowCloseHandle);
 		AssetManager::Shutdown();
 		m_renderSystem.Shutdown();
 		AudioDevices::Shutdown();

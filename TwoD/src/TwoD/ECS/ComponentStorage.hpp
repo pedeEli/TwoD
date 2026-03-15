@@ -32,6 +32,7 @@ namespace TwoD
 
 		virtual bool CreateLoadData(const Deserializer& deserializer, void*& value) const = 0;
 		virtual bool ModifyLoadData(const Deserializer& deserializer, void*& value) const = 0;
+		virtual void* CopyLoadData(const void* value) const = 0;
 	};
 
 	template<typename T>
@@ -59,6 +60,8 @@ namespace TwoD
 
 		bool CreateLoadData(const Deserializer& deserializer, void*& value) const override;
 		bool ModifyLoadData(const Deserializer& deserializer, void*& value) const override;
+		void* CopyLoadData(const void* value) const override;
+
 		
 		T& Add(EntityHandle entity, const T::td_load_data* data = nullptr);
 

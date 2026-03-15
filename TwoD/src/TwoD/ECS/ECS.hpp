@@ -54,6 +54,7 @@ namespace TwoD
 
 		static bool CreateLoadData(const std::string& name, const Deserializer& deserializer, void*& value);
 		static bool ModifyLoadData(const std::string& name, const Deserializer& deserializer, void*& value);
+		static void* CopyLoadData(const std::string& name, const void* value);
 
 	private:
 		static Entity& CreateEntity(const std::string& name, EntityHandle parent, const void* data);

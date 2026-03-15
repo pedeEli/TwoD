@@ -24,7 +24,7 @@ void Dices::Start()
 			Roll();
 		});
 
-	m_mouseDownHandle = EventHandler::On<MouseDownEvent>([](auto& event)
+	m_mouseDownHandle = EventHandler::Add<MouseDownEvent>([](auto& event)
 		{
 			auto pos = Camera::Get()->ScreenToWorldSpace({ event.x, event.y });
 			auto hit = Hitbox::Hit(pos);
@@ -54,6 +54,6 @@ void Dices::Roll()
 
 void Dices::Destroy()
 {
-	m_mouseDownHandle.Off();
+	EventHandler::Remove(m_mouseDownHandle);
 	m_rollButton->mouseClick.Remove(m_rollHandle);
 }
