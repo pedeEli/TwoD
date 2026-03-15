@@ -80,7 +80,7 @@ namespace TwoD
 
 		auto size = window.GetSize();
 		CreateTargetTexture(size.x, size.y);
-		EventHandler::On<WindowResizedEvent>([this](auto& e)
+		m_windowResizedHandle = EventHandler::On<WindowResizedEvent>([this](auto& e)
 			{
 				CreateTargetTexture(e.x, e.y);
 				return false;
@@ -94,6 +94,7 @@ namespace TwoD
 
 	void RenderSystem::Shutdown()
 	{
+		m_windowResizedHandle.Off();
 		m_renderer.Shutdown();
 		m_targetTexture.Release();
 		m_targetSampler.Release();

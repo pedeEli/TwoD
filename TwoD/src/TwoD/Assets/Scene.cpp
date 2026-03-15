@@ -1,7 +1,6 @@
 #include "tdpch.hpp"
 #include "Scene.hpp"
 #include "TwoD/Core/App.hpp"
-#include "TwoD/ECS/Transform.hpp"
 #include "TwoD/ECS/UITransform.hpp"
 
 
@@ -61,6 +60,7 @@ namespace TwoD
 				s_activeScene->m_screenRootEntity->Destroy();
 				s_activeScene->m_screenRootEntity = EntityHandle::None;
 			}
+			s_activeScene->m_windowResizedHandle.Off();
 		}
 
 		for (auto& entityInfo : entities)
@@ -83,7 +83,7 @@ namespace TwoD
 			auto size = static_cast<glm::fvec2>(App::Get<Window>().GetSize());
 			transform->size = size;
 			transform->anchor = Anchor::BOTTOM_RIGHT;
-			EventHandler::On<WindowResizedEvent>([transform](auto& event)
+			m_windowResizedHandle = EventHandler::On<WindowResizedEvent>([transform](auto& event)
 				{
 					glm::fvec2 size = { static_cast<float>(event.x), static_cast<float>(event.y) };
 					transform->size = size;

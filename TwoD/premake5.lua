@@ -50,6 +50,9 @@ project "TwoD"
 	warnings "Extra"
 	fatalwarnings { "all" }
 
+	filter "action:vs*"
+        buildoptions { "/we4834", "/w15240" }
+
 	filter "system:windows"
 		systemversion "latest"
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "TwoD/Debug/DebugDefines.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 
 #include "SDLDefines.hpp"
 #include "Buffer.hpp"
@@ -48,6 +49,7 @@ namespace TwoD
 	private:
 		bool m_releasedAndDestroyed = false;
 
+		EventHandler::Handle m_windowResizedHandle;
 		glm::u32vec2 m_size = { 0, 0 };
 
 		SDL::TextureInfo m_depthTextureInfo;

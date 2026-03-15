@@ -22,6 +22,7 @@ namespace TwoD
 		bool open = false;
 		bool demoWindow = false;
 		EntityHandle selectedEntity;
+		EventHandler::Handle keyDownHandle;
 	};
 	struct PauseState
 	{
@@ -66,7 +67,7 @@ namespace TwoD
 	static void InitEventHandlers()
 	{
 #ifdef TD_CREATE_DEBUGGER
-		EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
+		s_debugState.keyDownHandle = EventHandler::On<KeyDownEvent>([](const KeyDownEvent& event)
 			{
 				if (event.repeat || (event.mod & Keymod::CTRL) == Keymod::NONE)
 				{
@@ -95,6 +96,7 @@ namespace TwoD
 		ImGui_ImplSDL3_Shutdown();
 		ImGui_ImplSDLGPU3_Shutdown();
 		ImGui::DestroyContext();
+		s_debugState.keyDownHandle.Off();
 #endif
 	}
 

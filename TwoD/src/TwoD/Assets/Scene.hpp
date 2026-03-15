@@ -5,6 +5,7 @@
 #include "AssetManager.hpp"
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoD/ECS/Transform.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 
 
 namespace TwoD
@@ -57,6 +58,7 @@ namespace TwoD
 	private:
 		std::vector<EntityHandle> m_rootEntities;
 		EntityHandle m_screenRootEntity = EntityHandle::None;
+		EventHandler::Handle m_windowResizedHandle;
 
 		static inline std::vector<Transform::PropagationCallback> m_callbacks;
 	};

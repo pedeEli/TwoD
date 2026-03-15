@@ -76,6 +76,8 @@ namespace TwoD
 		Window m_window;
 		RenderSystem m_renderSystem;
 
+		EventHandler::Handle m_windowCloseHandle;
+
 		bool m_running = false;
 		bool m_initialized = false;
 

@@ -38,6 +38,9 @@ project "FactoryBlock"
 	buildoptions { "/utf-8" }
 	warnings "Extra"
 	fatalwarnings { "all" }
+
+	filter "action:vs*"
+        buildoptions { "/we4834", "/w15240" }
 	
 	defines {
 		"YAML_CPP_STATIC_DEFINE"

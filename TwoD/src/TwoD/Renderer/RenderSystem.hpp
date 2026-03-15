@@ -10,6 +10,7 @@
 #include "TwoD/SDL/Shader.hpp"
 #include "TwoD/SDL/GraphicsPipeline.hpp"
 #include "TwoD/SDL/Fence.hpp"
+#include "TwoD/Events/EventHandler.hpp"
 #include "Renderer.hpp"
 #include "RenderHandler.hpp"
 
@@ -53,6 +54,8 @@ namespace TwoD
 		void CreateTargetTexture(uint32_t width, uint32_t height);
 
 	private:
+		EventHandler::Handle m_windowResizedHandle;
+
 		Renderer m_renderer;
 		std::vector<std::unique_ptr<RenderHandler>> m_renderHandlers;
 		std::vector<RenderHandlerInfo> m_renderHandlerInfos;
