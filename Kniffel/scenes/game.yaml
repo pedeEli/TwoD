@@ -1,0 +1,26 @@
+type: class TwoD::Scene
+name: game
+
+entities:
+- name: camera
+  components:
+  - type: class TwoD::Camera
+    zoom: 25
+
+- name: dices
+  components:
+  - type: class Dices
+
+screen:
+- prefab: TwoDLib::ColorButton
+  name: roll
+  transform:
+    anchor: BOTTOM
+  components:
+  - type: class TwoD::Button
+    layer: 10000
+    padding: [ 10, 10 ]
+    background: [ 100, 100, 100, 255 ]
+  - type: class TwoD::TextRenderer
+    text: "Roll"
+    size: 30
