@@ -15,7 +15,15 @@ void Dice::Start()
 void Dice::Update(float delta)
 {
 	auto* transform = GetTransform();
+
 	transform->position = glm::lerp(transform->position, targetPosition, speed * delta);
+	if (m_shakeTimer > 0.0f)
+	{
+		m_shakeTimer -= delta;
+		float progress = m_shakeTimer / shakeDuration;
+		transform->position.x += std::sin((m_shakeTimer + m_shakeOffset) * 60.0f) * shakeMagnitude * progress;
+		transform->position.y += std::cos((m_shakeTimer + m_shakeOffset) * 45.0f) * shakeMagnitude * progress;
+	}
 
 	auto& renderer = *m_renderer;
 	renderer.sprite = sprite;
@@ -24,6 +32,12 @@ void Dice::Update(float delta)
 		targetColor,
 		speed * delta
 	));
+}
+
+void Dice::Roll(float shakeOffset)
+{
+	m_shakeTimer = shakeDuration;
+	m_shakeOffset = shakeOffset;
 }
 
 void Dice::Toggle()

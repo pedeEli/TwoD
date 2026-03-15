@@ -22,7 +22,8 @@ private:
 	std::array<TwoD::ComponentHandle<Dice>, 6> m_dices = {};
 
 	std::mt19937 m_gen;
-	std::uniform_int_distribution<int> m_dist{ 0, 5 };
+	std::uniform_int_distribution<int> m_rollDist{ 0, 5 };
+	std::uniform_real_distribution<float> m_shakeDist{ -1.0f, 1.0f };
 
 	TwoD::ComponentHandle<TwoD::Button> m_rollButton;
 	TwoD::Event<>::Handle m_rollHandle;

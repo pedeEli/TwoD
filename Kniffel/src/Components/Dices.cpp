@@ -44,9 +44,10 @@ void Dices::Roll()
 		auto& dice = *diceHandle;
 		if (!dice.selected)
 		{
-			auto value = static_cast<uint8_t>(m_dist(m_gen));
+			auto value = static_cast<uint8_t>(m_rollDist(m_gen));
 			dice.value = value + 1;
 			dice.sprite = m_sprites[value];
+			dice.Roll(m_shakeDist(m_gen));
 		}
 	}
 }
