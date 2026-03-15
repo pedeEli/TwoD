@@ -142,6 +142,15 @@ namespace TwoD
 			value.transformLoadData = prefab.prefab.transformLoadData;
 			value.components = prefab.prefab.components;
 			value.children = prefab.prefab.children;
+
+			if (deserializer["name"])
+			{
+				if (!deserializer["name"].As<std::string>(value.name))
+				{
+					return false;
+				}
+			}
+
 			return Modify(deserializer, value);
 		}
 

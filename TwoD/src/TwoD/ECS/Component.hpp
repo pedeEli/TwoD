@@ -65,6 +65,7 @@ namespace TwoD
 		std::vector<T>& GetComponents() const;
 
 		Entity& GetEntity() const;
+		Entity* GetEntity(const std::string& name) const;
 		Entity& CreateEntity(const std::string& name) const;
 
 	private:

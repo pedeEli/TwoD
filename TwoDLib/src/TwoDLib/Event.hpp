@@ -9,9 +9,15 @@ namespace TwoD
 	class Event
 	{
 	public:
-		using Callback = std::function<void(const Args&... args)>;
+		using Callback = std::function<void(const Args&...)>;
 		struct Handle
 		{
+		public:
+			Handle() = default;
+		
+		private:
+			Handle(size_t id) : m_id(id) {}
+
 		private:
 			size_t m_id = 0;
 
@@ -19,7 +25,7 @@ namespace TwoD
 		};
 
 	public:
-		Handle Add(Callback callback)
+		[[nodiscard]] Handle Add(Callback callback)
 		{
 			Handle handle = { m_handle++ };
 			m_callbacks.emplace_back(handle, std::move(callback));
@@ -41,7 +47,7 @@ namespace TwoD
 		{
 			for (auto& callback : m_callbacks)
 			{
-				callback(args...);
+				callback.second(args...);
 			}
 		}
 	private:

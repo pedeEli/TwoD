@@ -16,11 +16,11 @@ namespace TwoD
 
 		m_transform = GetComponent<UITransform>();
 
-		m_mouseClickHandle = EventHandler::On<MouseDownEvent>([this](auto& event)
+		m_mouseClickHandle = EventHandler::On<MouseDownEvent>([this]([[maybe_unused]] auto& event)
 			{
 				if (hover)
 				{
-					mouseClick.Emit({});
+					mouseClick.Emit();
 				}
 				return false;
 			});

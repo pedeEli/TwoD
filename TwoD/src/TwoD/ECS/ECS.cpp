@@ -94,4 +94,30 @@ namespace TwoD
 		}
 		m_entities.Destroy(handle);
 	}
+
+	Entity& ECS::GetEntity(EntityHandle handle)
+	{
+		return m_entities.Get(handle);
+	}
+
+	Entity* ECS::GetEntity(const std::string& name)
+	{
+		for (auto& entity : m_entities.GetAll())
+		{
+			if (entity.name == name)
+			{
+				return &entity;
+			}
+		}
+		return nullptr;
+	}
+
+	bool ECS::CreateLoadData(const std::string& name, const Deserializer& deserializer, void*& value)
+	{
+		return GetStorage(name)->CreateLoadData(deserializer, value);
+	}
+	bool ECS::ModifyLoadData(const std::string& name, const Deserializer& deserializer, void*& value)
+	{
+		return GetStorage(name)->ModifyLoadData(deserializer, value);
+	}
 }

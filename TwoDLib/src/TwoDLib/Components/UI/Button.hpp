@@ -18,7 +18,7 @@ TD_COMPONENT(
 		void Update(float delta) override;
 
 	public:
-		Event<glm::fvec2> mouseClick;
+		Event<> mouseClick;
 		bool hover = false;
 
 	private:
