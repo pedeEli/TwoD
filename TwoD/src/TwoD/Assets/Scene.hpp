@@ -14,14 +14,14 @@ namespace TwoD
 	struct ComponentInfo
 	{
 		std::string type;
-		const void* loadData = nullptr;
+		void* loadData = nullptr;
 	};
 
 	struct EntityInfo
 	{
 	public:
 		std::string name;
-		const void* transformLoadData = nullptr;
+		void* transformLoadData = nullptr;
 		std::vector<ComponentInfo> components;
 		std::vector<EntityInfo> children;
 	};
@@ -67,18 +67,19 @@ namespace TwoD
 	template<>
 	struct Deserializable<TwoD::ComponentInfo>
 	{
-		static bool Deserialize(const Deserializer& node, TwoD::ComponentInfo& rhs);
+		static bool Deserialize(const Deserializer& deserializer, TwoD::ComponentInfo& rhs);
 	};
 
 	template<>
 	struct Deserializable<TwoD::EntityInfo>
 	{
-		static bool Deserialize(const Deserializer& node, TwoD::EntityInfo& rhs);
+		static bool Deserialize(const Deserializer& deserializer, TwoD::EntityInfo& rhs);
+		static bool Modify(const Deserializer& deserializer, TwoD::EntityInfo& value);
 	};
 
 	template<>
 	struct Deserializable<TwoD::ScreenEntities>
 	{
-		static bool Deserialize(const Deserializer& node, TwoD::ScreenEntities& rhs);
+		static bool Deserialize(const Deserializer& deserializer, TwoD::ScreenEntities& rhs);
 	};
 }

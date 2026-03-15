@@ -54,9 +54,13 @@ namespace TwoD
 			return m_entities.Get(handle);
 		}
 
-		static bool CreateLoadData(const std::string& name, const Deserializer& deserializer, const void*& value)
+		static bool CreateLoadData(const std::string& name, const Deserializer& deserializer, void*& value)
 		{
 			return GetStorage(name)->CreateLoadData(deserializer, value);
+		}
+		static bool ModifyLoadData(const std::string& name, const Deserializer& deserializer, void* value)
+		{
+			return GetStorage(name)->ModifyLoadData(deserializer, value);
 		}
 
 	private:

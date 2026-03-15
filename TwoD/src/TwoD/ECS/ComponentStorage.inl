@@ -114,10 +114,16 @@ namespace TwoD
 
 	template<class T>
 	requires(std::is_base_of_v<Component, T>)
-	bool ComponentStorageImpl<T>::CreateLoadData(const Deserializer& deserializer, const void*& value) const
+	bool ComponentStorageImpl<T>::CreateLoadData(const Deserializer& deserializer, void*& value) const
 	{
-		auto* v = new T::td_load_data();
-		value = v;
-		return T::TDCreateLoadData(v, deserializer);
+		value = new T::td_load_data();
+		return T::TDCreateLoadData(static_cast<T::td_load_data*>(value), deserializer);
+	}
+
+	template<class T>
+	requires(std::is_base_of_v<Component, T>)
+	bool ComponentStorageImpl<T>::ModifyLoadData(const Deserializer& deserializer, void* value) const
+	{
+		return T::TDModifyLoadData(static_cast<T::td_load_data*>(value), deserializer);
 	}
 }

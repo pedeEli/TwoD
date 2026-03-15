@@ -142,7 +142,7 @@ namespace TwoD
 			value.transformLoadData = prefab.prefab.transformLoadData;
 			value.components = prefab.prefab.components;
 			value.children = prefab.prefab.children;
-			return true;
+			return Modify(deserializer, value);
 		}
 
 		if (!deserializer["name"].As<std::string>(value.name))
@@ -161,7 +161,7 @@ namespace TwoD
 
 		if (deserializer["transform"])
 		{
-			if (!TwoD::ECS::CreateLoadData("class TwoD::Transform", deserializer["transform"], value.transformLoadData))
+			if (!TwoD::ECS::CreateLoadData("class TwoD::UITransform", deserializer["transform"], value.transformLoadData))
 			{
 				return false;
 			}
@@ -175,6 +175,105 @@ namespace TwoD
 			}
 		}
 
+		return true;
+	}
+	bool Deserializable<TwoD::EntityInfo>::Modify(const Deserializer& deserializer, TwoD::EntityInfo& value)
+	{
+		auto transform = deserializer["transform"];
+		if (transform)
+		{
+			if (!ECS::ModifyLoadData("class TwoD::UITransform", transform, value.transformLoadData))
+			{
+				return false;
+			}
+		}
+
+		auto components = deserializer["components"];
+		if (components)
+		{
+			if (!components.IsSequence())
+			{
+				return false;
+			}
+			for (size_t i = 0; i < components.GetSize(); i++)
+			{
+				auto component = components[i];
+				if (!component["type"])
+				{
+					TD_CORE_ERROR("missing field type in TwoD::ComponentInfo");
+					return false;
+				}
+				std::string type;
+				if (!component["type"].As<std::string>(type))
+				{
+					return false;
+				}
+				bool exists = false;
+				for (auto& existing : value.components)
+				{
+					if (existing.type == type)
+					{
+						exists = true;
+						ECS::ModifyLoadData(type, component, existing.loadData);
+						break;
+					}
+				}
+				if (!exists)
+				{
+					ComponentInfo newInfo;
+					if (!component.As<ComponentInfo>(newInfo))
+					{
+						return false;
+					}
+					value.components.push_back(newInfo);
+				}
+			}
+		}
+
+		auto children = deserializer["children"];
+		if (children)
+		{
+			if (!children.IsSequence())
+			{
+				return false;
+			}
+			for (size_t i = 0; i < children.GetSize(); i++)
+			{
+				auto child = children[i];
+				if (!deserializer["name"])
+				{
+					TD_CORE_ERROR("missing field name in TwoD::EntityInfo");
+					return false;
+				}
+				std::string name;
+				if (!deserializer["name"].As<std::string>(name))
+				{
+					return false;
+				}
+				bool exists = false;
+				for (auto& existing : value.children)
+				{
+					if (existing.name == name)
+					{
+						exists = true;
+						if (!Modify(child, existing))
+						{
+							return false;
+						}
+						break;
+					}
+				}
+				if (!exists)
+				{
+					EntityInfo newInfo;
+					if (!child.As<EntityInfo>(newInfo))
+					{
+						return false;
+					}
+					value.children.push_back(newInfo);
+				}
+			}
+		}
 		return true;
 	}
 

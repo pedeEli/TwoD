@@ -1,11 +1,9 @@
 type: class TwoD::Prefab
-name: TwoDLib::Button
+name: TwoDLib::ColorButton
 prefab:
-  name: TwoDLib::Button
+  name: TwoDLib::ColorButton
   components:
-  - type: class TwoD::Hitbox
-
-  children:
-  - name: background
-    components:
-    - type: class TwoD::ColorRenderer
+  - type: class TwoD::Button
+  - type: class TwoD::ColorRenderer
+  - type: class TwoD::TextRenderer
+    font: Roboto

@@ -4,6 +4,11 @@
 
 namespace TwoD
 {
+	void TextRenderer::StartBefore()
+	{
+		SetGlyphs();
+	}
+
 	void TextRenderer::SetText(const std::string& newText)
 	{
 		text = newText;

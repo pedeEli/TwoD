@@ -74,6 +74,25 @@ namespace TwoD
 	}
 
 
+// component modify load data (ld)
+
+#define TDI_COMPONENT_MODIFY_LD_FIELD_DEF(name, type) \
+	if (deserializer[#name]) { \
+		if (!deserializer[#name].As<type>(data->name)) { \
+			return false; \
+		} \
+	}
+#define TDI_COMPONENT_MODIFY_LD_FIELD(field) TD_IF_ELSE( \
+		(TDI_GET_NO_SERIALIZE(field)),, \
+		TD_DEFER(TDI_COMPONENT_MODIFY_LD_FIELD_DEF)(TDI_GET_NAME(field), TDI_GET_TYPE(field)) \
+	)
+#define TDI_COMPONENT_MODIFY_LD(...) \
+	static bool TDModifyLoadData([[maybe_unused]] td_load_data* data, [[maybe_unused]] const ::TwoD::Deserializer& deserializer) { \
+		__VA_OPT__(TD_APPLY_EACH_CONCAT(TDI_COMPONENT_MODIFY_LD_FIELD, __VA_ARGS__)) \
+		return true; \
+	}
+
+
 // component constructor
 
 #define TDI_COMPONENT_CON_INIT_BASE(meta) TD_IF_ELSE( \
@@ -138,6 +157,7 @@ namespace TwoD
 			TDI_COMPONENT_LD(meta, TD_UNWRAP fields) \
 			TDI_COMPONENT_FIELDS(TD_UNWRAP fields) \
 			TDI_COMPONENT_CREATE_LD(TD_UNWRAP fields) \
+			TDI_COMPONENT_MODIFY_LD(TD_UNWRAP fields) \
 			TDI_COMPONENT_CON(meta, TD_UNWRAP fields) \
 			TDI_COMPONENT_DEBUG(meta, TD_UNWRAP fields)
 

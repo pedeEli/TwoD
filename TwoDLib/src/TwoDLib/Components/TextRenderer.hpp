@@ -8,7 +8,7 @@ TD_COMPONENT(
 		TD_COMPONENT_FIELD(int32_t, layer, TD_INIT(0)),
 		TD_COMPONENT_FIELD(float, size, TD_INIT(0.0f)),
 		TD_COMPONENT_FIELD(Font*, font, TD_INIT(nullptr)),
-		TD_COMPONENT_FIELD(std::string, text, TD_UPDATER(SetGlyphs()))
+		TD_COMPONENT_FIELD(std::string, text, TD_INIT({}), TD_UPDATER(SetGlyphs()))
 	)
 )
 	public:
@@ -21,6 +21,8 @@ TD_COMPONENT(
 		};
 
 	public:
+		void StartBefore() override;
+
 		void SetText(const std::string& text);
 		const std::vector<Glyph>& GetGlyphs() const;
 
