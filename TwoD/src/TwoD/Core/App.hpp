@@ -9,6 +9,7 @@
 #include "TwoD/ECS/ECS.hpp"
 #include "TwoD/Assets/AssetManager.hpp"
 #include "TwoD/Assets/Scene.hpp"
+#include "TwoD/Assets/Prefab.hpp"
 #include "TwoD/Renderer/RenderSystem.hpp"
 #include "TwoD/Inputs/Inputs.hpp"
 #include "TwoD/Events/EventHandler.hpp"

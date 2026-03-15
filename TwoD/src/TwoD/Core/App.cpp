@@ -49,6 +49,7 @@ namespace TwoD
 		RegisterComponent<Transform>();
 		RegisterComponent<UITransform>();
 		RegisterResource<Scene>();
+		RegisterResource<Prefab>();
 		
 		AudioDevices::Init();
 		Inputs::Init();

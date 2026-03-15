@@ -5,7 +5,7 @@ namespace TwoD
 {
 	bool Hitbox::IsInside(const glm::fvec2& pos) const
 	{
-		auto localPos = GetComponent<Transform>().GetInverseWorldMatrix() * glm::fvec3(pos, 1.0);
+		auto localPos = GetTransform()->GetInverseWorldMatrix() * glm::fvec3(pos, 1.0);
 		return localPos.x >= x && localPos.x <= x + w && localPos.y >= y && localPos.y <= y + h;
 	}
 

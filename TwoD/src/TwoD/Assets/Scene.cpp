@@ -2,6 +2,7 @@
 #include "Scene.hpp"
 #include "TwoD/Core/App.hpp"
 #include "TwoD/ECS/UITransform.hpp"
+#include "Prefab.hpp"
 
 
 namespace TwoD
@@ -131,6 +132,19 @@ namespace TwoD
 
 	bool Deserializable<TwoD::EntityInfo>::Deserialize(const Deserializer& deserializer, TwoD::EntityInfo& value)
 	{
+		if (deserializer["prefab"])
+		{
+			if (!deserializer["prefab"].As<std::string>(value.name))
+			{
+				return false;
+			}
+			auto& prefab = AssetManager::Get<Prefab>(value.name);
+			value.transformLoadData = prefab.prefab.transformLoadData;
+			value.components = prefab.prefab.components;
+			value.children = prefab.prefab.children;
+			return true;
+		}
+
 		if (!deserializer["name"].As<std::string>(value.name))
 		{
 			return false;

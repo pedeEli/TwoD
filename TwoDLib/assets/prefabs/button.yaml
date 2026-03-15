@@ -1,0 +1,11 @@
+type: class TwoD::Prefab
+name: TwoDLib::Button
+prefab:
+  name: TwoDLib::Button
+  components:
+  - type: class TwoD::Hitbox
+
+  children:
+  - name: background
+    components:
+    - type: class TwoD::ColorRenderer
