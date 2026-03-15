@@ -17,6 +17,8 @@
 #include "TwoDLib/Components/MeshRenderer.hpp"
 
 #include "TwoDLib/Components/UI/Button.hpp"
+#include "TwoDLib/Components/UI/Text.hpp"
+#include "TwoDLib/Components/UI/FlexLayout.hpp"
 
 #include "TwoDLib/RenderHandlers/SpriteRenderHandler.hpp"
 #include "TwoDLib/RenderHandlers/ColorRenderHandler.hpp"
@@ -54,6 +56,8 @@ namespace TwoDLib
 		components.Register<TwoD::MeshRenderer>();
 
 		components.Register<TwoD::Button>();
+		components.Register<TwoD::Text>();
+		components.Register<TwoD::FlexLayout>();
 	}
 
 	constexpr static void RegisterRenderHandlers(RenderHandlers& renderHandlers)

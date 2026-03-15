@@ -12,15 +12,28 @@ entities:
   - type: class Dices
 
 screen:
-- prefab: TwoDLib::ColorButton
-  name: roll
-  transform:
-    anchor: BOTTOM
+- name: flex
   components:
-  - type: class TwoD::Button
-    layer: 10000
-    padding: [ 10, 10 ]
-    background: [ 100, 100, 100, 255 ]
-  - type: class TwoD::TextRenderer
-    text: "Roll"
-    size: 30
+  - type: class TwoD::FlexLayout
+    gap: 20
+  children:
+  - prefab: TwoDLib::ColorButton
+    name: roll
+    components:
+    - type: class TwoD::Button
+      layer: 10000
+      padding: [ 10, 10 ]
+      background: [ 100, 100, 100, 255 ]
+    - type: class TwoD::TextRenderer
+      text: "Roll"
+      size: 30
+  - prefab: TwoDLib::ColorButton
+    name: test
+    components:
+    - type: class TwoD::Button
+      layer: 10010
+      padding: [ 20, 20 ]
+      background: [ 100, 0, 0, 255 ]
+    - type: class TwoD::TextRenderer
+      text: Hello world
+      size: 50
