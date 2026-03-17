@@ -170,13 +170,13 @@
 		(TDI_GET_NO_DEBUG(field)),, \
 		if constexpr (static_cast<_underlying>(_type::TDI_GET_NAME(field)) == 0) { \
 			bool selected = static_cast<_underlying>(value) == 0; \
-			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), selected) && !selected) { \
+			if (ImGui::Selectable(std::format("{}##{}", TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), name).c_str(), selected) && !selected) { \
 				value = _type::TDI_GET_NAME(field); \
 				changed = true; \
 			} \
 		} else { \
 			bool selected = (value & _type::TDI_GET_NAME(field)) != static_cast<_type>(0); \
-			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), &selected)) { \
+			if (ImGui::Selectable(std::format("{}##{}", TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), name).c_str(), &selected)) { \
 				if (selected) { \
 					value |= _type::TDI_GET_NAME(field); \
 				} else { \
@@ -193,7 +193,7 @@
 		(TDI_GET_NO_DEBUG(field)),, \
 		{ \
 			bool selected = value == _type::TDI_GET_NAME(field); \
-			if (ImGui::Selectable(TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), selected) && !selected) { \
+			if (ImGui::Selectable(std::format("{}##{}", TD_DEFER(TD_STRINGIFY)(TDI_GET_NAME(field)), name).c_str(), selected) && !selected) { \
 				value = _type::TDI_GET_NAME(field); \
 			} \
 		} \

@@ -15,12 +15,14 @@ screen:
 - name: flex
   transform:
     anchor: BOTTOM
+    offset: [ 0, -20 ]
     size: [ 0, 100 ]
   components:
   - type: class TwoD::FlexLayout
     justify: CENTER
     align: CENTER
     gap: 20
+  - type: class TwoD::LayoutSize
   children:
   - prefab: TwoDLib::ColorButton
     name: roll

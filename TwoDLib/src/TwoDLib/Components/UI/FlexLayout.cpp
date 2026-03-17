@@ -1,5 +1,6 @@
 #include "tdpch.hpp"
 #include "FlexLayout.hpp"
+#include "LayoutSize.hpp"
 
 namespace TwoD
 {
@@ -11,12 +12,11 @@ namespace TwoD
 		}
 	}
 
-	void FlexLayout::Apply(UITransform& parent) const
+	void FlexLayout::Apply(UITransform& uiTransform) const
 	{
 		const bool isRow = direction == FlexDirection::ROW;
-		const glm::fvec2 innerSize = parent.size - padding * 2.0f;
-
-		auto& children = parent.GetChildren();
+		const glm::fvec2 innerSize = uiTransform.size - padding * 2.0f;
+		auto& children = uiTransform.GetChildren();
 
 		struct Item
 		{
@@ -29,12 +29,14 @@ namespace TwoD
 		items.reserve(children.size());
 
 		float totalMainSize = 0.0f;
+		float maxCrossSize = 0.0f;
 		for (auto child : children)
 		{
 			auto* transform = &child->GetComponent<UITransform>();
 			float mainSize = isRow ? transform->size.x : transform->size.y;
 			float crossSize = isRow ? transform->size.y : transform->size.x;
 			totalMainSize += mainSize;
+			maxCrossSize = std::max(maxCrossSize, crossSize);
 			items.emplace_back(transform, mainSize, crossSize);
 		}
 
@@ -48,6 +50,12 @@ namespace TwoD
 		const float mainLength = isRow ? innerSize.x : innerSize.y;
 		const float crossLength = isRow ? innerSize.y : innerSize.x;
 		float freeSpace = mainLength - totalMainSize - totalGaps;
+
+		if (auto* layoutSize = TryGetComponent<LayoutSize>())
+		{
+			layoutSize->minSize = isRow ? glm::fvec2(totalMainSize, maxCrossSize) : glm::fvec2(maxCrossSize, totalMainSize);
+			layoutSize->minSize += padding * 2.0f;
+		}
 
 		float cursor = 0.0f;
 		float extraGap = 0.0f;
@@ -71,10 +79,6 @@ namespace TwoD
 			extraGap = freeSpace / n;
 			cursor = -mainLength * 0.5f + extraGap * 0.5f;
 			break;
-		case JustifyContent::SPACE_EVENLY:
-			extraGap = n > 1.0f ? freeSpace / (n - 1.0f) : 0.0f;
-			cursor = -mainLength * 0.5f + extraGap;
-			break;
 		}
 
 		for (auto& item : items)
@@ -87,10 +91,6 @@ namespace TwoD
 				break;
 			case AlignItems::END:
 				crossOffset = -crossLength * 0.5f - item.crossSize * 0.5f;
-				break;
-			case AlignItems::STRETCH:
-				isRow ? item.transform->size.y : item.transform->size.x = crossLength;
-				item.crossSize = crossLength;
 				break;
 			}
 
