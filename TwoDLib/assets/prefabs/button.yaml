@@ -1,9 +1,0 @@
-type: class TwoD::Prefab
-name: TwoDLib::ColorButton
-prefab:
-  name: TwoDLib::ColorButton
-  components:
-  - type: class TwoD::Button
-  - type: class TwoD::ColorRenderer
-  - type: class TwoD::TextRenderer
-    font: Roboto

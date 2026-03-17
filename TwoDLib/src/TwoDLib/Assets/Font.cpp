@@ -10,6 +10,12 @@
 
 namespace TwoD
 {
+	static Font* s_defaultFont = nullptr;
+	Font* Font::GetDefaultFont()
+	{
+		return s_defaultFont;
+	}
+
 	Font::Font() = default;
 	Font::~Font() = default;
 
@@ -117,6 +123,12 @@ namespace TwoD
 		binding.texture = &m_texture;
 		binding.sampler = &m_sampler;
 		commandBuffer.Submit().Release();
+
+		if (defaultFont)
+		{
+			TD_CORE_ASSERT(!s_defaultFont, "cannot have multiple default fonts!");
+			s_defaultFont = this;
+		}
 	}
 
 	void Font::Destroy()

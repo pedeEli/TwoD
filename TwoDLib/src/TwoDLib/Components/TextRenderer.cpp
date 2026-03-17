@@ -6,6 +6,10 @@ namespace TwoD
 {
 	void TextRenderer::StartBefore()
 	{
+		if (!font)
+		{
+			font = Font::GetDefaultFont();
+		}
 		SetGlyphs();
 	}
 

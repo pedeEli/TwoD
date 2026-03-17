@@ -1,0 +1,24 @@
+type: class TwoD::Prefab
+name: info
+
+prefab:
+  name: info
+  components:
+  - type: class TwoD::FlexLayout
+    direction: COLUMN
+  - type: class TwoD::LayoutSize
+    heightMode: PERCENTAGE
+  children:
+  - name: heading
+    components:
+    - type: class TwoD::Text
+    - type: class TwoD::TextRenderer
+      font: Roboto
+      text: Heading
+      size: 40
+  - name: roll
+    components:
+    - type: class TwoD::Button
+    - type: class TwoD::TextRenderer
+      text: roll
+      size: 30

@@ -5,14 +5,22 @@ namespace TwoD
 {
 	void Button::Start()
 	{
-		auto& colorRenderer = GetComponent<ColorRenderer>();
-		colorRenderer.layer = layer;
-		colorRenderer.color = background;
-		m_colorRenderer = colorRenderer;
+		auto* colorRenderer = TryGetComponent<ColorRenderer>();
+		if (!colorRenderer)
+		{
+			colorRenderer = &AddComponent<ColorRenderer>();
+		}
+		colorRenderer->layer = layer;
+		colorRenderer->color = background;
+		m_colorRenderer = *colorRenderer;
 
-		auto& textRenderer = GetComponent<TextRenderer>();
-		textRenderer.layer = layer + 1;
-		m_textRenderer = textRenderer;
+		auto* textRenderer = TryGetComponent<TextRenderer>();
+		if (!textRenderer)
+		{
+			textRenderer = &AddComponent<TextRenderer>();
+		}
+		textRenderer->layer = layer + 1;
+		m_textRenderer = *textRenderer;
 
 		m_transform = GetComponent<UITransform>();
 

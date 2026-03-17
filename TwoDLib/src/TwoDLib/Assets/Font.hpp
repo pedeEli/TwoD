@@ -19,6 +19,9 @@ namespace TwoD
 		};
 
 	public:
+		static Font* GetDefaultFont();
+
+	public:
 		Font();
 		~Font();
 
@@ -37,7 +40,8 @@ namespace TwoD
 
 	public:
 		TD_ASSET(
-			TD_ASSET_FIELD(std::string, file)
+			TD_ASSET_FIELD(std::string, file),
+			TD_ASSET_FIELD(bool, defaultFont, false)
 		)
 
 		SDL::TextureSamplerBinding binding;

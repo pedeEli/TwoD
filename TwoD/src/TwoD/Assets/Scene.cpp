@@ -270,6 +270,7 @@ namespace TwoD
 					}
 				}
 			}
+			copy.name = prefabChild.name;
 			if (!DeserializePrefab(copy, prefabChild, child))
 			{
 				return false;

@@ -19,30 +19,9 @@ screen:
   - type: class TwoD::LayoutSize
     widthMode: PERCENTAGE
     heightMode: PERCENTAGE
+  
   children:
-
-  - name: left
-    components:
-    - type: class TwoD::FlexLayout
-      direction: COLUMN
-    - type: class TwoD::LayoutSize
-      heightMode: PERCENTAGE
-    children:
-    - name: heading
-      components:
-      - type: class TwoD::Text
-      - type: class TwoD::TextRenderer
-        font: Roboto
-        text: Heading
-        size: 40
-    - prefab: TwoDLib::ColorButton
-      name: roll
-      components:
-      - type: class TwoD::TextRenderer
-        text: roll
-        size: 30
-
-  - name: right
-    components:
-    - type: class TwoD::FlexLayout
-      direction: COLUMN
+  - prefab: info
+    name: left
+  - prefab: info
+    name: right
