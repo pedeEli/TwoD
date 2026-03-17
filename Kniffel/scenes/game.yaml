@@ -12,35 +12,37 @@ entities:
   - type: class Dices
 
 screen:
-- name: flex
-  transform:
-    anchor: BOTTOM
-    offset: [ 0, -20 ]
-    size: [ 0, 100 ]
+- name: ui
   components:
   - type: class TwoD::FlexLayout
-    justify: CENTER
-    align: CENTER
-    gap: 20
+    justify: SPACE_BETWEEN
   - type: class TwoD::LayoutSize
+    widthMode: PERCENTAGE
+    heightMode: PERCENTAGE
   children:
-  - prefab: TwoDLib::ColorButton
-    name: roll
+
+  - name: left
     components:
-    - type: class TwoD::Button
-      layer: 10000
-      padding: [ 10, 10 ]
-      background: [ 100, 100, 100, 255 ]
-    - type: class TwoD::TextRenderer
-      text: "Roll"
-      size: 30
-  - prefab: TwoDLib::ColorButton
-    name: test
+    - type: class TwoD::FlexLayout
+      direction: COLUMN
+    - type: class TwoD::LayoutSize
+      heightMode: PERCENTAGE
+    children:
+    - name: heading
+      components:
+      - type: class TwoD::Text
+      - type: class TwoD::TextRenderer
+        font: Roboto
+        text: Heading
+        size: 40
+    - prefab: TwoDLib::ColorButton
+      name: roll
+      components:
+      - type: class TwoD::TextRenderer
+        text: roll
+        size: 30
+
+  - name: right
     components:
-    - type: class TwoD::Button
-      layer: 10010
-      padding: [ 20, 20 ]
-      background: [ 100, 0, 0, 255 ]
-    - type: class TwoD::TextRenderer
-      text: Hello world
-      size: 50
+    - type: class TwoD::FlexLayout
+      direction: COLUMN

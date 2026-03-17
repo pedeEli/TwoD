@@ -95,7 +95,7 @@ namespace TwoD
 			}
 
 			float mainPosition = cursor + item.mainSize * 0.5f;
-			glm::fvec2 position = isRow ? glm::fvec2(mainPosition, crossOffset) : glm::fvec2(crossOffset, -mainPosition);
+			glm::fvec2 position = isRow ? glm::fvec2(mainPosition, crossOffset) : glm::fvec2(crossOffset, mainPosition);
 
 			item.transform->offset = position + padding;
 			item.transform->anchor = Anchor::CENTER;
